@@ -1,0 +1,648 @@
+{
+  "75": {
+    "inputs": {
+      "filename_prefix": "video/LTX_2.3_i2v",
+      "format": "auto",
+      "codec": "auto",
+      "video-preview": "",
+      "video": [
+        "358",
+        0
+      ]
+    },
+    "class_type": "SaveVideo",
+    "_meta": {
+      "title": "Сохранить видео"
+    }
+  },
+  "324": {
+    "inputs": {
+      "noise_seed": 42
+    },
+    "class_type": "RandomNoise",
+    "_meta": {
+      "title": "Случайный шум"
+    }
+  },
+  "325": {
+    "inputs": {
+      "noise_seed": 715151001082848
+    },
+    "class_type": "RandomNoise",
+    "_meta": {
+      "title": "Случайный шум"
+    }
+  },
+  "326": {
+    "inputs": {
+      "video_latent": [
+        "336",
+        0
+      ],
+      "audio_latent": [
+        "355",
+        1
+      ]
+    },
+    "class_type": "LTXVConcatAVLatent",
+    "_meta": {
+      "title": "LTXVConcatAVLatent"
+    }
+  },
+  "327": {
+    "inputs": {
+      "ckpt_name": "ltx-2.3-22b-dev-fp8.safetensors"
+    },
+    "class_type": "LTXVAudioVAELoader",
+    "_meta": {
+      "title": "LTXV Загрузчик аудио VAE"
+    }
+  },
+  "328": {
+    "inputs": {
+      "sampler_name": "euler_cfg_pp"
+    },
+    "class_type": "KSamplerSelect",
+    "_meta": {
+      "title": "Выбор KSampler"
+    }
+  },
+  "329": {
+    "inputs": {
+      "sigmas": "0.85, 0.7250, 0.4219, 0.0"
+    },
+    "class_type": "ManualSigmas",
+    "_meta": {
+      "title": "ManualSigmas"
+    }
+  },
+  "330": {
+    "inputs": {
+      "cfg": 1,
+      "model": [
+        "333",
+        0
+      ],
+      "positive": [
+        "332",
+        0
+      ],
+      "negative": [
+        "332",
+        1
+      ]
+    },
+    "class_type": "CFGGuider",
+    "_meta": {
+      "title": "CFG Гид"
+    }
+  },
+  "331": {
+    "inputs": {
+      "noise": [
+        "325",
+        0
+      ],
+      "guider": [
+        "362",
+        0
+      ],
+      "sampler": [
+        "339",
+        0
+      ],
+      "sigmas": [
+        "354",
+        0
+      ],
+      "latent_image": [
+        "366",
+        0
+      ]
+    },
+    "class_type": "SamplerCustomAdvanced",
+    "_meta": {
+      "title": "Пользовательский сэмплер (Расширенный)"
+    }
+  },
+  "332": {
+    "inputs": {
+      "positive": [
+        "352",
+        0
+      ],
+      "negative": [
+        "352",
+        1
+      ],
+      "latent": [
+        "355",
+        0
+      ]
+    },
+    "class_type": "LTXVCropGuides",
+    "_meta": {
+      "title": "LTXVCropGuides"
+    }
+  },
+  "333": {
+    "inputs": {
+      "lora_name": "ltx-2.3-22b-distilled-lora-384-1.1.safetensors",
+      "strength_model": 0.5,
+      "model": [
+        "364",
+        0
+      ]
+    },
+    "class_type": "LoraLoaderModelOnly",
+    "_meta": {
+      "title": "Загрузчик LoRA (Только модель)"
+    }
+  },
+  "334": {
+    "inputs": {
+      "longer_edge": 1536,
+      "images": [
+        "338",
+        0
+      ]
+    },
+    "class_type": "ResizeImagesByLongerEdge",
+    "_meta": {
+      "title": "Изменить размер изображений по длинной стороне"
+    }
+  },
+  "335": {
+    "inputs": {
+      "samples": [
+        "355",
+        0
+      ],
+      "upscale_model": [
+        "359",
+        0
+      ],
+      "vae": [
+        "364",
+        2
+      ]
+    },
+    "class_type": "LTXVLatentUpsampler",
+    "_meta": {
+      "title": "LTXVLatentUpsampler"
+    }
+  },
+  "336": {
+    "inputs": {
+      "strength": 1,
+      "bypass": [
+        "350",
+        0
+      ],
+      "vae": [
+        "364",
+        2
+      ],
+      "image": [
+        "337",
+        0
+      ],
+      "latent": [
+        "335",
+        0
+      ]
+    },
+    "class_type": "LTXVImgToVideoInplace",
+    "_meta": {
+      "title": "LTXVImgToVideoInplace"
+    }
+  },
+  "337": {
+    "inputs": {
+      "img_compression": 18,
+      "image": [
+        "334",
+        0
+      ]
+    },
+    "class_type": "LTXVPreprocess",
+    "_meta": {
+      "title": "LTXVPreprocess"
+    }
+  },
+  "338": {
+    "inputs": {
+      "resize_type": "scale dimensions",
+      "resize_type.width": [
+        "360",
+        0
+      ],
+      "resize_type.height": [
+        "347",
+        0
+      ],
+      "resize_type.crop": "center",
+      "scale_method": "lanczos",
+      "input": [
+        "372",
+        0
+      ]
+    },
+    "class_type": "ResizeImageMaskNode",
+    "_meta": {
+      "title": "Изменить размер изображения/маски"
+    }
+  },
+  "339": {
+    "inputs": {
+      "sampler_name": "euler_ancestral_cfg_pp"
+    },
+    "class_type": "KSamplerSelect",
+    "_meta": {
+      "title": "Выбор KSampler"
+    }
+  },
+  "340": {
+    "inputs": {
+      "expression": "a/2",
+      "values.a": [
+        "360",
+        0
+      ]
+    },
+    "class_type": "ComfyMathExpression",
+    "_meta": {
+      "title": "Математическое выражение"
+    }
+  },
+  "342": {
+    "inputs": {
+      "expression": "a/2",
+      "values.a": [
+        "347",
+        0
+      ]
+    },
+    "class_type": "ComfyMathExpression",
+    "_meta": {
+      "title": "Математическое выражение"
+    }
+  },
+  "343": {
+    "inputs": {
+      "width": [
+        "340",
+        1
+      ],
+      "height": [
+        "342",
+        1
+      ],
+      "length": [
+        "371",
+        0
+      ],
+      "batch_size": 1
+    },
+    "class_type": "EmptyLTXVLatentVideo",
+    "_meta": {
+      "title": "Пустой LTXVLatentVideo"
+    }
+  },
+  "344": {
+    "inputs": {
+      "strength": 0.7,
+      "bypass": [
+        "350",
+        0
+      ],
+      "vae": [
+        "364",
+        2
+      ],
+      "image": [
+        "337",
+        0
+      ],
+      "latent": [
+        "343",
+        0
+      ]
+    },
+    "class_type": "LTXVImgToVideoInplace",
+    "_meta": {
+      "title": "LTXVImgToVideoInplace"
+    }
+  },
+  "346": {
+    "inputs": {
+      "expression": "a",
+      "values.a": [
+        "348",
+        0
+      ]
+    },
+    "class_type": "ComfyMathExpression",
+    "_meta": {
+      "title": "Математическое выражение"
+    }
+  },
+  "347": {
+    "inputs": {
+      "value": 1920
+    },
+    "class_type": "PrimitiveInt",
+    "_meta": {
+      "title": "Height"
+    }
+  },
+  "348": {
+    "inputs": {
+      "value": 24
+    },
+    "class_type": "PrimitiveInt",
+    "_meta": {
+      "title": "Frame Rate"
+    }
+  },
+  "350": {
+    "inputs": {
+      "value": false
+    },
+    "class_type": "PrimitiveBoolean",
+    "_meta": {
+      "title": "Switch to Text to Video?"
+    }
+  },
+  "351": {
+    "inputs": {
+      "text": [
+        "367",
+        0
+      ],
+      "clip": [
+        "365",
+        0
+      ]
+    },
+    "class_type": "CLIPTextEncode",
+    "_meta": {
+      "title": "Кодирование текста CLIP (Запрос)"
+    }
+  },
+  "352": {
+    "inputs": {
+      "frame_rate": [
+        "346",
+        0
+      ],
+      "positive": [
+        "351",
+        0
+      ],
+      "negative": [
+        "361",
+        0
+      ]
+    },
+    "class_type": "LTXVConditioning",
+    "_meta": {
+      "title": "Кондиционирование LTXV"
+    }
+  },
+  "353": {
+    "inputs": {
+      "frames_number": [
+        "371",
+        0
+      ],
+      "frame_rate": [
+        "346",
+        1
+      ],
+      "batch_size": 1,
+      "audio_vae": [
+        "327",
+        0
+      ]
+    },
+    "class_type": "LTXVEmptyLatentAudio",
+    "_meta": {
+      "title": "LTXV Пустое латентное аудио"
+    }
+  },
+  "354": {
+    "inputs": {
+      "sigmas": "1.0, 0.99375, 0.9875, 0.98125, 0.975, 0.909375, 0.725, 0.421875, 0.0"
+    },
+    "class_type": "ManualSigmas",
+    "_meta": {
+      "title": "ManualSigmas"
+    }
+  },
+  "355": {
+    "inputs": {
+      "av_latent": [
+        "331",
+        0
+      ]
+    },
+    "class_type": "LTXVSeparateAVLatent",
+    "_meta": {
+      "title": "LTXVSeparateAVLatent"
+    }
+  },
+  "356": {
+    "inputs": {
+      "noise": [
+        "324",
+        0
+      ],
+      "guider": [
+        "330",
+        0
+      ],
+      "sampler": [
+        "328",
+        0
+      ],
+      "sigmas": [
+        "329",
+        0
+      ],
+      "latent_image": [
+        "326",
+        0
+      ]
+    },
+    "class_type": "SamplerCustomAdvanced",
+    "_meta": {
+      "title": "Пользовательский сэмплер (Расширенный)"
+    }
+  },
+  "357": {
+    "inputs": {
+      "av_latent": [
+        "356",
+        0
+      ]
+    },
+    "class_type": "LTXVSeparateAVLatent",
+    "_meta": {
+      "title": "LTXVSeparateAVLatent"
+    }
+  },
+  "358": {
+    "inputs": {
+      "fps": [
+        "346",
+        0
+      ],
+      "images": [
+        "363",
+        0
+      ]
+    },
+    "class_type": "CreateVideo",
+    "_meta": {
+      "title": "Создать видео"
+    }
+  },
+  "359": {
+    "inputs": {
+      "model_name": "ltx-2.3-spatial-upscaler-x2-1.1.safetensors"
+    },
+    "class_type": "LatentUpscaleModelLoader",
+    "_meta": {
+      "title": "Загрузить модель увеличения latent"
+    }
+  },
+  "360": {
+    "inputs": {
+      "value": 1088
+    },
+    "class_type": "PrimitiveInt",
+    "_meta": {
+      "title": "Width"
+    }
+  },
+  "361": {
+    "inputs": {
+      "text": "low quality, blurry, low resolution, pixelated, distorted, out of focus, artifacts, overexposed, underexposed, washed-out lighting, color banding, AI artifacts, missing details, poor reflections, unrealistic lighting, plastic-looking surfaces, flickering lights, grainy shadows, wrong perspective, rendering glitches, deformed faces, uncanny expressions, unrealistic human motion, duplicate people, floating artifacts, clipping geometry, broken animation, unstable camera, jerky motion, frame stutter, ghosting, low frame rate, flat depth, bad contrast, bad proportions, warped architecture, inconsistent scale, low texture detail, poor ambient occlusion, flicker, noise, chromatic aberration, over-saturated highlights, shadow artifacts, incomplete rendering, compression noise, unnatural color balance, visual glitches",
+      "clip": [
+        "365",
+        0
+      ]
+    },
+    "class_type": "CLIPTextEncode",
+    "_meta": {
+      "title": "Кодирование текста CLIP (Запрос)"
+    }
+  },
+  "362": {
+    "inputs": {
+      "cfg": 1,
+      "model": [
+        "333",
+        0
+      ],
+      "positive": [
+        "352",
+        0
+      ],
+      "negative": [
+        "352",
+        1
+      ]
+    },
+    "class_type": "CFGGuider",
+    "_meta": {
+      "title": "CFG Гид"
+    }
+  },
+  "363": {
+    "inputs": {
+      "tile_size": 768,
+      "overlap": 64,
+      "temporal_size": 4096,
+      "temporal_overlap": 4,
+      "samples": [
+        "357",
+        0
+      ],
+      "vae": [
+        "364",
+        2
+      ]
+    },
+    "class_type": "VAEDecodeTiled",
+    "_meta": {
+      "title": "Декодировать VAE (плитками)"
+    }
+  },
+  "364": {
+    "inputs": {
+      "ckpt_name": "ltx-2.3-22b-dev-fp8.safetensors"
+    },
+    "class_type": "CheckpointLoaderSimple",
+    "_meta": {
+      "title": "Загрузить сheckpoint"
+    }
+  },
+  "365": {
+    "inputs": {
+      "text_encoder": "gemma_3_12B_it_fp4_mixed.safetensors",
+      "ckpt_name": "ltx-2.3-22b-dev-fp8.safetensors",
+      "device": "default"
+    },
+    "class_type": "LTXAVTextEncoderLoader",
+    "_meta": {
+      "title": "LTXV Загрузчик аудио-текстового энкодера"
+    }
+  },
+  "366": {
+    "inputs": {
+      "video_latent": [
+        "344",
+        0
+      ],
+      "audio_latent": [
+        "353",
+        0
+      ]
+    },
+    "class_type": "LTXVConcatAVLatent",
+    "_meta": {
+      "title": "LTXVConcatAVLatent"
+    }
+  },
+  "367": {
+    "inputs": {
+      "value": "A medium-wide, high-contrast sci-fi establishing shot opens on five athletic young men standing at the center of a rain-slicked, neon-drenched metropolitan plaza. The scene is bathed in a dramatic, cyan-blue volumetric light that streams down from the towering, futuristic skyscrapers surrounding them, creating intense, shallow depth of field reflections on the wet pavement. The initial atmosphere is charged and expectant, filled with the low hum of city life and rhythmic room tone. The five characters, each possessing defined musculature, stand in a powerful, slightly asymmetrical formation. The energy pulse begins subtly: the bioluminescent blue energy lines visible under their skin start to flicker, drawing the eye. As the energy surges, the men visibly tense their core muscles, their expressions shifting from contained readiness to ecstatic realization; they clench their fists slightly, their jaw tightening as the collective feeling of euphoria overtakes them. The camera executes a slow, deliberate circling gimbal movement, pulling away and rising slightly, simulating a crane-up, focusing on the synchronized nature of the energy. With a deep, resonating *thrumming* bass bass pulse—a distinct, audible heartbeat—the visible blue energy lines on their bodies intensify and arc across their skin, pulsing in rhythmic synchronicity with the sound. Each man straightens, their posture snapping to peak alertness. As the pulse hits its crescendo, they simultaneously lift their arms slightly, channeling the surge of power outward, moving forward in unison as the camera continues its slow upward spiral, leaving the viewer with a breathtaking view of their empowered ascent against the dazzling, electric backdrop."
+    },
+    "class_type": "PrimitiveStringMultiline",
+    "_meta": {
+      "title": "Prompt"
+    }
+  },
+  "371": {
+    "inputs": {
+      "value": 0
+    },
+    "class_type": "INTConstant",
+    "_meta": {
+      "title": "INT Constant"
+    }
+  },
+  "372": {
+    "inputs": {
+      "image": "ComfyUI/output/image_gen/7_00001_.png",
+      "custom_width": 0,
+      "custom_height": 0
+    },
+    "class_type": "VHS_LoadImagePath",
+    "_meta": {
+      "title": "Load Image (Path) 🎥🅥🅗🅢"
+    }
+  }
+}

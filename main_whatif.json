@@ -1,0 +1,116 @@
+{
+  "tts_text": "Что если интернет отключится во всем мире навсегда? В одно мгновение вся цифровая паутина, которая связывала континенты и сердца, исчезнет без следа. Экраны смартфонов и компьютеров погаснут навсегда, оставляя человечество в абсолютной тишине. Города, привыкшие к цифровому пульсу, замрут в неожиданной паузе. Люди выйдут на улицы, чтобы посмотреть в глаза друг другу по-настоящему. Быт изменится коренным образом, возвращаясь к простым и искренним ритуалам. Вместо мгновенных сообщений возникнут долгие разговоры у костра под звездами. Архитектура эволюционирует, покрываясь досками объявлений и рукописными картами на фасадах. Небоскребы превратятся в вертикальные сады, полные жизни и общения. Внешность людей преобразится, обретая здоровый румянец и глубину в глазах. Тела окрепнут от физического труда и долгих прогулок на свежем воздухе. Знания станут драгоценными, передаваемыми из уст в уста в теплых беседах. Но в этой новой реальности возникнет настоящая близость, свободная от виртуальных масок. Что если это не апокалипсис, а долгожданное пробуждение души?",
+  "base_prompts": [
+    {
+      "base_id": 1,
+      "base_name": "DigitalFading",
+      "base_prompt": "ethereal translucent remnants of digital screens, apps, and data streams hovering as fading holograms in the air, slowly dissolving into sparkling particles and mist, representing the permanent shutdown of the global network (masterpiece, best quality, anime style, cinematic lighting)"
+    },
+    {
+      "base_id": 2,
+      "base_name": "RebornHumanity",
+      "base_prompt": "diverse people with sun-kissed healthy skin, attentive expressive eyes full of genuine connection, upright confident postures, dressed in practical handcrafted earthy clothing, engaging in real-life interactions without any devices (masterpiece, best quality, anime style, cinematic lighting)"
+    },
+    {
+      "base_id": 3,
+      "base_name": "AnalogArchitecture",
+      "base_prompt": "transformed urban structures featuring massive handwritten bulletin boards, maps, and announcements on building facades, pigeon coops and mechanical devices on rooftops, blended harmoniously with climbing vines and community gardens (masterpiece, best quality, anime style, cinematic lighting)"
+    },
+    {
+      "base_id": 4,
+      "base_name": "QuietWorldAura",
+      "base_prompt": "profound atmosphere of serene silence and natural tranquility, soft golden cinematic lighting with subtle pulsing warm rays, air shimmering with floating pollen dust particles and gentle light waves (masterpiece, best quality, anime style, cinematic lighting)"
+    },
+    {
+      "base_id": 5,
+      "base_name": "NatureReclaimed",
+      "base_prompt": "cities partially overtaken by nature with expanded green spaces, trees and flowers blooming along streets, old server buildings covered in moss and ivy, creating a balanced organic urban landscape (masterpiece, best quality, anime style, cinematic lighting)"
+    }
+  ],
+  "scenes": [
+    {
+      "scene_id": 1,
+      "text_scene": "Что если интернет отключится во всем мире навсегда?",
+      "image_prompt": "vertical epic composition of planet Earth from space at twilight, faint [DigitalFading] digital webs cracking across continents under [QuietWorldAura] golden glow, dramatic wide view (masterpiece, best quality, anime style, cinematic lighting)",
+      "video_prompt": "slow orbital camera rotation around the globe in slow motion, [DigitalFading] webs pulsing like dying electrical waves before dissolving into sparkling particles, atmospheric shimmer and gentle light waves expanding"
+    },
+    {
+      "scene_id": 2,
+      "text_scene": "В одно мгновение вся цифровая паутина, которая связывала континенты и сердца, исчезнет без следа.",
+      "image_prompt": "vertical close-up of invisible digital threads snapping over a silent megacity, [DigitalFading] mist dissolving into [NatureReclaimed] emerging vines on rooftops, dramatic perspective (masterpiece, best quality, anime style, cinematic lighting)",
+      "video_prompt": "slow motion time-lapse of digital threads breaking apart with particle explosions, camera smoothly zooming downward as [DigitalFading] fades and air flickers with subtle waves"
+    },
+    {
+      "scene_id": 3,
+      "text_scene": "Экраны смартфонов и компьютеров погаснут навсегда, оставляя человечество в абсолютной тишине.",
+      "image_prompt": "vertical interior shot of a dark room where glowing screens suddenly black out, [RebornHumanity] figures turning toward windows bathed in [QuietWorldAura], intimate composition (masterpiece, best quality, anime style, cinematic lighting)",
+      "video_prompt": "slow motion flicker of screens dimming to black with lingering digital sparks, camera panning gently as [QuietWorldAura] warm particles float in and silence pulses through the air"
+    },
+    {
+      "scene_id": 4,
+      "text_scene": "Города, привыкшие к цифровому пульсу, замрут в неожиданной паузе.",
+      "image_prompt": "vertical wide street view of a once-bustling city frozen in silence, [AnalogArchitecture] bulletin boards appearing on facades under [QuietWorldAura], cinematic depth (masterpiece, best quality, anime style, cinematic lighting)",
+      "video_prompt": "slow descending camera pan along empty avenues, subtle pulsing waves in the air and [DigitalFading] remnants vanishing like smoke in slow motion"
+    },
+    {
+      "scene_id": 5,
+      "text_scene": "Люди выйдут на улицы, чтобы посмотреть в глаза друг другу по-настоящему.",
+      "image_prompt": "vertical dynamic composition of crowds emerging onto streets, [RebornHumanity] faces meeting with genuine eye contact, [AnalogArchitecture] in background, emotional focus (masterpiece, best quality, anime style, cinematic lighting)",
+      "video_prompt": "slow motion tracking shot following people stepping out, gentle particle dust swirling around [RebornHumanity] figures as camera circles to capture connected gazes"
+    },
+    {
+      "scene_id": 6,
+      "text_scene": "Быт изменится коренным образом, возвращаясь к простым и искренним ритуалам.",
+      "image_prompt": "vertical market scene with [RebornHumanity] trading goods face-to-face, [NatureReclaimed] stalls blending into streets under [QuietWorldAura], vibrant yet serene (masterpiece, best quality, anime style, cinematic lighting)",
+      "video_prompt": "slow rhythmic camera movement through the crowd, hands exchanging items in deliberate slow motion with floating pollen particles and soft light pulses"
+    },
+    {
+      "scene_id": 7,
+      "text_scene": "Вместо мгновенных сообщений возникнут долгие разговоры у костра под звездами.",
+      "image_prompt": "vertical intimate gathering around a glowing bonfire at night, [RebornHumanity] sharing stories with expressive faces, [QuietWorldAura] stars above, warm atmosphere (masterpiece, best quality, anime style, cinematic lighting)",
+      "video_prompt": "slow circular camera orbit around the fire, flames pulsing with light waves while [RebornHumanity] gestures animate in gentle slow motion and embers float as particles"
+    },
+    {
+      "scene_id": 8,
+      "text_scene": "Архитектура эволюционирует, покрываясь досками объявлений и рукописными картами на фасадах.",
+      "image_prompt": "vertical upward tilt of towering buildings now covered in [AnalogArchitecture] massive handwritten boards and maps, [NatureReclaimed] vines climbing, detailed facade focus (masterpiece, best quality, anime style, cinematic lighting)",
+      "video_prompt": "slow vertical camera ascent along the walls, paper posters fluttering subtly in wind with [DigitalFading] faint echoes dissolving and air shimmering"
+    },
+    {
+      "scene_id": 9,
+      "text_scene": "Небоскребы превратятся в вертикальные сады, полные жизни и общения.",
+      "image_prompt": "vertical lush composition of skyscrapers transformed into [NatureReclaimed] vertical gardens with [AnalogArchitecture] terraces, [RebornHumanity] tending plants high above, hopeful scale (masterpiece, best quality, anime style, cinematic lighting)",
+      "video_prompt": "slow upward tracking shot through foliage layers, leaves swaying in slow motion with gentle light pulses and pollen particles drifting between levels"
+    },
+    {
+      "scene_id": 10,
+      "text_scene": "Внешность людей преобразится, обретая здоровый румянец и глубину в глазах.",
+      "image_prompt": "vertical close-up portrait series of [RebornHumanity] faces glowing with natural vitality, sun-kissed skin and deep attentive eyes, soft [QuietWorldAura] lighting (masterpiece, best quality, anime style, cinematic lighting)",
+      "video_prompt": "slow motion sequence of faces turning toward light, skin subtly brightening and eyes reflecting genuine wonder with faint particle glows in the air"
+    },
+    {
+      "scene_id": 11,
+      "text_scene": "Тела окрепнут от физического труда и долгих прогулок на свежем воздухе.",
+      "image_prompt": "vertical energetic view of [RebornHumanity] working in community gardens and walking paths, strong postures amid [NatureReclaimed] greenery, dynamic action (masterpiece, best quality, anime style, cinematic lighting)",
+      "video_prompt": "slow motion rhythmic tracking of bodies moving with purpose, tools swinging and steps echoing as dust particles rise and light waves pulse softly"
+    },
+    {
+      "scene_id": 12,
+      "text_scene": "Знания станут драгоценными, передаваемыми из уст в уста в теплых беседах.",
+      "image_prompt": "vertical cozy library interior with [RebornHumanity] in circle sharing books and stories, [AnalogArchitecture] shelves and warm [QuietWorldAura], intimate gathering (masterpiece, best quality, anime style, cinematic lighting)",
+      "video_prompt": "slow camera pan around the storytelling circle, mouths moving expressively in slow motion with gentle light flickers and airborne dust particles"
+    },
+    {
+      "scene_id": 13,
+      "text_scene": "Но в этой новой реальности возникнет настоящая близость, свободная от виртуальных масок.",
+      "image_prompt": "vertical tender composition of [RebornHumanity] embracing and connecting deeply in a sunlit square, [NatureReclaimed] elements surrounding, emotional core (masterpiece, best quality, anime style, cinematic lighting)",
+      "video_prompt": "slow zoom into intertwined figures, subtle pulsing warmth in the air and [QuietWorldAura] particles dancing as camera circles the moment of true connection"
+    },
+    {
+      "scene_id": 14,
+      "text_scene": "Что если это не апокалипсис, а долгожданное пробуждение души?",
+      "image_prompt": "vertical majestic finale of a reborn world at sunrise, all elements combined: [DigitalFading] fully dissolved into [NatureReclaimed] and [AnalogArchitecture], [RebornHumanity] looking upward in hope under [QuietWorldAura], epic vertical vista (masterpiece, best quality, anime style, cinematic lighting)",
+      "video_prompt": "slow ascending camera rise toward the horizon, final [DigitalFading] particles merging into golden light waves in ultra slow motion, everything pulsing with awakening energy"
+    }
+  ]
+}

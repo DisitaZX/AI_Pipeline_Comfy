@@ -1,0 +1,295 @@
+{
+  "1": {
+    "inputs": {
+      "unet_name": "hunyuanvideo1.5_480p_i2v_step_distilled_fp16.safetensors",
+      "weight_dtype": "default"
+    },
+    "class_type": "UNETLoader",
+    "_meta": {
+      "title": "Загрузить модель диффузии"
+    }
+  },
+  "2": {
+    "inputs": {
+      "shift": 5,
+      "model": [
+        "10",
+        0
+      ]
+    },
+    "class_type": "ModelSamplingSD3",
+    "_meta": {
+      "title": "Выборка модели SD3"
+    }
+  },
+  "3": {
+    "inputs": {
+      "clip_name1": "qwen_2.5_vl_7b_fp8_scaled.safetensors",
+      "clip_name2": "byt5_small_glyphxl_fp16.safetensors",
+      "type": "hunyuan_video_15",
+      "device": "default"
+    },
+    "class_type": "DualCLIPLoader",
+    "_meta": {
+      "title": "Двойной загрузчик CLIP"
+    }
+  },
+  "4": {
+    "inputs": {
+      "clip_name": "sigclip_vision_patch14_384.safetensors"
+    },
+    "class_type": "CLIPVisionLoader",
+    "_meta": {
+      "title": "Загрузить видение CLIP"
+    }
+  },
+  "6": {
+    "inputs": {
+      "vae_name": "hunyuanvideo15_vae_fp16.safetensors"
+    },
+    "class_type": "VAELoader",
+    "_meta": {
+      "title": "Загрузить VAE"
+    }
+  },
+  "9": {
+    "inputs": {
+      "sage_attention": "auto",
+      "allow_compile": true,
+      "model": [
+        "2",
+        0
+      ]
+    },
+    "class_type": "PathchSageAttentionKJ",
+    "_meta": {
+      "title": "Patch Sage Attention KJ"
+    }
+  },
+  "10": {
+    "inputs": {
+      "PowerLoraLoaderHeaderWidget": {
+        "type": "PowerLoraLoaderHeaderWidget"
+      },
+      "lora_1": {
+        "on": false,
+        "lora": "hunyuanvideo1.5_t2v_480p_lightx2v_4step_lora_rank_32_bf16.safetensors",
+        "strength": 1
+      },
+      "➕ Add Lora": "",
+      "model": [
+        "1",
+        0
+      ],
+      "clip": [
+        "3",
+        0
+      ]
+    },
+    "class_type": "Power Lora Loader (rgthree)",
+    "_meta": {
+      "title": "Power Lora Loader (rgthree)"
+    }
+  },
+  "7151": {
+    "inputs": {
+      "image": "C:\\Users\\Loopy\\Desktop\\ComfyUI_windows_portable\\ComfyUI\\output\\image_gen\\1_00001_.png",
+      "custom_width": 0,
+      "custom_height": 0
+    },
+    "class_type": "VHS_LoadImagePath",
+    "_meta": {
+      "title": "Load Image (Path) 🎥🅥🅗🅢"
+    }
+  },
+  "7153": {
+    "inputs": {
+      "frame_rate": 24,
+      "loop_count": 0,
+      "filename_prefix": "1",
+      "format": "video/nvenc_hevc-mp4",
+      "pix_fmt": "yuv420p",
+      "bitrate": 5,
+      "megabit": true,
+      "save_metadata": false,
+      "pingpong": false,
+      "save_output": true,
+      "images": [
+        "7152:55",
+        0
+      ]
+    },
+    "class_type": "VHS_VideoCombine",
+    "_meta": {
+      "title": "Video Combine 🎥🅥🅗🅢"
+    }
+  },
+  "7156": {
+    "inputs": {
+      "value": 480
+    },
+    "class_type": "INTConstant",
+    "_meta": {
+      "title": "Ширина"
+    }
+  },
+  "7157": {
+    "inputs": {
+      "value": 832
+    },
+    "class_type": "INTConstant",
+    "_meta": {
+      "title": "Высота"
+    }
+  },
+  "7152:66": {
+    "inputs": {
+      "crop": "center",
+      "clip_vision": [
+        "4",
+        0
+      ],
+      "image": [
+        "7151",
+        0
+      ]
+    },
+    "class_type": "CLIPVisionEncode",
+    "_meta": {
+      "title": "Кодирование видения CLIP"
+    }
+  },
+  "7152:54": {
+    "inputs": {
+      "add_noise": "enable",
+      "noise_seed": 42,
+      "steps": 12,
+      "cfg": 1,
+      "sampler_name": "euler",
+      "scheduler": "simple",
+      "start_at_step": 0,
+      "end_at_step": 10000,
+      "return_with_leftover_noise": "disable",
+      "model": [
+        "9",
+        0
+      ],
+      "positive": [
+        "7152:64",
+        0
+      ],
+      "negative": [
+        "7152:64",
+        1
+      ],
+      "latent_image": [
+        "7152:64",
+        2
+      ]
+    },
+    "class_type": "KSamplerAdvanced",
+    "_meta": {
+      "title": "KSampler (Расширенный)"
+    }
+  },
+  "7152:63": {
+    "inputs": {
+      "text": "Make image come alive with cinematic motion, smoth animation.",
+      "clip": [
+        "10",
+        1
+      ]
+    },
+    "class_type": "CLIPTextEncode",
+    "_meta": {
+      "title": "CLIP Text Encode (Positive Prompt)"
+    }
+  },
+  "7152:64": {
+    "inputs": {
+      "width": [
+        "7156",
+        0
+      ],
+      "height": [
+        "7157",
+        0
+      ],
+      "length": 121,
+      "batch_size": 1,
+      "positive": [
+        "7152:63",
+        0
+      ],
+      "negative": [
+        "7152:51",
+        0
+      ],
+      "vae": [
+        "6",
+        0
+      ],
+      "start_image": [
+        "7151",
+        0
+      ],
+      "clip_vision_output": [
+        "7152:66",
+        0
+      ]
+    },
+    "class_type": "HunyuanVideo15ImageToVideo",
+    "_meta": {
+      "title": "HunyuanVideo15ImageToVideo"
+    }
+  },
+  "7152:51": {
+    "inputs": {
+      "text": "low quality, blurry, low resolution, pixelated, distorted, out of focus, artifacts, overexposed, underexposed, washed-out lighting, color banding, AI artifacts, missing details, poor reflections, unrealistic lighting, plastic-looking surfaces, flickering lights, grainy shadows, wrong perspective, rendering glitches, deformed faces, uncanny expressions, unrealistic human motion, duplicate people, floating artifacts, clipping geometry, broken animation, unstable camera, jerky motion, frame stutter, ghosting, low frame rate, flat depth, bad contrast, bad proportions, warped architecture, inconsistent scale, low texture detail, poor ambient occlusion, flicker, noise, chromatic aberration, over-saturated highlights, shadow artifacts, incomplete rendering, compression noise, unnatural color balance, visual glitches",
+      "clip": [
+        "10",
+        1
+      ]
+    },
+    "class_type": "CLIPTextEncode",
+    "_meta": {
+      "title": "CLIP Text Encode (Negative Prompt)"
+    }
+  },
+  "7152:57": {
+    "inputs": {
+      "tile_size": 512,
+      "overlap": 64,
+      "temporal_size": 64,
+      "temporal_overlap": 8,
+      "samples": [
+        "7152:54",
+        0
+      ],
+      "vae": [
+        "6",
+        0
+      ]
+    },
+    "class_type": "VAEDecodeTiled",
+    "_meta": {
+      "title": "Декодировать VAE (плитками)"
+    }
+  },
+  "7152:55": {
+    "inputs": {
+      "samples": [
+        "7152:54",
+        0
+      ],
+      "vae": [
+        "6",
+        0
+      ]
+    },
+    "class_type": "VAEDecode",
+    "_meta": {
+      "title": "Декодировать VAE"
+    }
+  }
+}

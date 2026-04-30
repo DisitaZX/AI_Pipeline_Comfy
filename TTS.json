@@ -1,0 +1,45 @@
+{
+  "1": {
+    "inputs": {
+      "voice_name": "",
+      "custom_path": "C:\\Users\\Loopy\\Desktop\\ComfyUI_windows_portable\\ComfyUI\\output\\voice_adam.pt"
+    },
+    "class_type": "AILab_Qwen3TTSLoadVoice",
+    "_meta": {
+      "title": "Load Voice (QwenTTS)"
+    }
+  },
+  "2": {
+    "inputs": {
+      "target_text": "",
+      "model_size": "1.7B",
+      "language": "Russian",
+      "reference_text": "",
+      "x_vector_only": false,
+      "unload_models": true,
+      "seed": 309385264148780,
+      "voice": [
+        "1",
+        0
+      ]
+    },
+    "class_type": "AILab_Qwen3TTSVoiceClone",
+    "_meta": {
+      "title": "Voice Clone (QwenTTS)"
+    }
+  },
+  "3": {
+    "inputs": {
+      "filename_prefix": "AI_VIDEO\\1",
+      "audioUI": "/api/view?filename=1_00001_.flac&type=output&subfolder=AI_VIDEO&rand=0.24933113988435418",
+      "audio": [
+        "2",
+        0
+      ]
+    },
+    "class_type": "SaveAudio",
+    "_meta": {
+      "title": "Сохранить аудио"
+    }
+  }
+}

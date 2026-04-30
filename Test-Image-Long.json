@@ -1,0 +1,1028 @@
+{
+  "6": {
+    "inputs": {
+      "text": [
+        "166",
+        0
+      ],
+      "clip": [
+        "392",
+        1
+      ]
+    },
+    "class_type": "CLIPTextEncode",
+    "_meta": {
+      "title": "CLIP Text Encoder"
+    }
+  },
+  "9": {
+    "inputs": {
+      "filename_prefix": "ZImage/2026_04_11/ZI",
+      "images": [
+        "532",
+        0
+      ]
+    },
+    "class_type": "SaveImage",
+    "_meta": {
+      "title": "Сохранить изображение"
+    }
+  },
+  "31": {
+    "inputs": {
+      "string": [
+        "87",
+        0
+      ],
+      "find": "{$@}",
+      "replace": [
+        "385",
+        0
+      ]
+    },
+    "class_type": "StringReplace",
+    "_meta": {
+      "title": "STYLE INTEGRATOR"
+    }
+  },
+  "41": {
+    "inputs": {
+      "value": "YOUR CONTEXT:\nYou are a Japanese anime artist.\nYour Japanese animation includes an ominous atmosphere, clean lines. The artwork uses cool and dark tones along with dramatic lighting and shadows that create a somber, intense mood.\nYOUR DRAWING:\n{$@}"
+    },
+    "class_type": "PrimitiveStringMultiline",
+    "_meta": {
+      "title": "STYLE: Anime"
+    }
+  },
+  "50": {
+    "inputs": {
+      "add_noise": "enable",
+      "noise_seed": [
+        "307",
+        0
+      ],
+      "steps": 9,
+      "cfg": 1,
+      "sampler_name": "dpmpp_2m_sde",
+      "scheduler": "beta",
+      "start_at_step": 0,
+      "end_at_step": 10000,
+      "return_with_leftover_noise": "disable",
+      "positive": [
+        "54",
+        0
+      ],
+      "negative": [
+        "60",
+        0
+      ],
+      "latent_image": [
+        "56",
+        0
+      ]
+    },
+    "class_type": "KSamplerAdvanced",
+    "_meta": {
+      "title": "KSampler (Расширенный)"
+    }
+  },
+  "54": {
+    "inputs": {
+      "text": [
+        "575",
+        0
+      ]
+    },
+    "class_type": "CLIPTextEncode",
+    "_meta": {
+      "title": "CLIP Text Encode (Positive Prompt)"
+    }
+  },
+  "56": {
+    "inputs": {
+      "width": 944,
+      "height": 1408,
+      "batch_size": 1
+    },
+    "class_type": "EmptyLatentImage",
+    "_meta": {
+      "title": "Пустое латентное изображение"
+    }
+  },
+  "60": {
+    "inputs": {
+      "text": ""
+    },
+    "class_type": "CLIPTextEncode",
+    "_meta": {
+      "title": "Кодирование текста CLIP (Запрос)"
+    }
+  },
+  "68": {
+    "inputs": {
+      "sampler_name": "euler"
+    },
+    "class_type": "KSamplerSelect",
+    "_meta": {
+      "title": "Default Euler Sampler"
+    }
+  },
+  "87": {
+    "inputs": {
+      "any_10": [
+        "41",
+        0
+      ]
+    },
+    "class_type": "Any Switch (rgthree)",
+    "_meta": {
+      "title": "Any Switch (rgthree)"
+    }
+  },
+  "96": {
+    "inputs": {
+      "any_02": [
+        "68",
+        0
+      ]
+    },
+    "class_type": "Any Switch (rgthree)",
+    "_meta": {
+      "title": "Sampler Chooser"
+    }
+  },
+  "146": {
+    "inputs": {
+      "string": [
+        "31",
+        0
+      ],
+      "find": "{$spicy-content-with}",
+      "replace": ""
+    },
+    "class_type": "StringReplace",
+    "_meta": {
+      "title": "DEFAULT: No Spicy Inpact"
+    }
+  },
+  "151": {
+    "inputs": {
+      "any_02": [
+        "146",
+        0
+      ]
+    },
+    "class_type": "Any Switch (rgthree)",
+    "_meta": {
+      "title": "Chooser"
+    }
+  },
+  "165": {
+    "inputs": {
+      "output": "",
+      "source": [
+        "166",
+        0
+      ]
+    },
+    "class_type": "Display Any (rgthree)",
+    "_meta": {
+      "title": "FINAL TEXT VIEWER"
+    }
+  },
+  "166": {
+    "inputs": {
+      "string": [
+        "151",
+        0
+      ],
+      "find": "  ",
+      "replace": " "
+    },
+    "class_type": "StringReplace",
+    "_meta": {
+      "title": "Fix Double Spaces"
+    }
+  },
+  "180": {
+    "inputs": {
+      "pixels": [
+        "341",
+        0
+      ],
+      "vae": [
+        "574",
+        0
+      ]
+    },
+    "class_type": "VAEEncode",
+    "_meta": {
+      "title": "Кодировать VAE"
+    }
+  },
+  "181": {
+    "inputs": {
+      "add_noise": true,
+      "noise_seed": 969696,
+      "cfg": 1,
+      "model": [
+        "392",
+        0
+      ],
+      "positive": [
+        "6",
+        0
+      ],
+      "negative": [
+        "6",
+        0
+      ],
+      "sampler": [
+        "371",
+        0
+      ],
+      "sigmas": [
+        "346",
+        0
+      ],
+      "latent_image": [
+        "180",
+        0
+      ]
+    },
+    "class_type": "SamplerCustom",
+    "_meta": {
+      "title": "Пользовательский выборщик"
+    }
+  },
+  "189": {
+    "inputs": {
+      "step": 2,
+      "sigmas": [
+        "195",
+        0
+      ]
+    },
+    "class_type": "SplitSigmas",
+    "_meta": {
+      "title": "Разделить сигмы"
+    }
+  },
+  "195": {
+    "inputs": {
+      "steps": 5,
+      "sigma_max": 1,
+      "sigma_min": 0.2,
+      "rho": 0.7
+    },
+    "class_type": "KarrasScheduler",
+    "_meta": {
+      "title": "Karras Scheduler (sigmas)"
+    }
+  },
+  "243": {
+    "inputs": {
+      "value": 720
+    },
+    "class_type": "PrimitiveInt",
+    "_meta": {
+      "title": "Default Short Side"
+    }
+  },
+  "244": {
+    "inputs": {
+      "width": [
+        "536",
+        0
+      ],
+      "height": [
+        "537",
+        0
+      ],
+      "batch_size": [
+        "443",
+        0
+      ]
+    },
+    "class_type": "EmptySD3LatentImage",
+    "_meta": {
+      "title": "Пустой SD3LatentImage"
+    }
+  },
+  "248": {
+    "inputs": {
+      "value": 1280
+    },
+    "class_type": "PrimitiveInt",
+    "_meta": {
+      "title": "Default Long Side"
+    }
+  },
+  "249": {
+    "inputs": {
+      "any_02": [
+        "248",
+        0
+      ]
+    },
+    "class_type": "Any Switch (rgthree)",
+    "_meta": {
+      "title": "Long Side Chooser"
+    }
+  },
+  "279": {
+    "inputs": {
+      "add_noise": true,
+      "noise_seed": 696969,
+      "cfg": 1,
+      "model": [
+        "392",
+        0
+      ],
+      "positive": [
+        "6",
+        0
+      ],
+      "negative": [
+        "6",
+        0
+      ],
+      "sampler": [
+        "377",
+        0
+      ],
+      "sigmas": [
+        "189",
+        1
+      ],
+      "latent_image": [
+        "286",
+        0
+      ]
+    },
+    "class_type": "SamplerCustom",
+    "_meta": {
+      "title": "Пользовательский выборщик"
+    }
+  },
+  "286": {
+    "inputs": {
+      "add_noise": false,
+      "noise_seed": [
+        "307",
+        0
+      ],
+      "cfg": 1,
+      "model": [
+        "392",
+        0
+      ],
+      "positive": [
+        "6",
+        0
+      ],
+      "negative": [
+        "6",
+        0
+      ],
+      "sampler": [
+        "96",
+        0
+      ],
+      "sigmas": [
+        "316",
+        0
+      ],
+      "latent_image": [
+        "289",
+        0
+      ]
+    },
+    "class_type": "SamplerCustom",
+    "_meta": {
+      "title": "Пользовательский выборщик"
+    }
+  },
+  "289": {
+    "inputs": {
+      "add_noise": true,
+      "noise_seed": [
+        "307",
+        0
+      ],
+      "cfg": 1,
+      "model": [
+        "392",
+        0
+      ],
+      "positive": [
+        "6",
+        0
+      ],
+      "negative": [
+        "6",
+        0
+      ],
+      "sampler": [
+        "96",
+        0
+      ],
+      "sigmas": [
+        "325",
+        0
+      ],
+      "latent_image": [
+        "244",
+        0
+      ]
+    },
+    "class_type": "SamplerCustom",
+    "_meta": {
+      "title": "Пользовательский выборщик"
+    }
+  },
+  "307": {
+    "inputs": {
+      "value": 1
+    },
+    "class_type": "PrimitiveInt",
+    "_meta": {
+      "title": "SEED"
+    }
+  },
+  "316": {
+    "inputs": {
+      "any_02": [
+        "324",
+        0
+      ]
+    },
+    "class_type": "Any Switch (rgthree)",
+    "_meta": {
+      "title": "Low Sigmas Switcher"
+    }
+  },
+  "321": {
+    "inputs": {
+      "steps": 8,
+      "sigma_max": 0.99,
+      "sigma_min": 0.08,
+      "rho": 0.3
+    },
+    "class_type": "KarrasScheduler",
+    "_meta": {
+      "title": "Karras Scheduler 8-Steps"
+    }
+  },
+  "322": {
+    "inputs": {
+      "step": 2,
+      "sigmas": [
+        "321",
+        0
+      ]
+    },
+    "class_type": "SplitSigmas",
+    "_meta": {
+      "title": "Split Sigmas [2] + [6]"
+    }
+  },
+  "323": {
+    "inputs": {
+      "sigma": 0.906,
+      "sigmas": [
+        "322",
+        1
+      ]
+    },
+    "class_type": "SetFirstSigma",
+    "_meta": {
+      "title": "Set First Sigma"
+    }
+  },
+  "324": {
+    "inputs": {
+      "steps": 2,
+      "start_at_sigma": 1,
+      "end_at_sigma": 0.8,
+      "spacing": "linear",
+      "sigmas": [
+        "323",
+        0
+      ]
+    },
+    "class_type": "ExtendIntermediateSigmas",
+    "_meta": {
+      "title": "ExtendIntermediateSigmas"
+    }
+  },
+  "325": {
+    "inputs": {
+      "any_02": [
+        "322",
+        0
+      ]
+    },
+    "class_type": "Any Switch (rgthree)",
+    "_meta": {
+      "title": "High Sigmas Switcher"
+    }
+  },
+  "341": {
+    "inputs": {
+      "seed": 699669,
+      "strength": 0.04,
+      "image": [
+        "344",
+        0
+      ]
+    },
+    "class_type": "ImageAddNoise",
+    "_meta": {
+      "title": "Add Noise"
+    }
+  },
+  "344": {
+    "inputs": {
+      "measurement": "percentage",
+      "width": 150,
+      "height": 0,
+      "fit": "contain",
+      "method": "area",
+      "image": [
+        "522",
+        0
+      ]
+    },
+    "class_type": "Image Resize (rgthree)",
+    "_meta": {
+      "title": "Resize Image +50%"
+    }
+  },
+  "346": {
+    "inputs": {
+      "steps": 3,
+      "sigma_max": 0.17,
+      "sigma_min": 0.06,
+      "rho": 0.6
+    },
+    "class_type": "KarrasScheduler",
+    "_meta": {
+      "title": "Karras Scheduler (sigmas)"
+    }
+  },
+  "371": {
+    "inputs": {
+      "sampler_name": "euler"
+    },
+    "class_type": "KSamplerSelect",
+    "_meta": {
+      "title": "Default Euler Sampler"
+    }
+  },
+  "377": {
+    "inputs": {
+      "sampler_name": "euler"
+    },
+    "class_type": "KSamplerSelect",
+    "_meta": {
+      "title": "Default Euler Sampler"
+    }
+  },
+  "385": {
+    "inputs": {
+      "string": [
+        "575",
+        0
+      ],
+      "mode": "Both"
+    },
+    "class_type": "StringTrim",
+    "_meta": {
+      "title": "(used for reroute)"
+    }
+  },
+  "392": {
+    "inputs": {
+      "PowerLoraLoaderHeaderWidget": {
+        "type": "PowerLoraLoaderHeaderWidget"
+      },
+      "➕ Add Lora": "",
+      "model": [
+        "572",
+        0
+      ],
+      "clip": [
+        "573",
+        0
+      ]
+    },
+    "class_type": "Power Lora Loader (rgthree)",
+    "_meta": {
+      "title": "Power Lora Loader (rgthree)"
+    }
+  },
+  "443": {
+    "inputs": {
+      "value": 1
+    },
+    "class_type": "PrimitiveInt",
+    "_meta": {
+      "title": "Batch Size"
+    }
+  },
+  "471": {
+    "inputs": {
+      "sampler_name": "euler"
+    },
+    "class_type": "KSamplerSelect",
+    "_meta": {
+      "title": "Default Euler Sampler"
+    }
+  },
+  "475": {
+    "inputs": {
+      "add_noise": true,
+      "noise_seed": 969696,
+      "cfg": 1,
+      "model": [
+        "392",
+        0
+      ],
+      "positive": [
+        "6",
+        0
+      ],
+      "negative": [
+        "6",
+        0
+      ],
+      "sampler": [
+        "471",
+        0
+      ],
+      "sigmas": [
+        "488",
+        0
+      ],
+      "latent_image": [
+        "478",
+        0
+      ]
+    },
+    "class_type": "SamplerCustom",
+    "_meta": {
+      "title": "Пользовательский выборщик"
+    }
+  },
+  "478": {
+    "inputs": {
+      "pixels": [
+        "486",
+        0
+      ],
+      "vae": [
+        "574",
+        0
+      ]
+    },
+    "class_type": "VAEEncode",
+    "_meta": {
+      "title": "Кодировать VAE"
+    }
+  },
+  "482": {
+    "inputs": {
+      "upscale_model": [
+        "483",
+        0
+      ],
+      "image": [
+        "487",
+        0
+      ]
+    },
+    "class_type": "ImageUpscaleWithModel",
+    "_meta": {
+      "title": "Upscale Image *4"
+    }
+  },
+  "483": {
+    "inputs": {
+      "model_name": "4x_foolhardy_Remacri.safetensors"
+    },
+    "class_type": "UpscaleModelLoader",
+    "_meta": {
+      "title": "Загрузить модель апскейла"
+    }
+  },
+  "486": {
+    "inputs": {
+      "measurement": "percentage",
+      "width": 75,
+      "height": 0,
+      "fit": "contain",
+      "method": "area",
+      "image": [
+        "482",
+        0
+      ]
+    },
+    "class_type": "Image Resize (rgthree)",
+    "_meta": {
+      "title": "Resize Image 75*2 = 150%"
+    }
+  },
+  "487": {
+    "inputs": {
+      "measurement": "percentage",
+      "width": 50,
+      "height": 0,
+      "fit": "contain",
+      "method": "bilinear",
+      "image": [
+        "528",
+        0
+      ]
+    },
+    "class_type": "Image Resize (rgthree)",
+    "_meta": {
+      "title": "Resize Image 1/2"
+    }
+  },
+  "488": {
+    "inputs": {
+      "steps": 3,
+      "sigma_max": 0.22,
+      "sigma_min": 0.06,
+      "rho": 0.5
+    },
+    "class_type": "KarrasScheduler",
+    "_meta": {
+      "title": "Karras Scheduler (sigmas)"
+    }
+  },
+  "522": {
+    "inputs": {
+      "any_02": [
+        "526",
+        0
+      ]
+    },
+    "class_type": "Any Switch (rgthree)",
+    "_meta": {
+      "title": "Image Chooser"
+    }
+  },
+  "526": {
+    "inputs": {
+      "samples": [
+        "286",
+        0
+      ],
+      "vae": [
+        "574",
+        0
+      ]
+    },
+    "class_type": "VAEDecode",
+    "_meta": {
+      "title": "Декодировать VAE"
+    }
+  },
+  "528": {
+    "inputs": {
+      "samples": [
+        "286",
+        0
+      ],
+      "vae": [
+        "574",
+        0
+      ]
+    },
+    "class_type": "VAEDecode",
+    "_meta": {
+      "title": "Декодировать VAE"
+    }
+  },
+  "531": {
+    "inputs": {
+      "any_02": [
+        "540",
+        0
+      ]
+    },
+    "class_type": "Any Switch (rgthree)",
+    "_meta": {
+      "title": "\"ILLUSTRATION\" Artistic Mode"
+    }
+  },
+  "532": {
+    "inputs": {
+      "any_02": [
+        "531",
+        0
+      ]
+    },
+    "class_type": "Any Switch (rgthree)",
+    "_meta": {
+      "title": "Any Switch (rgthree)"
+    }
+  },
+  "534": {
+    "inputs": {
+      "any_02": [
+        "243",
+        0
+      ]
+    },
+    "class_type": "Any Switch (rgthree)",
+    "_meta": {
+      "title": "Short Side Chooser"
+    }
+  },
+  "536": {
+    "inputs": {
+      "any_02": [
+        "534",
+        0
+      ]
+    },
+    "class_type": "Any Switch (rgthree)",
+    "_meta": {
+      "title": "Width Long/Short Chooser"
+    }
+  },
+  "537": {
+    "inputs": {
+      "any_02": [
+        "249",
+        0
+      ]
+    },
+    "class_type": "Any Switch (rgthree)",
+    "_meta": {
+      "title": "Height Long/Short Chooser"
+    }
+  },
+  "540": {
+    "inputs": {
+      "any_02": [
+        "528",
+        0
+      ]
+    },
+    "class_type": "Any Switch (rgthree)",
+    "_meta": {
+      "title": "Image Chooser"
+    }
+  },
+  "545": {
+    "inputs": {
+      "model_name": "4x_foolhardy_Remacri.safetensors"
+    },
+    "class_type": "UpscaleModelLoader",
+    "_meta": {
+      "title": "Загрузить модель апскейла"
+    }
+  },
+  "546": {
+    "inputs": {
+      "measurement": "percentage",
+      "width": 50,
+      "height": 0,
+      "fit": "contain",
+      "method": "area",
+      "image": [
+        "528",
+        0
+      ]
+    },
+    "class_type": "Image Resize (rgthree)",
+    "_meta": {
+      "title": "Resize Image 1/2"
+    }
+  },
+  "547": {
+    "inputs": {
+      "upscale_model": [
+        "545",
+        0
+      ],
+      "image": [
+        "546",
+        0
+      ]
+    },
+    "class_type": "ImageUpscaleWithModel",
+    "_meta": {
+      "title": "Upscale Image *4"
+    }
+  },
+  "548": {
+    "inputs": {
+      "measurement": "percentage",
+      "width": 50,
+      "height": 0,
+      "fit": "contain",
+      "method": "area",
+      "image": [
+        "547",
+        0
+      ]
+    },
+    "class_type": "Image Resize (rgthree)",
+    "_meta": {
+      "title": "Resize Image 1/2"
+    }
+  },
+  "552": {
+    "inputs": {
+      "pixels": [
+        "548",
+        0
+      ],
+      "vae": [
+        "574",
+        0
+      ]
+    },
+    "class_type": "VAEEncode",
+    "_meta": {
+      "title": "Кодировать VAE"
+    }
+  },
+  "563": {
+    "inputs": {
+      "add_noise": "enable",
+      "noise_seed": 696969,
+      "steps": 20,
+      "cfg": 1,
+      "sampler_name": "euler",
+      "scheduler": "simple",
+      "start_at_step": 18,
+      "end_at_step": 20,
+      "return_with_leftover_noise": "disable",
+      "model": [
+        "392",
+        0
+      ],
+      "positive": [
+        "6",
+        0
+      ],
+      "negative": [
+        "6",
+        0
+      ],
+      "latent_image": [
+        "552",
+        0
+      ]
+    },
+    "class_type": "KSamplerAdvanced",
+    "_meta": {
+      "title": "KSampler (Расширенный)"
+    }
+  },
+  "572": {
+    "inputs": {
+      "unet_name": "z_image_turbo_bf16.safetensors",
+      "weight_dtype": "default"
+    },
+    "class_type": "UNETLoader",
+    "_meta": {
+      "title": "Загрузить модель диффузии"
+    }
+  },
+  "573": {
+    "inputs": {
+      "clip_name": "qwen_3_4b.safetensors",
+      "type": "lumina2",
+      "device": "default"
+    },
+    "class_type": "CLIPLoader",
+    "_meta": {
+      "title": "Загрузить CLIP"
+    }
+  },
+  "574": {
+    "inputs": {
+      "vae_name": "ae.safetensors"
+    },
+    "class_type": "VAELoader",
+    "_meta": {
+      "title": "Загрузить VAE"
+    }
+  },
+  "575": {
+    "inputs": {
+      "value": ""
+    },
+    "class_type": "PrimitiveStringMultiline",
+    "_meta": {
+      "title": "1"
+    }
+  }
+}

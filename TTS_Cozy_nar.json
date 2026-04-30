@@ -1,0 +1,47 @@
+{
+  "1": {
+    "inputs": {
+      "text": "Вот и славно, — с дежурной улыбкой произнесла менеджер по кадрам, убирая бумаги. — Желаю успехов в будущем. Чжан Вэй лишь холодно наблюдала со стороны, в её взгляде читалось облегчение от того, что она наконец избавилась от него, смешанное с неприкрытым презрением. Выйдя из переговорной, Линь Фэн увидел, что его личные вещи уже небрежно свалены в картонную коробку. ",
+      "speaker_preset": "nar",
+      "speed": 1,
+      "seed": 42,
+      "text_frontend": true,
+      "model": [
+        "2",
+        0
+      ]
+    },
+    "class_type": "FL_CosyVoice3_SpeakerClone",
+    "_meta": {
+      "title": "FL CosyVoice3 Speaker Clone"
+    }
+  },
+  "2": {
+    "inputs": {
+      "model_version": "Fun-CosyVoice3-0.5B",
+      "download_source": "HuggingFace",
+      "device": "auto",
+      "force_redownload": false,
+      "force_reload": false
+    },
+    "class_type": "FL_CosyVoice3_ModelLoader",
+    "_meta": {
+      "title": "FL CosyVoice3 Model Loader"
+    }
+  },
+  "3": {
+    "inputs": {
+      "filename_prefix": "AI_VIDEO/output",
+      "quality": "320k",
+      "audioUI": "",
+      "audio": [
+        "1",
+        0
+      ]
+    },
+    "class_type": "SaveAudioMP3",
+    "_meta": {
+      "title": "Сохранить аудио (MP3)"
+    }
+  }
+}
