@@ -1,0 +1,179 @@
+{
+  "60": {
+    "inputs": {
+      "filename_prefix": "Qwen-Image-2512",
+      "images": [
+        "270",
+        0
+      ]
+    },
+    "class_type": "SaveImage",
+    "_meta": {
+      "title": "Сохранить изображение"
+    }
+  },
+  "264": {
+    "inputs": {
+      "clip_name": "qwen_2.5_vl_7b_fp8_scaled.safetensors",
+      "type": "qwen_image",
+      "device": "default"
+    },
+    "class_type": "CLIPLoader",
+    "_meta": {
+      "title": "Загрузить CLIP"
+    }
+  },
+  "265": {
+    "inputs": {
+      "vae_name": "qwen_image_vae.safetensors"
+    },
+    "class_type": "VAELoader",
+    "_meta": {
+      "title": "Загрузить VAE"
+    }
+  },
+  "266": {
+    "inputs": {
+      "shift": 3.1,
+      "model": [
+        "278",
+        0
+      ]
+    },
+    "class_type": "ModelSamplingAuraFlow",
+    "_meta": {
+      "title": "Выборка модели AuraFlow"
+    }
+  },
+  "267": {
+    "inputs": {
+      "unet_name": "qwen-image-2512-fp8.safetensors",
+      "weight_dtype": "default"
+    },
+    "class_type": "UNETLoader",
+    "_meta": {
+      "title": "Загрузить модель диффузии"
+    }
+  },
+  "268": {
+    "inputs": {
+      "text": "A luxurious underground guest room with polished rare wood parquet floors, handmade leather sofas, floor-to-ceiling panoramic windows overlooking a calm artificial lake, soft morning sunlight streaming in casting golden patches on the floor, Pixar CGI Toon Style with warm soft lighting, detailed wood grain and leather texture, two single beds with rumpled dark sheets.",
+      "clip": [
+        "264",
+        0
+      ]
+    },
+    "class_type": "CLIPTextEncode",
+    "_meta": {
+      "title": "CLIP Text Encode (Positive Prompt)"
+    }
+  },
+  "269": {
+    "inputs": {
+      "text": "worst quality, inconsistent motion, blurry, jittery, distorted, watermark, morphing faces, fingers deformed, extra limbs, unnatural colors, flickering, ghosting, anime, manga, 2d animation, cel-shaded, hand-drawn, painterly, flat colors, sharp lineart, line art, watercolor, sketch, ink drawing, comic book style, blood",
+      "clip": [
+        "264",
+        0
+      ]
+    },
+    "class_type": "CLIPTextEncode",
+    "_meta": {
+      "title": "CLIP Text Encode (Negative Prompt)"
+    }
+  },
+  "270": {
+    "inputs": {
+      "samples": [
+        "272",
+        0
+      ],
+      "vae": [
+        "265",
+        0
+      ]
+    },
+    "class_type": "VAEDecode",
+    "_meta": {
+      "title": "Декодировать VAE"
+    }
+  },
+  "271": {
+    "inputs": {
+      "width": 1280,
+      "height": 720,
+      "batch_size": 1
+    },
+    "class_type": "EmptySD3LatentImage",
+    "_meta": {
+      "title": "Пустой SD3LatentImage"
+    }
+  },
+  "272": {
+    "inputs": {
+      "seed": 380340083657250,
+      "steps": [
+        "273",
+        0
+      ],
+      "cfg": [
+        "274",
+        0
+      ],
+      "sampler_name": "euler",
+      "scheduler": "simple",
+      "denoise": 1,
+      "model": [
+        "266",
+        0
+      ],
+      "positive": [
+        "268",
+        0
+      ],
+      "negative": [
+        "269",
+        0
+      ],
+      "latent_image": [
+        "271",
+        0
+      ]
+    },
+    "class_type": "KSampler",
+    "_meta": {
+      "title": "KSampler"
+    }
+  },
+  "273": {
+    "inputs": {
+      "value": 8
+    },
+    "class_type": "PrimitiveInt",
+    "_meta": {
+      "title": "Int (Steps)"
+    }
+  },
+  "274": {
+    "inputs": {
+      "value": 1
+    },
+    "class_type": "PrimitiveFloat",
+    "_meta": {
+      "title": "Float (CFG)"
+    }
+  },
+  "278": {
+    "inputs": {
+      "lora_name": "Qwen-Image-2512-Lightning-8steps-V1.0-bf16.safetensors",
+      "strength_model": 1,
+      "model": [
+        "267",
+        0
+      ]
+    },
+    "class_type": "LoraLoaderModelOnly",
+    "_meta": {
+      "title": "Загрузчик LoRA (Только модель)"
+    }
+  }
+}

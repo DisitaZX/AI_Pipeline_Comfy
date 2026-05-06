@@ -177,9 +177,9 @@
   "670": {
     "inputs": {
       "lora_name": "SVI_v2_PRO_Wan2.2-I2V-A14B_HIGH_lora_rank_128_fp16.safetensors",
-      "strength_model": 1.0000000000000002,
+      "strength_model": 1,
       "model": [
-        "666",
+        "703",
         0
       ]
     },
@@ -191,9 +191,9 @@
   "671": {
     "inputs": {
       "lora_name": "SVI_v2_PRO_Wan2.2-I2V-A14B_LOW_lora_rank_128_fp16.safetensors",
-      "strength_model": 1.0000000000000002,
+      "strength_model": 1,
       "model": [
-        "667",
+        "704",
         0
       ]
     },
@@ -224,7 +224,7 @@
   },
   "696": {
     "inputs": {
-      "unet_name": "wan2.2_i2v_A14b_high_noise_scaled_fp8_e4m3_lightx2v_4step_comfyui_720p_260412.safetensors",
+      "unet_name": "wan2.2_i2v_high_noise_14B_fp8_scaled.safetensors",
       "weight_dtype": "default"
     },
     "class_type": "UNETLoader",
@@ -234,7 +234,7 @@
   },
   "697": {
     "inputs": {
-      "unet_name": "wan2.2_i2v_A14b_low_noise_scaled_fp8_e4m3_lightx2v_4step_comfyui_720p_260412.safetensors",
+      "unet_name": "wan2.2_i2v_low_noise_14B_fp8_scaled.safetensors",
       "weight_dtype": "default"
     },
     "class_type": "UNETLoader",
@@ -271,6 +271,91 @@
       "title": "Load Image (Path) 🎥🅥🅗🅢"
     }
   },
+  "703": {
+    "inputs": {
+      "lora_name": "Wan_2_2_I2V_A14B_HIGH_lightx2v_4step_lora_260412_rank_256_fp16.safetensors",
+      "strength_model": 1.2,
+      "model": [
+        "666",
+        0
+      ]
+    },
+    "class_type": "LoraLoaderModelOnly",
+    "_meta": {
+      "title": "HIGH LORA 1"
+    }
+  },
+  "704": {
+    "inputs": {
+      "lora_name": "Wan_2_2_I2V_A14B_LOW_lightx2v_4step_lora_260412_rank_256_fp16.safetensors",
+      "strength_model": 1,
+      "model": [
+        "667",
+        0
+      ]
+    },
+    "class_type": "LoraLoaderModelOnly",
+    "_meta": {
+      "title": "LOW LORA 1"
+    }
+  },
+  "623:299": {
+    "inputs": {
+      "sampler_name": "euler"
+    },
+    "class_type": "KSamplerSelect",
+    "_meta": {
+      "title": "Выбор KSampler"
+    }
+  },
+  "623:601": {
+    "inputs": {},
+    "class_type": "DisableNoise",
+    "_meta": {
+      "title": "Отключить шум"
+    }
+  },
+  "623:599": {
+    "inputs": {
+      "noise_seed": 42
+    },
+    "class_type": "RandomNoise",
+    "_meta": {
+      "title": "Случайный шум"
+    }
+  },
+  "336:332": {
+    "inputs": {
+      "noise_seed": 43
+    },
+    "class_type": "RandomNoise",
+    "_meta": {
+      "title": "Случайный шум"
+    }
+  },
+  "336:325": {
+    "inputs": {},
+    "class_type": "DisableNoise",
+    "_meta": {
+      "title": "Отключить шум"
+    }
+  },
+  "644:677": {
+    "inputs": {
+      "noise_seed": 44
+    },
+    "class_type": "RandomNoise",
+    "_meta": {
+      "title": "Случайный шум"
+    }
+  },
+  "644:680": {
+    "inputs": {},
+    "class_type": "DisableNoise",
+    "_meta": {
+      "title": "Отключить шум"
+    }
+  },
   "623:596": {
     "inputs": {
       "text": "The camera slowly dollies forward, focusing on the tired young man who sighs deeply, his shoulders drooping with visible exhaustion. The large blue system interface flickers intermittently, displaying faint error lights and glitching text as dust motes drift through the shaft of light.",
@@ -297,44 +382,56 @@
       "title": "Кодирование текста CLIP (Запрос)"
     }
   },
-  "623:299": {
+  "336:334": {
     "inputs": {
-      "sampler_name": "euler"
-    },
-    "class_type": "KSamplerSelect",
-    "_meta": {
-      "title": "Выбор KSampler"
-    }
-  },
-  "623:297": {
-    "inputs": {
-      "shift": 8,
-      "model": [
-        "670",
+      "text": "The camera continues its slow dolly forward, capturing the subtle slump of the character's posture. The system interface flickers more intensely, displaying rapid bursts of error messages and momentarily distorting the text. The young man shifts slightly in his chair, rubbing his eyes with a weary hand.",
+      "clip": [
+        "672",
         0
       ]
     },
-    "class_type": "ModelSamplingSD3",
+    "class_type": "CLIPTextEncode",
     "_meta": {
-      "title": "Выборка модели SD3"
+      "title": "Кодирование текста CLIP (Запрос)"
     }
   },
-  "623:298": {
+  "336:335": {
     "inputs": {
-      "scheduler": "simple",
-      "steps": [
-        "609",
-        0
-      ],
-      "denoise": 1,
-      "model": [
-        "623:297",
+      "text": "Bright, oversaturated tones; overexposed; static; unclear or blurry details; subtitles; painting or image; still/frozen frame; overall grayish appearance; worst quality; low quality; JPEG artifacts; ugly; incomplete or damaged; extra fingers; poorly drawn hands; poorly drawn face; deformed; disfigured; malformed limbs; fused fingers; motionless/still image; messy/cluttered background; three legs; many people in the background; walking backwards.",
+      "clip": [
+        "672",
         0
       ]
     },
-    "class_type": "BasicScheduler",
+    "class_type": "CLIPTextEncode",
     "_meta": {
-      "title": "Основной scheduler"
+      "title": "Кодирование текста CLIP (Запрос)"
+    }
+  },
+  "644:675": {
+    "inputs": {
+      "text": "The warrior cat holds a sword above his head. The blade of the sword lights up with a red flame. A column of red flame bursts out of the sword and quickly rushes into the sky. The camera turns to show dark clouds and a fierce column of flame rushing into them.",
+      "clip": [
+        "672",
+        0
+      ]
+    },
+    "class_type": "CLIPTextEncode",
+    "_meta": {
+      "title": "Кодирование текста CLIP (Запрос)"
+    }
+  },
+  "644:676": {
+    "inputs": {
+      "text": "Bright, oversaturated tones; overexposed; static; unclear or blurry details; subtitles; painting or image; still/frozen frame; overall grayish appearance; worst quality; low quality; JPEG artifacts; ugly; incomplete or damaged; extra fingers; poorly drawn hands; poorly drawn face; deformed; disfigured; malformed limbs; fused fingers; motionless/still image; messy/cluttered background; three legs; many people in the background; walking backwards.",
+      "clip": [
+        "672",
+        0
+      ]
+    },
+    "class_type": "CLIPTextEncode",
+    "_meta": {
+      "title": "Кодирование текста CLIP (Запрос)"
     }
   },
   "623:595": {
@@ -362,6 +459,19 @@
       "title": "WanImageToVideoSVIPro"
     }
   },
+  "623:297": {
+    "inputs": {
+      "shift": 8,
+      "model": [
+        "670",
+        0
+      ]
+    },
+    "class_type": "ModelSamplingSD3",
+    "_meta": {
+      "title": "Выборка модели SD3"
+    }
+  },
   "623:597": {
     "inputs": {
       "cfg": 1,
@@ -383,6 +493,47 @@
     "class_type": "ScheduledCFGGuidance",
     "_meta": {
       "title": "Scheduled CFG Guidance"
+    }
+  },
+  "623:602": {
+    "inputs": {
+      "cfg": 1,
+      "start_percent": 0,
+      "end_percent": 1,
+      "model": [
+        "671",
+        0
+      ],
+      "positive": [
+        "623:595",
+        0
+      ],
+      "negative": [
+        "623:595",
+        1
+      ]
+    },
+    "class_type": "ScheduledCFGGuidance",
+    "_meta": {
+      "title": "Scheduled CFG Guidance"
+    }
+  },
+  "623:298": {
+    "inputs": {
+      "scheduler": "simple",
+      "steps": [
+        "609",
+        0
+      ],
+      "denoise": 1,
+      "model": [
+        "623:297",
+        0
+      ]
+    },
+    "class_type": "BasicScheduler",
+    "_meta": {
+      "title": "Основной scheduler"
     }
   },
   "623:128": {
@@ -429,36 +580,6 @@
       "title": "Пользовательский сэмплер (Расширенный)"
     }
   },
-  "623:601": {
-    "inputs": {},
-    "class_type": "DisableNoise",
-    "_meta": {
-      "title": "Отключить шум"
-    }
-  },
-  "623:602": {
-    "inputs": {
-      "cfg": 1,
-      "start_percent": 0,
-      "end_percent": 1,
-      "model": [
-        "671",
-        0
-      ],
-      "positive": [
-        "623:595",
-        0
-      ],
-      "negative": [
-        "623:595",
-        1
-      ]
-    },
-    "class_type": "ScheduledCFGGuidance",
-    "_meta": {
-      "title": "Scheduled CFG Guidance"
-    }
-  },
   "623:604": {
     "inputs": {
       "noise": [
@@ -503,73 +624,6 @@
       "title": "Декодировать VAE"
     }
   },
-  "623:599": {
-    "inputs": {
-      "noise_seed": 42
-    },
-    "class_type": "RandomNoise",
-    "_meta": {
-      "title": "Случайный шум"
-    }
-  },
-  "336:330": {
-    "inputs": {
-      "cfg": 1,
-      "start_percent": 0,
-      "end_percent": 1,
-      "model": [
-        "670",
-        0
-      ],
-      "positive": [
-        "336:333",
-        0
-      ],
-      "negative": [
-        "336:333",
-        1
-      ]
-    },
-    "class_type": "ScheduledCFGGuidance",
-    "_meta": {
-      "title": "Scheduled CFG Guidance"
-    }
-  },
-  "336:334": {
-    "inputs": {
-      "text": "The camera continues its slow dolly forward, capturing the subtle slump of the character's posture. The system interface flickers more intensely, displaying rapid bursts of error messages and momentarily distorting the text. The young man shifts slightly in his chair, rubbing his eyes with a weary hand.",
-      "clip": [
-        "672",
-        0
-      ]
-    },
-    "class_type": "CLIPTextEncode",
-    "_meta": {
-      "title": "Кодирование текста CLIP (Запрос)"
-    }
-  },
-  "336:335": {
-    "inputs": {
-      "text": "Bright, oversaturated tones; overexposed; static; unclear or blurry details; subtitles; painting or image; still/frozen frame; overall grayish appearance; worst quality; low quality; JPEG artifacts; ugly; incomplete or damaged; extra fingers; poorly drawn hands; poorly drawn face; deformed; disfigured; malformed limbs; fused fingers; motionless/still image; messy/cluttered background; three legs; many people in the background; walking backwards.",
-      "clip": [
-        "672",
-        0
-      ]
-    },
-    "class_type": "CLIPTextEncode",
-    "_meta": {
-      "title": "Кодирование текста CLIP (Запрос)"
-    }
-  },
-  "336:332": {
-    "inputs": {
-      "noise_seed": 43
-    },
-    "class_type": "RandomNoise",
-    "_meta": {
-      "title": "Случайный шум"
-    }
-  },
   "336:333": {
     "inputs": {
       "length": [
@@ -597,6 +651,52 @@
     "class_type": "WanImageToVideoSVIPro",
     "_meta": {
       "title": "WanImageToVideoSVIPro"
+    }
+  },
+  "336:330": {
+    "inputs": {
+      "cfg": 1,
+      "start_percent": 0,
+      "end_percent": 1,
+      "model": [
+        "670",
+        0
+      ],
+      "positive": [
+        "336:333",
+        0
+      ],
+      "negative": [
+        "336:333",
+        1
+      ]
+    },
+    "class_type": "ScheduledCFGGuidance",
+    "_meta": {
+      "title": "Scheduled CFG Guidance"
+    }
+  },
+  "336:331": {
+    "inputs": {
+      "cfg": 1,
+      "start_percent": 0,
+      "end_percent": 1,
+      "model": [
+        "671",
+        0
+      ],
+      "positive": [
+        "336:333",
+        0
+      ],
+      "negative": [
+        "336:333",
+        1
+      ]
+    },
+    "class_type": "ScheduledCFGGuidance",
+    "_meta": {
+      "title": "Scheduled CFG Guidance"
     }
   },
   "336:326": {
@@ -627,36 +727,6 @@
       "title": "Пользовательский сэмплер (Расширенный)"
     }
   },
-  "336:325": {
-    "inputs": {},
-    "class_type": "DisableNoise",
-    "_meta": {
-      "title": "Отключить шум"
-    }
-  },
-  "336:331": {
-    "inputs": {
-      "cfg": 1,
-      "start_percent": 0,
-      "end_percent": 1,
-      "model": [
-        "671",
-        0
-      ],
-      "positive": [
-        "336:333",
-        0
-      ],
-      "negative": [
-        "336:333",
-        1
-      ]
-    },
-    "class_type": "ScheduledCFGGuidance",
-    "_meta": {
-      "title": "Scheduled CFG Guidance"
-    }
-  },
   "336:327": {
     "inputs": {
       "noise": [
@@ -685,25 +755,6 @@
       "title": "Пользовательский сэмплер (Расширенный)"
     }
   },
-  "336:329": {
-    "inputs": {
-      "overlap": 5,
-      "overlap_side": "source",
-      "overlap_mode": "linear_blend",
-      "source_images": [
-        "623:600",
-        0
-      ],
-      "new_images": [
-        "336:328",
-        0
-      ]
-    },
-    "class_type": "ImageBatchExtendWithOverlap",
-    "_meta": {
-      "title": "Image Batch Extend With Overlap"
-    }
-  },
   "336:328": {
     "inputs": {
       "samples": [
@@ -718,64 +769,6 @@
     "class_type": "VAEDecode",
     "_meta": {
       "title": "Декодировать VAE"
-    }
-  },
-  "644:674": {
-    "inputs": {
-      "cfg": 1,
-      "start_percent": 0,
-      "end_percent": 1,
-      "model": [
-        "670",
-        0
-      ],
-      "positive": [
-        "644:678",
-        0
-      ],
-      "negative": [
-        "644:678",
-        1
-      ]
-    },
-    "class_type": "ScheduledCFGGuidance",
-    "_meta": {
-      "title": "Scheduled CFG Guidance"
-    }
-  },
-  "644:675": {
-    "inputs": {
-      "text": "The warrior cat holds a sword above his head. The blade of the sword lights up with a red flame. A column of red flame bursts out of the sword and quickly rushes into the sky. The camera turns to show dark clouds and a fierce column of flame rushing into them.",
-      "clip": [
-        "672",
-        0
-      ]
-    },
-    "class_type": "CLIPTextEncode",
-    "_meta": {
-      "title": "Кодирование текста CLIP (Запрос)"
-    }
-  },
-  "644:676": {
-    "inputs": {
-      "text": "Bright, oversaturated tones; overexposed; static; unclear or blurry details; subtitles; painting or image; still/frozen frame; overall grayish appearance; worst quality; low quality; JPEG artifacts; ugly; incomplete or damaged; extra fingers; poorly drawn hands; poorly drawn face; deformed; disfigured; malformed limbs; fused fingers; motionless/still image; messy/cluttered background; three legs; many people in the background; walking backwards.",
-      "clip": [
-        "672",
-        0
-      ]
-    },
-    "class_type": "CLIPTextEncode",
-    "_meta": {
-      "title": "Кодирование текста CLIP (Запрос)"
-    }
-  },
-  "644:677": {
-    "inputs": {
-      "noise_seed": 44
-    },
-    "class_type": "RandomNoise",
-    "_meta": {
-      "title": "Случайный шум"
     }
   },
   "644:678": {
@@ -807,6 +800,71 @@
       "title": "WanImageToVideoSVIPro"
     }
   },
+  "336:329": {
+    "inputs": {
+      "overlap": 5,
+      "overlap_side": "source",
+      "overlap_mode": "linear_blend",
+      "source_images": [
+        "623:600",
+        0
+      ],
+      "new_images": [
+        "336:328",
+        0
+      ]
+    },
+    "class_type": "ImageBatchExtendWithOverlap",
+    "_meta": {
+      "title": "Image Batch Extend With Overlap"
+    }
+  },
+  "644:674": {
+    "inputs": {
+      "cfg": 1,
+      "start_percent": 0,
+      "end_percent": 1,
+      "model": [
+        "670",
+        0
+      ],
+      "positive": [
+        "644:678",
+        0
+      ],
+      "negative": [
+        "644:678",
+        1
+      ]
+    },
+    "class_type": "ScheduledCFGGuidance",
+    "_meta": {
+      "title": "Scheduled CFG Guidance"
+    }
+  },
+  "644:681": {
+    "inputs": {
+      "cfg": 1,
+      "start_percent": 0,
+      "end_percent": 1,
+      "model": [
+        "671",
+        0
+      ],
+      "positive": [
+        "644:678",
+        0
+      ],
+      "negative": [
+        "644:678",
+        1
+      ]
+    },
+    "class_type": "ScheduledCFGGuidance",
+    "_meta": {
+      "title": "Scheduled CFG Guidance"
+    }
+  },
   "644:679": {
     "inputs": {
       "noise": [
@@ -833,36 +891,6 @@
     "class_type": "SamplerCustomAdvanced",
     "_meta": {
       "title": "Пользовательский сэмплер (Расширенный)"
-    }
-  },
-  "644:680": {
-    "inputs": {},
-    "class_type": "DisableNoise",
-    "_meta": {
-      "title": "Отключить шум"
-    }
-  },
-  "644:681": {
-    "inputs": {
-      "cfg": 1,
-      "start_percent": 0,
-      "end_percent": 1,
-      "model": [
-        "671",
-        0
-      ],
-      "positive": [
-        "644:678",
-        0
-      ],
-      "negative": [
-        "644:678",
-        1
-      ]
-    },
-    "class_type": "ScheduledCFGGuidance",
-    "_meta": {
-      "title": "Scheduled CFG Guidance"
     }
   },
   "644:682": {
@@ -893,6 +921,22 @@
       "title": "Пользовательский сэмплер (Расширенный)"
     }
   },
+  "644:684": {
+    "inputs": {
+      "samples": [
+        "644:682",
+        0
+      ],
+      "vae": [
+        "673",
+        0
+      ]
+    },
+    "class_type": "VAEDecode",
+    "_meta": {
+      "title": "Декодировать VAE"
+    }
+  },
   "644:683": {
     "inputs": {
       "overlap": 5,
@@ -910,22 +954,6 @@
     "class_type": "ImageBatchExtendWithOverlap",
     "_meta": {
       "title": "Image Batch Extend With Overlap"
-    }
-  },
-  "644:684": {
-    "inputs": {
-      "samples": [
-        "644:682",
-        0
-      ],
-      "vae": [
-        "673",
-        0
-      ]
-    },
-    "class_type": "VAEDecode",
-    "_meta": {
-      "title": "Декодировать VAE"
     }
   }
 }

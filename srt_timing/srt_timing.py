@@ -53,7 +53,7 @@ class SRTSceneTimeline:
 
         return found
 
-    def build(self, srt_text, target_texts, fps=16, max_overlap_sec=0.0, seed=0):
+    def build(self, srt_text, target_texts, fps=24, max_overlap_sec=0.0, seed=0):
 
         random.seed(seed)
 

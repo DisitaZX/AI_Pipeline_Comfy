@@ -257,13 +257,13 @@ async def main():
         workflow_vid = json.load(f)
 
     # --- ЭТАП 2: Аудио ---
-    """print("\n2. Запускаем генерацию TTS ...")
+    print("\n2. Запускаем генерацию TTS ...")
     tts_node_id = "1"
     workflow_tts[tts_node_id]["inputs"]["text"] = plan["tts_text"]
 
     prompt_id_tts = await comfy.queue_prompt(workflow_tts)
     audio_files = await comfy.wait_for_execution(prompt_id_tts)
-    print(f"Аудио сгенерировано: {audio_files[0] if audio_files else 'Ошибка'}")"""
+    print(f"Аудио сгенерировано: {audio_files[0] if audio_files else 'Ошибка'}")
 
     # ! AENEAS !
     command = [
@@ -338,7 +338,7 @@ async def main():
     fragments_to_ass("map_words.json", "subs.ass")
 
     # генерация base
-    """for i, scene in enumerate(plan["base_prompts"]):
+    for i, scene in enumerate(plan["base_prompts"]):
         print(f"\n--- Обработка base prompt {i + 1} ---")
         # 1. Генерируем изображение
 
@@ -359,7 +359,7 @@ async def main():
         generated_image_name = img_files[0]
         print(f"Изображение готово: {generated_image_name}")
 
-    await comfy_mgr.restart()"""
+    await comfy_mgr.restart()
 
     last_frame_per_thread: dict[str, str] = {}
     REFS_DIR = r"C:\Users\Loopy\Desktop\ComfyUI_windows_portable\ComfyUI\output\base_image_gen"
@@ -380,7 +380,7 @@ async def main():
         # 1. Генерируем изображение
         print(f"Генерация изображения {i + 1}")
         sid = scene["scene_id"]
-        entities = scene.get("entities", [])
+        entities = scene.get("used_entities", scene.get("entities", []))
         thread_id = scene.get("thread_id", f"_scene_{sid}")
 
         # Берём готовый expanded prompt из batch'а — без Ollama-вызова.
@@ -555,10 +555,30 @@ async def main():
 
     stdout, stderr = await process.communicate()
 
+    command = [
+        "ffmpeg", "-y",
+        "-i", "video.mp4",
+        "-vf", "scale=720:405:flags=lanczos,setsar=1,pad=720:1280:0:437:color=black",
+        "-c:v", "libx264",
+        "-crf", "18",
+        "-pix_fmt", "yuv420p",
+        "-c:a", "copy",
+        "output_9x16.mp4",
+    ]
+
+    process = await asyncio.create_subprocess_exec(
+        *command,
+        stdout=asyncio.subprocess.PIPE,
+        stderr=asyncio.subprocess.PIPE,
+        cwd=target_dir
+    )
+
+    stdout, stderr = await process.communicate()
+
     # ! SUBTITLES BURN-IN !
 
     command = [
-        "ffmpeg", "-i", "video.mp4", "-vf", "ass=subs.ass",
+        "ffmpeg", "-i", "output_9x16.mp4", "-vf", "ass=subs.ass",
         "-c:a", "copy", "video_with_subs.mp4"
     ]
 

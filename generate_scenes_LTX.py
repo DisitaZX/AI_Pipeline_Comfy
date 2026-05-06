@@ -16,6 +16,7 @@ import base64
 import re
 import torch
 import sys
+import copy
 sys.path.append("./")
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, BASE_DIR)
@@ -23,11 +24,74 @@ from srt_timing.srt_timing import SRTSceneTimeline
 from comics.animator import ImagePanner
 from srt.ass_encode import fragments_to_ass
 from comfy_manager import ComfyManager
-from chunk_prompts import split_into_chunks, get_chunk_prompts_from_ollama, get_image_prompt_from_ollama
-from rife_interp import rife_interpolate_inplace
+from chunk_prompts_2 import (split_into_chunks, get_chunk_prompts_from_ollama,
+                           substitute_entities_to_image_slots, expand_image_prompt_for_qwen_edit,
+                           precompute_all_image_prompts, get_video_prompt_for_ltx_from_ollama, round_to_valid_frames_ltx, pick_camera_preset)
+from prompt_builder import build_qwen_edit_prompt
 
 OLLAMA_URL = "http://localhost:11434/api/generate"
 COMFYUI_URL = "127.0.0.1:8188"
+
+def patch_flux2_edit_workflow(
+    workflow: dict,
+    image_paths: list[str],          # 1..5 absolute paths, ordered like [image 1..N]
+    positive_prompt: str,
+    filename_prefix: str,
+    negative_prompt: str | None = None,  # None → не трогаем хардкод в ноде 143
+    width: int = 1280,
+    height: int = 720,
+    seed: int | None = None,
+    ) -> dict:
+    """
+    Патчит flux2-klein-edit.json под текущую сцену.
+
+    FLUX.2 Klein использует chained ReferenceLatent: positive- и negative-
+    conditioning поочерёдно "обвешиваются" reference-латентами для каждой
+    image. Точка съёма для CFGGuider зависит от количества reference'ов
+    (см. таблицу _CFG_ENDPOINTS_BY_N ниже). Неиспользуемые звенья цепочки
+    становятся unreachable от output-ноды 94 и ComfyUI их не выполнит.
+    """
+    wf = copy.deepcopy(workflow)
+    n = len(image_paths)
+    if not 1 <= n <= 5:
+        raise ValueError(f"image_paths должен иметь 1..5 элементов, got {n}")
+
+    # VHS_LoadImagePath ноды в порядке image1..image5
+    loader_nodes = ["160", "161", "162", "163", "171"]
+    for i, path in enumerate(image_paths):
+        wf[loader_nodes[i]]["inputs"]["image"] = path
+
+    # CFGGuider 144 цепляется к нужному звену ReferenceLatent цепочки
+    cfg_endpoints_by_n = {
+        1: ("148", "146"),
+        2: ("151", "149"),
+        3: ("155", "154"),
+        4: ("158", "156"),
+        5: ("169", "170"),
+    }
+    pos_node, neg_node = cfg_endpoints_by_n[n]
+    wf["144"]["inputs"]["positive"] = [pos_node, 0]
+    wf["144"]["inputs"]["negative"] = [neg_node, 0]
+
+    # промпты (CLIPTextEncode)
+    wf["142"]["inputs"]["text"] = positive_prompt
+    if negative_prompt is not None:
+        wf["143"]["inputs"]["text"] = negative_prompt
+
+    # выход
+    wf["94"]["inputs"]["filename_prefix"] = filename_prefix
+
+    # размеры — в EmptyFlux2LatentImage (138) и в Flux2Scheduler (145)
+    wf["138"]["inputs"]["width"] = width
+    wf["138"]["inputs"]["height"] = height
+    wf["145"]["inputs"]["width"] = width
+    wf["145"]["inputs"]["height"] = height
+
+    # seed (RandomNoise)
+    if seed is not None:
+        wf["134"]["inputs"]["noise_seed"] = seed
+
+    return wf
 
 def set_chunk_count(workflow: dict, n_chunks: int) -> dict:
     """
@@ -210,9 +274,11 @@ async def main():
     # Загружаем шаблоны (предварительно сохраненные через "Save (API Format)" в ComfyUI)
     with open('TTS_Cozy.json', 'r', encoding='utf-8') as f:
         workflow_tts = json.load(f)
-    with open('Test-Image-Long.json', 'r', encoding='utf-8') as f:
+    with open('image_qwen_Image_2512.json', 'r', encoding='utf-8') as f:
         workflow_img = json.load(f)
-    with open('VID_WAN.json', 'r', encoding='utf-8') as f:
+    with open('flux2-klein-edit.json', 'r', encoding='utf-8') as f:
+        workflow_flux2 = json.load(f)
+    with open('VID_LTX.json', 'r', encoding='utf-8') as f:
         workflow_vid = json.load(f)
 
     # --- ЭТАП 2: Аудио ---
@@ -296,39 +362,73 @@ async def main():
 
     fragments_to_ass("map_words.json", "subs.ass")
 
-    # --- ЭТАП 2 и 3: Изображения и Видео ---
-    """for i, scene in enumerate(plan["scenes"]):
-        print(f"\n--- Обработка сцены {scene['scene_id']} ---")
+    # генерация base
+    """for i, scene in enumerate(plan["base_prompts"]):
+        print(f"\n--- Обработка base prompt {i + 1} ---")
         # 1. Генерируем изображение
-        print(f"Генерация изображения {i + 1}")
-        source_prompt = scene["image_prompt"]
-        for n in plan["base_prompts"]:
-            source_prompt = source_prompt.replace(f"[{n['base_name']}]", n["base_prompt"])
 
-        image_result = await get_image_prompt_from_ollama(
-            source_prompt=source_prompt,
-            previous_recap=scene["previous_recap"],
-        )
-        full_prompt = image_result["prompt"]
-        negative_prompt = image_result["negative_prompt"]
+        full_prompt = scene["base_prompt"]
         print(full_prompt)
 
-        img_prompt_node_id = "575"
-        img_seed = "307"
-        workflow_img[img_seed]["inputs"]["value"] = f"{secrets.randbelow(2 ** 32)}"
-        workflow_img[img_prompt_node_id]["inputs"]["value"] = full_prompt
-        workflow_img["9"]["inputs"]["filename_prefix"] = f"image_gen/{i + 1}"
+        workflow_img["272"]["inputs"]["seed"] = f"{secrets.randbelow(2 ** 32)}"
+        workflow_img["268"]["inputs"]["text"] = full_prompt
+        workflow_img["60"]["inputs"]["filename_prefix"] = f"base_image_gen/{scene["base_name"]}"
 
-        workflow_img["243"]["inputs"]["value"] = 720
-        workflow_img["248"]["inputs"]["value"] = 1280
+        workflow_img["271"]["inputs"]["width"] = 1280
+        workflow_img["271"]["inputs"]["height"] = 720
 
         prompt_id_img = await comfy.queue_prompt(workflow_img)
         img_files = await comfy.wait_for_execution(prompt_id_img)
         generated_image_name = img_files[0]
-        print(f"Изображение готово: {generated_image_name}")"""
+        print(f"Изображение готово: {generated_image_name}")
 
-    await unload_ollama_model()
-    await comfy_mgr.restart()
+    await comfy_mgr.restart()"""
+
+    REFS_DIR = r"C:\Users\Loopy\Desktop\ComfyUI_windows_portable\ComfyUI\output\base_image_gen"
+    GEN_IMG_DIR = r"C:\Users\Loopy\Desktop\ComfyUI_windows_portable\ComfyUI\output\image_gen"
+
+    """"# --- ЭТАП 1.5: Batch-прогон Gemma по всем сценам ДО загрузки Qwen Edit ---
+    # Иначе Comfy выжирает RAM и Ollama падает с OOM на второй сцене.
+    print("\n=== Pre-batch: image prompts через Gemma ===")
+    precomputed_image_prompts = await precompute_all_image_prompts(
+        scenes=plan["scenes"],
+    )
+
+    await unload_ollama_model()"""
+
+    base_prompts_by_name = {bp["base_name"]: bp for bp in plan.get("base_prompts", [])}
+    # --- ЭТАП 2 и 3: Изображения и Видео ---
+    for i, scene in enumerate(plan["scenes"]):
+        print(f"\n--- Обработка сцены {scene['scene_id']} ---")
+        # 1. Генерируем изображение
+        print(f"Генерация изображения {i + 1}")
+        camera_preset = pick_camera_preset(i)  # 0-based, как в chunk_prompts_2
+        final_prompt, entities = build_qwen_edit_prompt(
+            image_prompt=scene["image_prompt"],
+            base_prompts_by_name=base_prompts_by_name,
+            camera_preset=camera_preset,
+            max_pictures=5,
+        )
+        image_paths = [f"{REFS_DIR}\\{name}_00001_.png" for name in entities]
+        print("Промпт (raw):")
+        print(scene["image_prompt"])
+        print("Промпт (final):")
+        print(final_prompt)
+        print("Image paths:", image_paths)
+
+        wf_flux2 = patch_flux2_edit_workflow(
+            workflow=workflow_flux2,
+            image_paths=image_paths,
+            positive_prompt=final_prompt,
+            filename_prefix=f"image_gen/{i + 1}",
+        )
+
+        prompt_id_img = await comfy.queue_prompt(wf_flux2)
+        img_files = await comfy.wait_for_execution(prompt_id_img)
+        generated_image_name = img_files[0]
+        print(f"Изображение готово: {generated_image_name}")
+
+    await comfy_mgr.stop()
     folder_to_create = f"C:\\Users\\Loopy\\Desktop\\ComfyUI_windows_portable\\ComfyUI\\output\\{datetime.datetime.today().strftime('%Y-%m-%d')}"
     unique_path = get_unique_dir_name(folder_to_create)
     os.makedirs(unique_path)
@@ -341,9 +441,16 @@ async def main():
     for i, scene in enumerate(plan["scenes"]):
         print(f"Генерация промпта для сцены {scene['scene_id']}...")
         image_path = f"C:\\Users\\Loopy\\Desktop\\ComfyUI_windows_portable\\ComfyUI\\output\\image_gen\\{i + 1}_00001_.png"
-        frames = split_into_chunks(SRT_json["scenes"][i]["frames"])
-
-        prompt = await get_chunk_prompts_from_ollama(scene["text_scene"], scene["video_prompt"], image_path, len(frames), frames, fps=16, previous_recap=scene["previous_recap"])
+        frames_raw  = SRT_json["scenes"][i]["frames"]
+        frames = round_to_valid_frames_ltx(frames_raw, mode="nearest")
+        prompt = await get_video_prompt_for_ltx_from_ollama(
+            scene_text=scene["text_scene"],
+            video_prompt=scene["video_prompt"],
+            image_path=image_path,
+            n_frames=frames,
+            fps=24,
+            previous_recap=scene["previous_recap"],
+        )
         video_prompts.append(prompt)
         scene_frames.append(frames)
         print(prompt)
@@ -351,58 +458,31 @@ async def main():
 
     await unload_ollama_model()
 
-    await comfy_mgr.restart()
+    await comfy_mgr.start()
 
     # --- ЭТАП 3.2: Генерация видео в ComfyUI ---
     print("\n--- Генерация видео ---")
     for i, scene in enumerate(plan["scenes"]):
         prompt = video_prompts[i]
         frames = scene_frames[i]
-        lenPrompts = len(prompt)
-        wf = set_chunk_count(workflow_vid, lenPrompts)
-        if lenPrompts == 1:
-            wf["623:596"]["inputs"]["text"] = prompt[0]
-            wf["608"]["inputs"]["value"] = frames[0]
-        elif lenPrompts == 2:
-            wf["623:596"]["inputs"]["text"] = prompt[0]
-            wf["608"]["inputs"]["value"] = frames[0]
-            wf["336:334"]["inputs"]["text"] = prompt[1]
-            wf["698"]["inputs"]["value"] = frames[1]
-        else:
-            wf["623:596"]["inputs"]["text"] = prompt[0]
-            wf["608"]["inputs"]["value"] = frames[0]
-            wf["336:334"]["inputs"]["text"] = prompt[1]
-            wf["698"]["inputs"]["value"] = frames[1]
-            wf["644:675"]["inputs"]["text"] = prompt[2]
-            wf["700"]["inputs"]["value"] = frames[2]
 
-        wf["702"]["inputs"]["image"] = f"C:\\Users\\Loopy\\Desktop\\ComfyUI_windows_portable\\ComfyUI\\output\\image_gen\\{i + 1}_00001_.png"
-
-        wf["656"]["inputs"]["filename_prefix"] = f"{unique_path}\\{i + 1}"
+        workflow_vid["367"]["inputs"]["value"] = prompt
+        workflow_vid["375"]["inputs"]["image"] = f"C:\\Users\\Loopy\\Desktop\\ComfyUI_windows_portable\\ComfyUI\\output\\image_gen\\{i + 1}_00001_.png"
+        workflow_vid["374"]["inputs"]["value"] = frames
+        workflow_vid["75"]["inputs"]["filename_prefix"] = f"{unique_path}\\{i + 1}"
 
         print(f"Отправка сцены {scene['scene_id']} на генерацию видео...")
-        prompt_id_vid = await comfy.queue_prompt(wf)
+        prompt_id_vid = await comfy.queue_prompt(workflow_vid)
         vid_files = await comfy.wait_for_execution(prompt_id_vid)
-        if vid_files:
-            video_path = f"{unique_path}\\{vid_files[0]}"
-            print(f"RIFE 16->30fps inplace: {video_path}")
-            rife_interpolate_inplace(video_path, multiplier=2, target_fps=30)
-            print(f"Видео для сцены {scene['scene_id']} готово: {vid_files[0]}")
-        else:
-            print(f"Видео для сцены {scene['scene_id']} готово: Ошибка")
+        print(f"Видео для сцены {scene['scene_id']} готово: {vid_files[0]}")
 
     print("\nПайплайн успешно завершен!")
     await comfy_mgr.stop()
-    """panner = ImagePanner()
-    for i, scene in enumerate(plan["scenes"]):
-
-        panner.animate_image(f"C:\\Users\\Loopy\\Desktop\\ComfyUI_windows_portable\\ComfyUI\\output\\image_gen\\{i+1}_00001_.png",
-                             audio_duration=float(SRT_json['scenes'][i]["video_duration"]), output_path=f"{unique_path}\\{i+1}_00001_.mp4")"""
 
     print("Копирование файлов")
     source_dir = f"C:\\Users\\Loopy\\Desktop\\ComfyUI_windows_portable\\ComfyUI\\output\\AI_VIDEO"
     target_dir = f"{unique_path}"
-    files_to_copy = ['list_vid.txt', 'output_00001_.mp3', 'audio.mp3', 'subs.ass']
+    files_to_copy = ['list.txt', 'output_00001_.mp3', 'audio.mp3', 'subs.ass']
     for file_name in files_to_copy:
         source_path = os.path.join(source_dir, file_name)
         target_path = os.path.join(target_dir, file_name)
@@ -411,7 +491,7 @@ async def main():
             shutil.copy2(source_path, target_path)
             print(f"Скопирован: {file_name}")
     command = [
-        "ffmpeg", "-f", "concat", "-safe", "0", "-i", "list_vid.txt", "-c", "copy", "output.mp4"
+        "ffmpeg", "-f", "concat", "-safe", "0", "-i", "list.txt", "-c", "copy", "output.mp4"
     ]
 
     process = await asyncio.create_subprocess_exec(
@@ -471,10 +551,30 @@ async def main():
 
     stdout, stderr = await process.communicate()
 
+    command = [
+        "ffmpeg", "-y",
+        "-i", "video.mp4",
+        "-vf", "scale=720:405:flags=lanczos,setsar=1,pad=720:1280:0:437:color=black",
+        "-c:v", "libx264",
+        "-crf", "18",
+        "-pix_fmt", "yuv420p",
+        "-c:a", "copy",
+        "output_9x16.mp4",
+    ]
+
+    process = await asyncio.create_subprocess_exec(
+        *command,
+        stdout=asyncio.subprocess.PIPE,
+        stderr=asyncio.subprocess.PIPE,
+        cwd=target_dir
+    )
+
+    stdout, stderr = await process.communicate()
+
     # ! SUBTITLES BURN-IN !
 
     command = [
-        "ffmpeg", "-i", "video.mp4", "-vf", "ass=subs.ass",
+        "ffmpeg", "-i", "output_9x16.mp4", "-vf", "ass=subs.ass",
         "-c:a", "copy", "video_with_subs.mp4"
     ]
 

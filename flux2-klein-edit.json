@@ -1,0 +1,546 @@
+{
+  "94": {
+    "inputs": {
+      "filename_prefix": "Flux2-Klein-4b-base",
+      "images": [
+        "133",
+        0
+      ]
+    },
+    "class_type": "SaveImage",
+    "_meta": {
+      "title": "Сохранить изображение"
+    }
+  },
+  "131": {
+    "inputs": {
+      "sampler_name": "euler"
+    },
+    "class_type": "KSamplerSelect",
+    "_meta": {
+      "title": "Выбор KSampler"
+    }
+  },
+  "132": {
+    "inputs": {
+      "noise": [
+        "134",
+        0
+      ],
+      "guider": [
+        "144",
+        0
+      ],
+      "sampler": [
+        "131",
+        0
+      ],
+      "sigmas": [
+        "145",
+        0
+      ],
+      "latent_image": [
+        "138",
+        0
+      ]
+    },
+    "class_type": "SamplerCustomAdvanced",
+    "_meta": {
+      "title": "Пользовательский сэмплер (Расширенный)"
+    }
+  },
+  "133": {
+    "inputs": {
+      "samples": [
+        "132",
+        0
+      ],
+      "vae": [
+        "136",
+        0
+      ]
+    },
+    "class_type": "VAEDecode",
+    "_meta": {
+      "title": "Декодировать VAE"
+    }
+  },
+  "134": {
+    "inputs": {
+      "noise_seed": 42
+    },
+    "class_type": "RandomNoise",
+    "_meta": {
+      "title": "Случайный шум"
+    }
+  },
+  "135": {
+    "inputs": {
+      "unet_name": "flux-2-klein-9b.safetensors",
+      "weight_dtype": "default"
+    },
+    "class_type": "UNETLoader",
+    "_meta": {
+      "title": "Загрузить модель диффузии"
+    }
+  },
+  "136": {
+    "inputs": {
+      "vae_name": "full_encoder_small_decoder.safetensors"
+    },
+    "class_type": "VAELoader",
+    "_meta": {
+      "title": "Загрузить VAE"
+    }
+  },
+  "138": {
+    "inputs": {
+      "width": 1280,
+      "height": 720,
+      "batch_size": 1
+    },
+    "class_type": "EmptyFlux2LatentImage",
+    "_meta": {
+      "title": "Пустой Flux 2 latent"
+    }
+  },
+  "139": {
+    "inputs": {
+      "upscale_method": "lanczos",
+      "megapixels": 1,
+      "resolution_steps": 1,
+      "image": [
+        "160",
+        0
+      ]
+    },
+    "class_type": "ImageScaleToTotalPixels",
+    "_meta": {
+      "title": "Масштабировать изображение до общего количества пикселей"
+    }
+  },
+  "140": {
+    "inputs": {
+      "upscale_method": "lanczos",
+      "megapixels": 1,
+      "resolution_steps": 1,
+      "image": [
+        "161",
+        0
+      ]
+    },
+    "class_type": "ImageScaleToTotalPixels",
+    "_meta": {
+      "title": "Масштабировать изображение до общего количества пикселей"
+    }
+  },
+  "141": {
+    "inputs": {
+      "clip_name": "qwen_3_8b_fp8mixed.safetensors",
+      "type": "flux2",
+      "device": "default"
+    },
+    "class_type": "CLIPLoader",
+    "_meta": {
+      "title": "Загрузить CLIP"
+    }
+  },
+  "142": {
+    "inputs": {
+      "text": "Over-the-shoulder camera angle, medium framing with a soft out-of-focus foreground edge in the bottom corner of frame, classic shoulder-anchored perspective. Picture 1 (A younger woman with white hair) bursting through a door into the Picture 2 (Interior of a traditional Chinese teahouse room) with a look of panic and urgency, Picture 3 (Handsome man wearing white shirt) standing in middle of the room through on Picture 4 (The girl wearing assasins suit with dark hair). Pixar CGI Toon Style, stylized CGI character, pixar-like 3D render, cinematic animated character, high-end animated film style, soft volumetric lighting, PBR textures, subsurface scattering on skin, smooth highlights.",
+      "clip": [
+        "141",
+        0
+      ]
+    },
+    "class_type": "CLIPTextEncode",
+    "_meta": {
+      "title": "CLIP Text Encode (Positive Prompt)"
+    }
+  },
+  "143": {
+    "inputs": {
+      "text": "worst quality, inconsistent motion, blurry, jittery, distorted, watermark, morphing faces, fingers deformed, extra limbs, unnatural colors, flickering, ghosting, anime, manga, 2d animation, cel-shaded, hand-drawn, painterly, flat colors, sharp lineart, line art, watercolor, sketch, ink drawing, comic book style, three hand, extra hand.",
+      "clip": [
+        "141",
+        0
+      ]
+    },
+    "class_type": "CLIPTextEncode",
+    "_meta": {
+      "title": "CLIP Text Encode ( Negative Prompt)"
+    }
+  },
+  "144": {
+    "inputs": {
+      "cfg": 1,
+      "model": [
+        "135",
+        0
+      ],
+      "positive": [
+        "169",
+        0
+      ],
+      "negative": [
+        "170",
+        0
+      ]
+    },
+    "class_type": "CFGGuider",
+    "_meta": {
+      "title": "CFG Гид"
+    }
+  },
+  "145": {
+    "inputs": {
+      "steps": 4,
+      "width": 1280,
+      "height": 720
+    },
+    "class_type": "Flux2Scheduler",
+    "_meta": {
+      "title": "Flux2Scheduler"
+    }
+  },
+  "146": {
+    "inputs": {
+      "conditioning": [
+        "143",
+        0
+      ],
+      "latent": [
+        "147",
+        0
+      ]
+    },
+    "class_type": "ReferenceLatent",
+    "_meta": {
+      "title": "Эталонный латент"
+    }
+  },
+  "147": {
+    "inputs": {
+      "pixels": [
+        "139",
+        0
+      ],
+      "vae": [
+        "136",
+        0
+      ]
+    },
+    "class_type": "VAEEncode",
+    "_meta": {
+      "title": "Кодировать VAE"
+    }
+  },
+  "148": {
+    "inputs": {
+      "conditioning": [
+        "142",
+        0
+      ],
+      "latent": [
+        "147",
+        0
+      ]
+    },
+    "class_type": "ReferenceLatent",
+    "_meta": {
+      "title": "Эталонный латент"
+    }
+  },
+  "149": {
+    "inputs": {
+      "conditioning": [
+        "146",
+        0
+      ],
+      "latent": [
+        "150",
+        0
+      ]
+    },
+    "class_type": "ReferenceLatent",
+    "_meta": {
+      "title": "Эталонный латент"
+    }
+  },
+  "150": {
+    "inputs": {
+      "pixels": [
+        "140",
+        0
+      ],
+      "vae": [
+        "136",
+        0
+      ]
+    },
+    "class_type": "VAEEncode",
+    "_meta": {
+      "title": "Кодировать VAE"
+    }
+  },
+  "151": {
+    "inputs": {
+      "conditioning": [
+        "148",
+        0
+      ],
+      "latent": [
+        "150",
+        0
+      ]
+    },
+    "class_type": "ReferenceLatent",
+    "_meta": {
+      "title": "Эталонный латент"
+    }
+  },
+  "152": {
+    "inputs": {
+      "upscale_method": "lanczos",
+      "megapixels": 1,
+      "resolution_steps": 1,
+      "image": [
+        "162",
+        0
+      ]
+    },
+    "class_type": "ImageScaleToTotalPixels",
+    "_meta": {
+      "title": "Масштабировать изображение до общего количества пикселей"
+    }
+  },
+  "153": {
+    "inputs": {
+      "upscale_method": "lanczos",
+      "megapixels": 1,
+      "resolution_steps": 1,
+      "image": [
+        "163",
+        0
+      ]
+    },
+    "class_type": "ImageScaleToTotalPixels",
+    "_meta": {
+      "title": "Масштабировать изображение до общего количества пикселей"
+    }
+  },
+  "154": {
+    "inputs": {
+      "conditioning": [
+        "149",
+        0
+      ],
+      "latent": [
+        "159",
+        0
+      ]
+    },
+    "class_type": "ReferenceLatent",
+    "_meta": {
+      "title": "Эталонный латент"
+    }
+  },
+  "155": {
+    "inputs": {
+      "conditioning": [
+        "151",
+        0
+      ],
+      "latent": [
+        "159",
+        0
+      ]
+    },
+    "class_type": "ReferenceLatent",
+    "_meta": {
+      "title": "Эталонный латент"
+    }
+  },
+  "156": {
+    "inputs": {
+      "conditioning": [
+        "154",
+        0
+      ],
+      "latent": [
+        "157",
+        0
+      ]
+    },
+    "class_type": "ReferenceLatent",
+    "_meta": {
+      "title": "Эталонный латент"
+    }
+  },
+  "157": {
+    "inputs": {
+      "pixels": [
+        "153",
+        0
+      ],
+      "vae": [
+        "136",
+        0
+      ]
+    },
+    "class_type": "VAEEncode",
+    "_meta": {
+      "title": "Кодировать VAE"
+    }
+  },
+  "158": {
+    "inputs": {
+      "conditioning": [
+        "155",
+        0
+      ],
+      "latent": [
+        "157",
+        0
+      ]
+    },
+    "class_type": "ReferenceLatent",
+    "_meta": {
+      "title": "Эталонный латент"
+    }
+  },
+  "159": {
+    "inputs": {
+      "pixels": [
+        "152",
+        0
+      ],
+      "vae": [
+        "136",
+        0
+      ]
+    },
+    "class_type": "VAEEncode",
+    "_meta": {
+      "title": "Кодировать VAE"
+    }
+  },
+  "160": {
+    "inputs": {
+      "image": "\"C:\\Users\\Loopy\\Desktop\\ComfyUI_windows_portable\\ComfyUI\\output\\base_image_gen\\lin_xue_00001_.png",
+      "custom_width": 0,
+      "custom_height": 0
+    },
+    "class_type": "VHS_LoadImagePath",
+    "_meta": {
+      "title": "Load Image (Path) 🎥🅥🅗🅢"
+    }
+  },
+  "161": {
+    "inputs": {
+      "image": "\"C:\\Users\\Loopy\\Desktop\\ComfyUI_windows_portable\\ComfyUI\\output\\base_image_gen\\teahouse_room_00001_.png\"",
+      "custom_width": 0,
+      "custom_height": 0
+    },
+    "class_type": "VHS_LoadImagePath",
+    "_meta": {
+      "title": "Load Image (Path) 🎥🅥🅗🅢"
+    }
+  },
+  "162": {
+    "inputs": {
+      "image": "\"C:\\Users\\Loopy\\Desktop\\ComfyUI_windows_portable\\ComfyUI\\output\\base_image_gen\\shen_fei_00001_.png",
+      "custom_width": 0,
+      "custom_height": 0
+    },
+    "class_type": "VHS_LoadImagePath",
+    "_meta": {
+      "title": "Load Image (Path) 🎥🅥🅗🅢"
+    }
+  },
+  "163": {
+    "inputs": {
+      "image": "\"C:\\Users\\Loopy\\Desktop\\ComfyUI_windows_portable\\ComfyUI\\output\\base_image_gen\\lin_shuang_00001_.png\"",
+      "custom_width": 0,
+      "custom_height": 0
+    },
+    "class_type": "VHS_LoadImagePath",
+    "_meta": {
+      "title": "Load Image (Path) 🎥🅥🅗🅢"
+    }
+  },
+  "167": {
+    "inputs": {
+      "upscale_method": "lanczos",
+      "megapixels": 1,
+      "resolution_steps": 1,
+      "image": [
+        "171",
+        0
+      ]
+    },
+    "class_type": "ImageScaleToTotalPixels",
+    "_meta": {
+      "title": "Масштабировать изображение до общего количества пикселей"
+    }
+  },
+  "168": {
+    "inputs": {
+      "pixels": [
+        "167",
+        0
+      ],
+      "vae": [
+        "136",
+        0
+      ]
+    },
+    "class_type": "VAEEncode",
+    "_meta": {
+      "title": "Кодировать VAE"
+    }
+  },
+  "169": {
+    "inputs": {
+      "conditioning": [
+        "158",
+        0
+      ],
+      "latent": [
+        "168",
+        0
+      ]
+    },
+    "class_type": "ReferenceLatent",
+    "_meta": {
+      "title": "Эталонный латент"
+    }
+  },
+  "170": {
+    "inputs": {
+      "conditioning": [
+        "156",
+        0
+      ],
+      "latent": [
+        "168",
+        0
+      ]
+    },
+    "class_type": "ReferenceLatent",
+    "_meta": {
+      "title": "Эталонный латент"
+    }
+  },
+  "171": {
+    "inputs": {
+      "image": "\"C:\\Users\\Loopy\\Desktop\\ComfyUI_windows_portable\\ComfyUI\\output\\base_image_gen\\lin_shuang_00001_.png\"",
+      "custom_width": 0,
+      "custom_height": 0
+    },
+    "class_type": "VHS_LoadImagePath",
+    "_meta": {
+      "title": "Load Image (Path) 🎥🅥🅗🅢"
+    }
+  }
+}

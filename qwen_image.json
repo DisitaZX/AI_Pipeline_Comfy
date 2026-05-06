@@ -16,7 +16,7 @@
     "inputs": {
       "shift": 3.1,
       "model": [
-        "196",
+        "179",
         0
       ]
     },
@@ -62,7 +62,7 @@
   },
   "175": {
     "inputs": {
-      "prompt": "worst quality, inconsistent motion, blurry, jittery, distorted, watermark, morphing faces, fingers deformed, extra limbs, unnatural colors, flickering, ghosting, photorealistic, realistic, live action, real footage, 3d rendered, photograph, photographic, real human skin texture, soft realistic shading",
+      "prompt": "worst quality, inconsistent motion, blurry, jittery, distorted, watermark, morphing faces, fingers deformed, extra limbs, unnatural colors, flickering, ghosting, anime, manga, 2d animation, cel-shaded, hand-drawn, painterly, flat colors, sharp lineart, line art, watercolor, sketch, ink drawing, comic book style, three hand, extra hand",
       "clip": [
         "184",
         0
@@ -91,7 +91,7 @@
   },
   "177": {
     "inputs": {
-      "prompt": "[image 1] sitting on office chair, [image 3] hologram looking distressed, [su_group] logo crashing animation on system interface.",
+      "prompt": "[image 1] standing before injured [image 2] and injured [image 3] in a dark drainage channel. Pixar CGI Toon Style, cinematic lighting.\"",
       "clip": [
         "184",
         0
@@ -118,25 +118,12 @@
       "title": "TextEncodeQwenImageEditPlus (Positive)"
     }
   },
-  "178": {
-    "inputs": {
-      "strength": 1,
-      "model": [
-        "171",
-        0
-      ]
-    },
-    "class_type": "CFGNorm",
-    "_meta": {
-      "title": "CFGNorm"
-    }
-  },
   "179": {
     "inputs": {
-      "lora_name": "Qwen-Image-Edit-2511-Lightning-8steps-V1.0-bf16.safetensors",
+      "lora_name": "Qwen-Image-Edit-2511-Lightning-8steps-V1.0-fp32.safetensors",
       "strength_model": 1,
       "model": [
-        "178",
+        "183",
         0
       ]
     },
@@ -154,34 +141,9 @@
       "title": "CFG"
     }
   },
-  "181": {
-    "inputs": {
-      "value": 2
-    },
-    "class_type": "PrimitiveFloat",
-    "_meta": {
-      "title": "CFG"
-    }
-  },
-  "182": {
-    "inputs": {
-      "pixels": [
-        "202",
-        0
-      ],
-      "vae": [
-        "172",
-        0
-      ]
-    },
-    "class_type": "VAEEncode",
-    "_meta": {
-      "title": "Кодировать VAE"
-    }
-  },
   "183": {
     "inputs": {
-      "unet_name": "qwen_image_edit_2511_fp8_e4m3fn_scaled_lightning_comfyui_4steps_v1.0.safetensors",
+      "unet_name": "Qwen-Image-Edit-2511-FP8_e4m3fn.safetensors",
       "weight_dtype": "default"
     },
     "class_type": "UNETLoader",
@@ -200,27 +162,7 @@
       "title": "Загрузить CLIP"
     }
   },
-  "185": {
-    "inputs": {
-      "switch": [
-        "188",
-        0
-      ],
-      "on_false": [
-        "178",
-        0
-      ],
-      "on_true": [
-        "179",
-        0
-      ]
-    },
-    "class_type": "ComfySwitchNode",
-    "_meta": {
-      "title": "Switch (Model)"
-    }
-  },
-  "186": {
+  "187": {
     "inputs": {
       "value": 8
     },
@@ -229,80 +171,22 @@
       "title": "Steps"
     }
   },
-  "187": {
+  "191": {
     "inputs": {
-      "value": 4
-    },
-    "class_type": "PrimitiveInt",
-    "_meta": {
-      "title": "Steps"
-    }
-  },
-  "188": {
-    "inputs": {
-      "value": false
-    },
-    "class_type": "PrimitiveBoolean",
-    "_meta": {
-      "title": "Enable 4steps LoRA?"
-    }
-  },
-  "189": {
-    "inputs": {
-      "switch": [
-        "188",
-        0
-      ],
-      "on_false": [
-        "180",
-        0
-      ],
-      "on_true": [
-        "181",
-        0
-      ]
-    },
-    "class_type": "ComfySwitchNode",
-    "_meta": {
-      "title": "Switch (CFG)"
-    }
-  },
-  "190": {
-    "inputs": {
-      "switch": [
-        "188",
-        0
-      ],
-      "on_false": [
+      "seed": 42,
+      "steps": [
         "187",
         0
       ],
-      "on_true": [
-        "186",
-        0
-      ]
-    },
-    "class_type": "ComfySwitchNode",
-    "_meta": {
-      "title": "Switch (Steps)"
-    }
-  },
-  "191": {
-    "inputs": {
-      "seed": 5052788012571,
-      "steps": [
-        "190",
-        0
-      ],
       "cfg": [
-        "189",
+        "180",
         0
       ],
       "sampler_name": "euler",
       "scheduler": "simple",
       "denoise": 1,
       "model": [
-        "185",
+        "171",
         0
       ],
       "positive": [
@@ -314,7 +198,7 @@
         0
       ],
       "latent_image": [
-        "182",
+        "203",
         0
       ]
     },
@@ -339,21 +223,9 @@
       "title": "Декодировать VAE"
     }
   },
-  "196": {
-    "inputs": {
-      "model": [
-        "183",
-        0
-      ]
-    },
-    "class_type": "TorchCompileModelQwenImage",
-    "_meta": {
-      "title": "TorchCompileModelQwenImage"
-    }
-  },
   "200": {
     "inputs": {
-      "image": "",
+      "image": "\"C:\\Users\\Loopy\\Desktop\\ComfyUI_windows_portable\\ComfyUI\\output\\base_image_gen\\lin_xue_00001_.png\"",
       "custom_width": 0,
       "custom_height": 0
     },
@@ -364,7 +236,7 @@
   },
   "201": {
     "inputs": {
-      "image": "",
+      "image": "\"C:\\Users\\Loopy\\Desktop\\ComfyUI_windows_portable\\ComfyUI\\output\\base_image_gen\\lin_shuang_00001_.png\"",
       "custom_width": 0,
       "custom_height": 0
     },
@@ -375,13 +247,24 @@
   },
   "202": {
     "inputs": {
-      "image": "",
+      "image": "\"C:\\Users\\Loopy\\Desktop\\ComfyUI_windows_portable\\ComfyUI\\output\\base_image_gen\\shen_fei_00001_.png\"",
       "custom_width": 0,
       "custom_height": 0
     },
     "class_type": "VHS_LoadImagePath",
     "_meta": {
       "title": "Load Image (Path) 🎥🅥🅗🅢"
+    }
+  },
+  "203": {
+    "inputs": {
+      "width": 1280,
+      "height": 720,
+      "batch_size": 1
+    },
+    "class_type": "EmptyLatentImage",
+    "_meta": {
+      "title": "Пустое латентное изображение"
     }
   }
 }

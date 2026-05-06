@@ -262,11 +262,14 @@ Single flowing paragraph that covers, in this order, in natural prose:
      This conditions the visual model; the actual audio track is replaced
      in post-production.
 
-## Style — anime / 2D animation
-- Aesthetic is **2D hand-drawn anime / cel-shaded animation**, NOT
-  photorealistic, NOT live-action footage, NOT 3D rendered, NOT a
-  photograph. Use phrasing like "anime-style cel shading", "painterly
-  hand-drawn frames", "soft 2D animated lines", "studio-anime composition".
+## Style — Pixar 3D CGI toon (P1x4r LoRA)
+- Aesthetic is **stylized 3D CGI in Pixar / DreamWorks animated film
+  style**, NOT photorealistic, NOT live-action footage, NOT 2D
+  hand-drawn, NOT cel-shaded anime, NOT a photograph. Use phrasing
+  like "Pixar-style stylized 3D rendering", "smooth PBR surfaces",
+  "soft volumetric lighting", "subsurface scattering on skin",
+  "exaggerated cartoon proportions with appealing 3D character design",
+  "high-end animated film cinematography".
 - Match level of detail to shot scale: close-ups need more facial /
   fabric / lighting detail than wide shots.
 - Camera language should be relative to the subject (push-in, track,
@@ -283,7 +286,10 @@ Single flowing paragraph that covers, in this order, in natural prose:
 - **No on-screen text, logos, captions, subtitles, signs with words**.
 - **No meta references** ("frame", "second", "scene", "chunk", "video",
   "LTX", "AI", "model").
-- **No photorealistic / live-action / 3D-rendered / photographic descriptors**.
+- **No photorealistic / live-action / photographic / real-footage descriptors**.
+- **No 2D / hand-drawn / anime / manga / cel-shaded / lineart / line-art /
+  watercolor / sketch / ink-drawing / comic-book descriptors**. The output
+  must read as stylized 3D CGI, not 2D animation.
 - No complex chaotic physics (water splashes with thousands of droplets,
   glass shattering into hundreds of shards). Stay clean and animatable.
 
@@ -654,12 +660,13 @@ async def get_video_prompt_for_ltx_from_ollama(
                 "format": "json",
                 "stream": False,
                 "keep_alive": 5,
+                "think": True,
                 "options": {
                     "temperature": profile["temperature"],
                     "top_p": profile["top_p"],
                     "repeat_penalty": 1.15,
                     # Поднято до 8192 ради Qwen3+ thinking-моделей (см. WAN-функцию).
-                    "num_predict": 8192,
+                    "num_predict": 32768,
                     "seed": random.randint(1, 2**31 - 1),
                     "stop": ["<|", "<channel", "<tool_call", "```\n\n", "}<"],
                 },
@@ -728,14 +735,20 @@ async def get_video_prompt_for_ltx_from_ollama(
 # сама подаёт, Gemma'е генерить его не нужно.
 
 
-SYSTEM_PROMPT_IMAGE = """Ты — image-prompt expander для Qwen Image Edit 2511.
+SYSTEM_PROMPT_IMAGE = """Ты — image-prompt expander для Qwen Image Edit 2511 + P1x4r Pixar LoRA.
 
 ЗАДАЧА: взять source prompt и дополнить его композицией, освещением, атмосферой.
 Вокабуляр объектов в output ограничен тем что в source — НИЧЕГО НОВОГО.
 
-`[image N]` — ссылки на reference картинки. Не описывай что ВНУТРИ них (модель
-их и так видит). Используй как композиционные якоря в том порядке и в той
-структуре что заданы в source.
+СТИЛЬ: Pixar 3D CGI toon (LoRA триггер — `P1x4r`). Вывод должен читаться как
+кадр из современного Pixar/DreamWorks animated film: стилизованный 3D CGI с
+экспрессивными cartoon-пропорциями, мягким volumetric lighting, subsurface
+scattering на коже, smooth PBR текстурами. НЕ anime, НЕ 2D, НЕ cel-shaded,
+НЕ фотореализм.
+
+`[image N]` — ссылки на reference картинки (уже в Pixar 3D стиле). Не описывай
+что ВНУТРИ них (модель их и так видит). Используй как композиционные
+якоря в том порядке и в той структуре что заданы в source.
 
 ═══ 3 ПРАВИЛА ═══
 
@@ -758,9 +771,11 @@ SYSTEM_PROMPT_IMAGE = """Ты — image-prompt expander для Qwen Image Edit 2
 ═══ ФОРМАТ ВЫВОДА ═══
 
 - Одна строка на английском. Без markdown, JSON, кавычек, заголовков.
-- Если задан `camera_hint` — output начинается с него verbatim.
+- Output ОБЯЗАН начинаться с LoRA-триггера `P1x4r,` (именно в такой
+  регистре — большая P, цифра 1, x, цифра 4, r). Если задан `camera_hint`,
+  ставь его СРАЗУ ПОСЛЕ триггера: `P1x4r, <camera_hint>, ...`.
 - Output заканчивается обязательным style stack:
-  anime style, 2D animation, cel-shaded, sharp lineart, vibrant flat colors, modern anime aesthetic
+  pixar style character, stylized CGI character, pixar-like 3D render, cinematic animated character, high-end animated film style
 - Никаких `[bracketed_text]` кроме `[image 1]`, `[image 2]`, `[image 3]`
   (не больше чем n_images).
 
@@ -769,14 +784,16 @@ SYSTEM_PROMPT_IMAGE = """Ты — image-prompt expander для Qwen Image Edit 2
 INPUT:
   camera_hint: "extreme wide establishing shot"
   must_preserve_terms: ["Zhou Kun"]
-  source: [image 1], [image 2] and [image 3] flanking Zhou Kun, combat ready poses, modern anime style, dynamic angle.
+  source: [image 1], [image 2] and [image 3] flanking Zhou Kun, combat ready poses, dynamic angle.
 
 OUTPUT:
-  extreme wide establishing shot, [image 1], [image 2] and [image 3] flanking Zhou Kun in a tight semi-circle formation, combat ready poses with weight low and forward, knees bent and feet planted shoulder-width apart, focused intent in their narrowed eyes locked on Zhou Kun, dynamic diagonal composition pulling the eye toward the central confrontation, dramatic side-lighting carving sharp contrast across their faces, charged tense atmosphere, anime style, 2D animation, cel-shaded, sharp lineart, vibrant flat colors, modern anime aesthetic
+  P1x4r, extreme wide establishing shot, [image 1], [image 2] and [image 3] flanking Zhou Kun in a tight semi-circle formation, combat ready poses with weight low and forward, knees bent and feet planted shoulder-width apart, focused intent in their narrowed eyes locked on Zhou Kun, dynamic diagonal composition pulling the eye toward the central confrontation, dramatic side-lighting carving sharp contrast across PBR-textured faces and clothing, soft volumetric god-rays threading the scene, charged tense atmosphere, pixar style character, stylized CGI character, pixar-like 3D render, cinematic animated character, high-end animated film style
 
-(Заметь: action "flanking Zhou Kun" сохранён. "Zhou Kun" появился дословно.
-Структура `[image 1], [image 2] and [image 3]` и их порядок не изменены.
-Ничего не добавлено сверх source — нет weapons, dust, ruins, smoke.)
+(Заметь: output начинается с `P1x4r,` (LoRA-триггер), затем camera_hint.
+Action "flanking Zhou Kun" сохранён. "Zhou Kun" появился дословно. Структура
+`[image 1], [image 2] and [image 3]` и порядок не изменены. Ничего не добавлено
+сверх source — нет weapons, dust, ruins, smoke. PBR/volumetric — это cinematic
+language под Pixar-стиль, не новые объекты.)
 """
 
 
@@ -807,10 +824,11 @@ def pick_camera_preset(scene_index_in_thread: int) -> str:
 
 
 # Якорные фразы которые мы хотим видеть в финальном expanded promtе
-# (если их нет - значит Gemma не дописала style stack).
+# (если их нет - значит Gemma не дописала style stack или потеряла
+# LoRA-триггер P1x4r). Сравнение идёт в lower-case, поэтому "p1x4r".
 _REQUIRED_STYLE_TOKENS = (
-    "anime style",
-    "cel-shaded",
+    "p1x4r",
+    "pixar",
 )
 
 
@@ -886,6 +904,81 @@ def _strip_unknown_brackets(text: str) -> tuple[str, list[str]]:
 
     cleaned = _BRACKET_TOKEN_RE.sub(repl, text)
     return cleaned, stripped
+
+
+def resolve_entities_from_image_prompt(
+    image_prompt: str,
+    base_names: list[str] | set[str] | tuple[str, ...],
+) -> list[str]:
+    """
+    Извлекает entity-маркеры `[base_name]` из image_prompt и пересекает их
+    с известными `base_names` из plan["base_prompts"].
+
+    Возвращает упорядоченный список base_name'ов (без дубликатов) в том
+    порядке в каком они впервые появились в image_prompt. Усечён до 3
+    элементов (hard limit Qwen Edit'а — max 3 image slots).
+
+    Это замена устаревшему `scene["entities"]` полю в GROK plan'е — теперь
+    pipeline резолвит entities из текста image_prompt автоматически,
+    GROK больше не обязан выписывать их явно. Любые `[bracketed]` маркеры
+    которых нет в `base_names` просто игнорируются (они будут позже
+    задавлены `_strip_unknown_brackets`).
+
+    Параметры:
+      image_prompt - сырой image_prompt из scene с маркерами [base_name].
+                     Например:
+                       "[main_character] standing in [shop_interior] with
+                        [red_ribbon] in hand, dramatic lighting."
+      base_names   - итерируемое со всеми объявленными base_name из
+                     plan["base_prompts"]. Маркеры не из этого списка
+                     игнорируются (например `[wide shot]` — это шум).
+
+    Возвращает:
+      Упорядоченный список base_name'ов длины 0..3.
+
+    Пример 1 — нормальный кейс:
+      resolve_entities_from_image_prompt(
+          "[lin_shuang] and [lin_xue] leaning against [drainage_channel]",
+          base_names={"lin_shuang", "lin_xue", "drainage_channel", "red_ribbon"},
+      )
+      -> ['lin_shuang', 'lin_xue', 'drainage_channel']
+
+    Пример 2 — дубликат маркера в одной сцене:
+      resolve_entities_from_image_prompt(
+          "[main_character] in [shop] [main_character] holding pill",
+          base_names={"main_character", "shop"},
+      )
+      -> ['main_character', 'shop']  # main_character не задвоен
+
+    Пример 3 — маркер не из base_names игнорируется:
+      resolve_entities_from_image_prompt(
+          "wide shot of [unknown_entity] near [shop]",
+          base_names={"main_character", "shop"},
+      )
+      -> ['shop']
+
+    Пример 4 — больше 3 валидных маркеров → берём первые 3:
+      resolve_entities_from_image_prompt(
+          "[a] sees [b] beside [c] looking at [d]",
+          base_names={"a", "b", "c", "d"},
+      )
+      -> ['a', 'b', 'c']
+    """
+    base_set = set(base_names)
+    seen: set[str] = set()
+    out: list[str] = []
+    for m in _BRACKET_TOKEN_RE.finditer(image_prompt):
+        inner = m.group(1).strip()
+        # Скип `[image N]` мета-маркеры — это нумерованные слоты Qwen Edit'а,
+        # они появляются после substitute_entities_to_image_slots, не раньше.
+        if re.fullmatch(r"image\s+\d+", inner, re.IGNORECASE):
+            continue
+        if inner in base_set and inner not in seen:
+            seen.add(inner)
+            out.append(inner)
+            if len(out) >= 3:
+                break
+    return out
 
 
 def substitute_entities_to_image_slots(
@@ -1012,7 +1105,8 @@ async def expand_image_prompt_for_qwen_edit(
                             с N > n_images в output появляться не должны.
       camera_hint         - принудительный ракурс/кадрирование, например
                             `"low angle wide shot"`. Если задан, output
-                            ОБЯЗАН начинаться с этой фразы. Используй
+                            ОБЯЗАН начинаться с `P1x4r, <camera_hint>, ...`
+                            — сначала LoRA-триггер, затем ракурс. Используй
                             `pick_camera_preset(idx)` чтобы детерминистично
                             ротировать ракурсы между сценами.
       min_expansion_ratio - output должен быть длиннее source хотя бы в это
@@ -1082,8 +1176,8 @@ async def expand_image_prompt_for_qwen_edit(
     )
 
     camera_block = (
-        f"camera_hint (must appear verbatim as the first phrase of output): "
-        f"{camera_hint_clean}\n\n"
+        f"camera_hint (must appear verbatim immediately after the `P1x4r,` "
+        f"LoRA trigger at the start of output): {camera_hint_clean}\n\n"
         if camera_hint_clean
         else ""
     )
@@ -1252,7 +1346,7 @@ async def expand_image_prompt_for_qwen_edit(
             )
             continue
 
-        # 4) anime style stack
+        # 4) Pixar 3D style stack (вкл. LoRA-триггер P1x4r)
         out_lower = out.lower()
         missing_style = [t for t in _REQUIRED_STYLE_TOKENS if t not in out_lower]
         if missing_style:
@@ -1383,6 +1477,7 @@ def patch_qwen_edit_workflow(
 
 async def precompute_all_image_prompts(
     scenes: list[dict],
+    base_prompts: list[dict] | None = None,
     ollama_url: str = "http://localhost:11434/api/generate",
     model: str = "gemma4:e4b",
     min_expansion_ratio: float = 1.4,
@@ -1392,14 +1487,37 @@ async def precompute_all_image_prompts(
     Прогоняет ВСЕ image_prompt'ы сцен через Gemma за один проход.
 
     Делает per-сцену:
-      1. substitute_entities_to_image_slots(scene.image_prompt, scene.entities)
-      2. Если rotate_cameras=True — берёт `pick_camera_preset(idx-1)` как
+      1. resolve_entities_from_image_prompt(scene.image_prompt, base_names) —
+         резолвит используемые в сцене entity-маркеры `[base_name]` через
+         intersection с реальными именами из `plan["base_prompts"]`. Поле
+         `scene["entities"]` больше НЕ читается из GROK plan'а (оно убрано
+         из схемы) — pipeline сам определяет порядок entity по тексту
+         image_prompt.
+      2. substitute_entities_to_image_slots(scene.image_prompt, resolved_entities)
+      3. Если rotate_cameras=True — берёт `pick_camera_preset(idx-1)` как
          camera_hint, где idx — глобальный 1-based порядковый номер
          сцены. Сцены обрабатываются изолированно — понятие thread
          больше не используется. Камеры ротируются по всему потоку
          сцен детерминистично (low angle → high angle → close-up → ...).
          Если False — camera_hint пустой, Gemma выбирает сама.
-      3. expand_image_prompt_for_qwen_edit(...)
+      4. expand_image_prompt_for_qwen_edit(...)
+
+    Параметры:
+      scenes        - список сцен из plan["scenes"]. Каждая сцена должна
+                      иметь scene_id и image_prompt. Поле scene["entities"]
+                      БОЛЬШЕ НЕ ТРЕБУЕТСЯ (если оно есть — игнорируется).
+      base_prompts  - список base_prompts из plan["base_prompts"], каждый
+                      элемент это dict с ключом "base_name" (см. GROK
+                      schema). Используется для извлечения base_names
+                      и резолва entities из текста image_prompt.
+                      Если None — fallback на legacy scene["entities"]
+                      (только для обратной совместимости со старыми
+                      plan'ами; новые planы по `GROK_Prompt_2.txt` не
+                      содержат поле entities).
+      ollama_url    - endpoint Ollama API.
+      model         - имя модели в Ollama (gemma4:e4b по умолчанию).
+      min_expansion_ratio - см. expand_image_prompt_for_qwen_edit.
+      rotate_cameras - если True, ракурсы ротируются по pick_camera_preset.
 
     Возвращает {scene_id: expanded_prompt}. Сцены без entities скипает
     (туда expand-логика не применима; в этих сценах image_prompt пойдёт
@@ -1411,9 +1529,32 @@ async def precompute_all_image_prompts(
     out: dict[int, str] = {}
     total = len(scenes)
 
+    # Извлекаем base_names из plan["base_prompts"] для резолва entities из
+    # текста image_prompt. Если caller не передал base_prompts — fallback
+    # на legacy scene["entities"] в каждой сцене (старые GROK plan'ы).
+    base_names: set[str] = set()
+    if base_prompts:
+        base_names = {
+            bp["base_name"]
+            for bp in base_prompts
+            if isinstance(bp, dict) and "base_name" in bp
+        }
+        print(
+            f"[precompute_image] resolving entities from image_prompt text "
+            f"using {len(base_names)} known base_names"
+        )
+
     for idx, scene in enumerate(scenes, 1):
         sid = scene["scene_id"]
-        entities = scene.get("entities", [])
+        # Резолвим entities из текста image_prompt (новый способ —
+        # GROK_Prompt_2.txt больше не выводит поле entities). Если
+        # base_names не передан, читаем legacy scene["entities"].
+        if base_names:
+            entities = resolve_entities_from_image_prompt(
+                scene["image_prompt"], base_names
+            )
+        else:
+            entities = scene.get("entities", [])
 
         # idx — 1-based глобальный номер сцены. Для ротации камер берём
         # idx-1 (0-based). thread_id больше не учитывается — каждая сцена
