@@ -203,8 +203,10 @@ def build_qwen_edit_prompt(
     image_prompt: str,
     base_prompts_by_name: Dict[str, dict],
     camera_preset: str,
-    max_pictures: int = 3,
+    max_pictures: int = 5,
     style_stack: str = STYLE_STACK,
+    *,
+    continuity_mode: str = "none",  # "none" | "soft" | "hard"
 ) -> Tuple[str, List[str]]:
     """Собрать финальный prompt для TextEncodeQwenImageEditPlus + список
     entity-имён в порядке Picture 1..N.
@@ -273,26 +275,32 @@ def build_qwen_edit_prompt(
     # 1. Резолвим entities в порядке появления, фильтруя по base_prompts_by_name
     entities: List[str] = []
     seen: set[str] = set()
+
+    # Если continuity_mode != "none", Picture 1 зарезервирована под previous-frame
+    # (caller пихает prev_image_path в начало image_paths). Все base entities
+    # сдвигаются на Picture 2..N, и effective max_pictures для них снижается на 1.
+    picture_offset = 1 if continuity_mode in ("soft", "hard") else 0
+    effective_max = max_pictures - picture_offset
+
     for m in _BRACKET_TOKEN_RE.finditer(image_prompt):
         name = m.group(1).strip()
         if name in base_prompts_by_name and name not in seen:
             seen.add(name)
             entities.append(name)
-            if len(entities) >= max_pictures:
+            if len(entities) >= effective_max:
                 break
 
-    # 2. Подмена [entity] -> Picture N (alias)
+    # 2. Подмена [entity] -> Picture N (alias), с учётом offset
     out = image_prompt
     for i, name in enumerate(entities):
         bp = base_prompts_by_name.get(name, {})
         alias = (bp.get("short_alias") or "").strip()
         if not alias:
             alias = short_alias_from_base_prompt(bp.get("base_prompt", ""))
-        # Если эвристика тоже отдала пусто (битый base_prompt) — fallback на name
         if not alias:
             alias = name.replace("_", " ")
 
-        replacement = f"Picture {i + 1} ({alias})"
+        replacement = f"Picture {i + 1 + picture_offset} ({alias})"
         out = re.sub(
             r"\[\s*" + re.escape(name) + r"\s*\]",
             replacement,
@@ -316,12 +324,34 @@ def build_qwen_edit_prompt(
     out = re.sub(r"\s*,\s*\.", ".", out)
     out = re.sub(r"\.\s*\.+", ".", out)
 
-    # 4. Финальная сборка: angle + body + style stack
+    # 4. Финальная сборка: angle + continuity prefix + body + style stack
     body = _WS_RE.sub(" ", out).strip(" ,.;:-")
     angle = rich_angle_phrase(camera_preset).rstrip(". ").strip()
     style = style_stack.strip().rstrip(".")
 
-    final = f"{angle}. {body}. {style}.".strip()
+    if continuity_mode == "soft":
+        continuity_prefix = (
+            "Picture 1 shows the immediately preceding moment of this same scene. "
+            "The action below is a direct continuation: characters keep the same "
+            "pose, expression, clothing, body position, and any props they were "
+            "holding from Picture 1. Camera angle may shift to the new framing "
+            "described below, but character state is preserved."
+        )
+    elif continuity_mode == "hard":
+        continuity_prefix = (
+            "Picture 1 shows the exact previous frame of this same scene. "
+            "This image is the very next moment, with only minor incremental "
+            "motion: characters in identical pose, expression, clothing, and "
+            "position; props in identical placement. The camera does NOT cut — "
+            "framing and angle remain the same as Picture 1."
+        )
+    else:
+        continuity_prefix = ""
+
+    if continuity_prefix:
+        final = f"{angle}. {continuity_prefix} {body}. {style}.".strip()
+    else:
+        final = f"{angle}. {body}. {style}.".strip()
     final = _WS_RE.sub(" ", final)
     return final, entities
 

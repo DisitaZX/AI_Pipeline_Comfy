@@ -276,6 +276,14 @@ Single flowing paragraph that covers, in this order, in natural prose:
   pan, orbit, tilt) — avoid abstract labels like "cinematic" alone.
 
 ## Forbidden
+- **No proper names of any kind** — no character names, no personal
+  names, no city/country/region names, no brand names. The reference
+  context may contain names like "Lin Shuang", "Shen Fei", "Chang'an"
+  etc. — these are for YOUR understanding only. In the output prompt,
+  refer to characters ONLY by visual description: "the young woman
+  with dark hair", "the white-haired man in tactical gear", "the
+  taller assassin", etc. LTX has no concept of named identities; it
+  only sees shapes, colors, and clothing.
 - **No internal emotional state words** ("she feels sad", "he is angry",
   "she is confused"). Use physical cues instead.
 - **No spoken dialogue** of any kind. NO quoted text. NO "she says ...".
@@ -423,16 +431,109 @@ def extract_json_object(raw: str) -> Any:
 
     raise ValueError("could not extract JSON object from LLM output")
 
+LLAMA_URL = "http://localhost:8080/v1/chat/completions"
+
+async def call_llama_server(
+    *,
+    system: str,
+    user: str,
+    images: list[str] | None = None,  # base64-encoded картинки (PNG)
+    temperature: float,
+    top_p: float,
+    max_tokens: int = 8192,
+    repeat_penalty: float = 1.15,
+    stop: list[str] | None = None,
+    seed: int | None = None,
+    use_json_format: bool = True,
+    enable_thinking: bool = False,
+    server_url: str = LLAMA_URL,
+    timeout: aiohttp.ClientTimeout | None = None,
+) -> tuple[str, dict]:
+    """
+    Универсальный клиент для llama.cpp `llama-server` (OpenAI-compat
+    /v1/chat/completions). Заменяет Ollama /api/generate.
+
+    Возвращает:
+        (raw_content, full_result) — content уже взят из
+        choices[0].message.content. Если ответ битый - content="".
+
+    Параметры:
+      system / user        - текстовые сообщения. Картинки больше не
+                             поддерживаются (этот сервер запущен на
+                             text-only модели Qwen3.6-35B-A3B без mmproj).
+      use_json_format      - True ставит response_format=json_object,
+                             llama.cpp форсит модель закрывать корректным
+                             JSON через grammar-constrained декодинг.
+                             Аналог Ollama `format: "json"`.
+      enable_thinking      - False для Qwen3-моделей вырубает <think>
+                             через chat_template_kwargs. Аналог
+                             Ollama `think: false`.
+      stop                 - стопы. Default: ["<|im_end|>"] - end-of-turn
+                             маркер Qwen3.
+      seed                 - default random per call.
+    """
+    if stop is None:
+        stop = ["<|im_end|>"]
+    if seed is None:
+        seed = random.randint(1, 2**31 - 1)
+    if timeout is None:
+        timeout = aiohttp.ClientTimeout(total=None)
+
+    if images:
+        # OpenAI vision-format: content становится массивом частей.
+        # llama-server при наличии --mmproj разбирает image_url с data: URI
+        # как вход для vision-tower. Изображения декодируются через clip
+        # encoder и приклеиваются к user-сообщению как vision-токены.
+        user_content: list[dict] = [{"type": "text", "text": user}]
+        for img_b64 in images:
+            user_content.append({
+                "type": "image_url",
+                "image_url": {"url": f"data:image/png;base64,{img_b64}"},
+            })
+        messages = [
+            {"role": "system", "content": system},
+            {"role": "user", "content": user_content},
+        ]
+    else:
+        messages = [
+            {"role": "system", "content": system},
+            {"role": "user", "content": user},
+        ]
+
+    body: dict = {
+        "model": "loaded",
+        "messages": messages,
+        "temperature": temperature,
+        "top_p": top_p,
+        "max_tokens": max_tokens,
+        "repeat_penalty": repeat_penalty,
+        "seed": seed,
+        "stop": stop,
+        "stream": False,
+        "chat_template_kwargs": {"enable_thinking": enable_thinking},
+    }
+    if use_json_format:
+        body["response_format"] = {"type": "json_object"}
+
+    async with aiohttp.ClientSession(timeout=timeout) as session:
+        async with session.post(server_url, json=body) as response:
+            result = await response.json()
+
+    try:
+        content = result["choices"][0]["message"]["content"] or ""
+    except (KeyError, IndexError, TypeError):
+        return "", result if isinstance(result, dict) else {}
+
+    return content.strip(), result
 
 async def get_chunk_prompts_from_ollama(
     scene_text: str,
     video_prompt: str,
-    image_path: str | None,
+    image_path: str | None,  # подаётся в vision-tower через --mmproj
     n_chunks: int,
     chunk_frames: Sequence[int],
     fps: int = 15,
-    ollama_url: str = "http://localhost:11434/api/generate",
-    model: str = "gemma4:e4b",
+    ollama_url: str = LLAMA_URL,
     previous_recap: str = "",
 ) -> list[str]:
     """
@@ -485,10 +586,6 @@ async def get_chunk_prompts_from_ollama(
     if image_path and os.path.exists(image_path):
         images_payload.append(encode_image_b64(image_path))
 
-    # Ретраи: Gemma при высокой t иногда пробивает format=json выводя
-    # template-control токены (`<channel|>`, `<tool_call|>`) после закрывающего
-    # `]}`. На каждый ретрай слегка прижимаем сэмплинг и меняем seed,
-    # чтобы не попасть в тот же бад-путь.
     retry_profiles = [
         {"temperature": 0.95, "top_p": 0.85},
         {"temperature": 0.80, "top_p": 0.90},
@@ -497,35 +594,19 @@ async def get_chunk_prompts_from_ollama(
     last_err: Exception | None = None
     last_raw: str = ""
 
-    timeout = aiohttp.ClientTimeout(total=None)
     for attempt, profile in enumerate(retry_profiles):
-        async with aiohttp.ClientSession(timeout=timeout) as session:
-            payload = {
-                "model": model,
-                "system": SYSTEM_PROMPT_WAN.format(n_chunks=n_chunks),
-                "prompt": user_payload,
-                "images": images_payload,
-                "format": "json",
-                "stream": False,
-                "keep_alive": 5,
-                "options": {
-                    "temperature": profile["temperature"],
-                    "top_p": profile["top_p"],
-                    "repeat_penalty": 1.15,
-                    # Поднято до 8192 ради Qwen3+ thinking-моделей: они тратят
-                    # 1.5-3k токенов на CoT в поле `thinking`, потом ещё пишут
-                    # JSON в `response`. Старого 2048 хватало только Gemma'е.
-                    "num_predict": 8192,
-                    "seed": random.randint(1, 2**31 - 1),
-                    # Обрезаем template-лики если модель начнёт их лить.
-                    # `<|`, `<channel`, `<tool_call` - типичные лики chat template'a;
-                    # `}<` ловит любой garbage сразу после закрывающей `}`.
-                    "stop": ["<|", "<channel", "<tool_call", "```\n\n", "}<"],
-                },
-            }
-            async with session.post(ollama_url, json=payload) as response:
-                result = await response.json()
-                last_raw = result.get("response", "").strip()
+        last_raw, result = await call_llama_server(
+            system=SYSTEM_PROMPT_WAN.format(n_chunks=n_chunks),
+            user=user_payload,
+            images=images_payload or None,
+            temperature=profile["temperature"],
+            top_p=profile["top_p"],
+            max_tokens=8192,
+            stop=["<end_of_turn>"],
+            use_json_format=True,
+            enable_thinking=True,
+            server_url=ollama_url,
+        )
 
         # Стрип <think>...</think> блоков на случай если Ollama льёт CoT
         # прямо в response (старые версии до отдельного поля `thinking`).
@@ -534,11 +615,15 @@ async def get_chunk_prompts_from_ollama(
         # Diagnostic: если response пуст и done_reason=length при наличии
         # thinking - значит thinking-модель не успела до ответа дойти.
         if not last_raw and isinstance(result, dict):
-            if result.get("done_reason") == "length" and result.get("thinking"):
+            try:
+                finish_reason = result["choices"][0]["finish_reason"]
+            except (KeyError, IndexError, TypeError):
+                finish_reason = None
+            if finish_reason == "length":
                 print(
                     f"[chunk_prompts] attempt {attempt + 1}/{len(retry_profiles)} "
-                    f"thinking-truncated: done_reason=length, thinking={len(result['thinking'])} chars, "
-                    f"response empty. Increase num_predict (currently 8192) или используй non-thinking модель."
+                    f"truncated by max_tokens. Increase max_tokens (currently 8192) "
+                    f"или закрути thinking=False."
                 )
 
         try:
@@ -583,6 +668,7 @@ async def get_video_prompt_for_ltx_from_ollama(
     ollama_url: str = "http://localhost:11434/api/generate",
     model: str = "gemma4:e4b",
     previous_recap: str = "",
+    continuity_type: str = "new_cut",  # NEW
 ) -> str:
     """
     Возвращает ОДНУ строку — prompt для LTX 2.3 i2v на всю сцену.
@@ -621,6 +707,18 @@ async def get_video_prompt_for_ltx_from_ollama(
         else ""
     )
 
+    # Дополнительная инструкция для continue-сцен
+    if continuity_type in ("soft_continue", "hard_continue"):
+        continuity_note = (
+            "## Critical continuity constraint\n"
+            "The reference image is the immediate continuation of the previous "
+            "scene. Character pose, expression, position, and ongoing action "
+            "MUST be preserved exactly as shown in the reference image. The "
+            "first second of motion should evolve smoothly from the static "
+            "reference state, not start from a 'rest pose' or 'default' state.\n\n"
+        )
+        recap_block = recap_block + continuity_note
+
     user_payload = (
         recap_block
         + "## Scene context\n"
@@ -639,8 +737,6 @@ async def get_video_prompt_for_ltx_from_ollama(
     if image_path and os.path.exists(image_path):
         images_payload.append(encode_image_b64(image_path))
 
-    # Те же ретрай-профили что у Wan-функции: при высокой t Gemma пробивает
-    # format=json template-control токенами (`<channel|>` и т.п.) после `}`.
     retry_profiles = [
         {"temperature": 0.95, "top_p": 0.85},
         {"temperature": 0.80, "top_p": 0.90},
@@ -649,42 +745,34 @@ async def get_video_prompt_for_ltx_from_ollama(
     last_err: Exception | None = None
     last_raw: str = ""
 
-    timeout = aiohttp.ClientTimeout(total=None)
     for attempt, profile in enumerate(retry_profiles):
-        async with aiohttp.ClientSession(timeout=timeout) as session:
-            payload = {
-                "model": model,
-                "system": SYSTEM_PROMPT_LTX,
-                "prompt": user_payload,
-                "images": images_payload,
-                "format": "json",
-                "stream": False,
-                "keep_alive": 5,
-                "think": True,
-                "options": {
-                    "temperature": profile["temperature"],
-                    "top_p": profile["top_p"],
-                    "repeat_penalty": 1.15,
-                    # Поднято до 8192 ради Qwen3+ thinking-моделей (см. WAN-функцию).
-                    "num_predict": 32768,
-                    "seed": random.randint(1, 2**31 - 1),
-                    "stop": ["<|", "<channel", "<tool_call", "```\n\n", "}<"],
-                },
-            }
-            async with session.post(ollama_url, json=payload) as response:
-                result = await response.json()
-                last_raw = result.get("response", "").strip()
+        last_raw, result = await call_llama_server(
+            system=SYSTEM_PROMPT_LTX,
+            user=user_payload,
+            images=images_payload or None,
+            temperature=profile["temperature"],
+            top_p=profile["top_p"],
+            max_tokens=32768,
+            stop=["<end_of_turn>"],
+            use_json_format=True,
+            enable_thinking=True,
+            server_url=ollama_url,
+        )
 
         # Стрип <think>...</think> блоков (см. WAN-функцию).
         last_raw = re.sub(r"<think\b[^>]*>.*?</think>", "", last_raw, flags=re.DOTALL | re.IGNORECASE).strip()
 
         # Diagnostic: thinking-truncated case.
         if not last_raw and isinstance(result, dict):
-            if result.get("done_reason") == "length" and result.get("thinking"):
+            try:
+                finish_reason = result["choices"][0]["finish_reason"]
+            except (KeyError, IndexError, TypeError):
+                finish_reason = None
+            if finish_reason == "length":
                 print(
                     f"[ltx_prompt] attempt {attempt + 1}/{len(retry_profiles)} "
-                    f"thinking-truncated: done_reason=length, thinking={len(result['thinking'])} chars, "
-                    f"response empty. Increase num_predict (currently 8192) или non-thinking модель."
+                    f"truncated by max_tokens (currently 32768). "
+                    f"Подними max_tokens или вырубай thinking=False."
                 )
 
         try:

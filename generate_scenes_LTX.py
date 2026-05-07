@@ -24,12 +24,13 @@ from srt_timing.srt_timing import SRTSceneTimeline
 from comics.animator import ImagePanner
 from srt.ass_encode import fragments_to_ass
 from comfy_manager import ComfyManager
+from llama_manager import llama_mgr
 from chunk_prompts_2 import (split_into_chunks, get_chunk_prompts_from_ollama,
                            substitute_entities_to_image_slots, expand_image_prompt_for_qwen_edit,
                            precompute_all_image_prompts, get_video_prompt_for_ltx_from_ollama, round_to_valid_frames_ltx, pick_camera_preset)
 from prompt_builder import build_qwen_edit_prompt
 
-OLLAMA_URL = "http://localhost:11434/api/generate"
+LLAMA_URL = "http://localhost:8080/v1/chat/completions"
 COMFYUI_URL = "127.0.0.1:8188"
 
 def patch_flux2_edit_workflow(
@@ -282,13 +283,13 @@ async def main():
         workflow_vid = json.load(f)
 
     # --- ЭТАП 2: Аудио ---
-    """print("\n2. Запускаем генерацию TTS ...")
+    print("\n2. Запускаем генерацию TTS ...")
     tts_node_id = "1"
     workflow_tts[tts_node_id]["inputs"]["text"] = plan["tts_text"]
 
     prompt_id_tts = await comfy.queue_prompt(workflow_tts)
     audio_files = await comfy.wait_for_execution(prompt_id_tts)
-    print(f"Аудио сгенерировано: {audio_files[0] if audio_files else 'Ошибка'}")"""
+    print(f"Аудио сгенерировано: {audio_files[0] if audio_files else 'Ошибка'}")
 
     # ! AENEAS !
     command = [
@@ -363,7 +364,7 @@ async def main():
     fragments_to_ass("map_words.json", "subs.ass")
 
     # генерация base
-    """for i, scene in enumerate(plan["base_prompts"]):
+    for i, scene in enumerate(plan["base_prompts"]):
         print(f"\n--- Обработка base prompt {i + 1} ---")
         # 1. Генерируем изображение
 
@@ -382,7 +383,7 @@ async def main():
         generated_image_name = img_files[0]
         print(f"Изображение готово: {generated_image_name}")
 
-    await comfy_mgr.restart()"""
+    await comfy_mgr.restart()
 
     REFS_DIR = r"C:\Users\Loopy\Desktop\ComfyUI_windows_portable\ComfyUI\output\base_image_gen"
     GEN_IMG_DIR = r"C:\Users\Loopy\Desktop\ComfyUI_windows_portable\ComfyUI\output\image_gen"
@@ -392,24 +393,64 @@ async def main():
     print("\n=== Pre-batch: image prompts через Gemma ===")
     precomputed_image_prompts = await precompute_all_image_prompts(
         scenes=plan["scenes"],
-    )
-
-    await unload_ollama_model()"""
+    )"""
 
     base_prompts_by_name = {bp["base_name"]: bp for bp in plan.get("base_prompts", [])}
-    # --- ЭТАП 2 и 3: Изображения и Видео ---
+    # --- ЭТАП 2: Image generation с continuity ---
+    # previous_image_path — путь к FLUX.2-выходу предыдущей сцены, используется
+    # как Picture 1 для soft/hard_continue сцен. None для new_cut / scene 1.
+    previous_image_path: str | None = None
+
     for i, scene in enumerate(plan["scenes"]):
         print(f"\n--- Обработка сцены {scene['scene_id']} ---")
-        # 1. Генерируем изображение
         print(f"Генерация изображения {i + 1}")
-        camera_preset = pick_camera_preset(i)  # 0-based, как в chunk_prompts_2
+
+        continuity_type = scene.get("continuity_type", "new_cut")
+        # Безопасный fallback: scene 1 всегда new_cut
+        if i == 0:
+            continuity_type = "new_cut"
+
+        # Если continuity != new_cut но previous_image_path не существует
+        # (например GROK ошибочно поставил soft_continue для scene 1, или
+        # предыдущая сцена не сгенерилась) — даунгрейдим на new_cut.
+        if continuity_type != "new_cut" and (
+                previous_image_path is None
+                or not os.path.exists(previous_image_path)
+        ):
+            print(f"  [WARN] continuity={continuity_type}, но prev image отсутствует — fallback на new_cut")
+            continuity_type = "new_cut"
+
+        camera_preset = pick_camera_preset(i)
+
+        # Маппинг continuity_type -> continuity_mode для prompt_builder
+        cmode_map = {
+            "new_cut": "none",
+            "soft_continue": "soft",
+            "hard_continue": "hard",
+        }
+        continuity_mode = cmode_map.get(continuity_type, "none")
+
         final_prompt, entities = build_qwen_edit_prompt(
             image_prompt=scene["image_prompt"],
             base_prompts_by_name=base_prompts_by_name,
             camera_preset=camera_preset,
             max_pictures=5,
+            continuity_mode=continuity_mode,
         )
-        image_paths = [f"{REFS_DIR}\\{name}_00001_.png" for name in entities]
+
+        # Сборка image_paths: prev-frame идёт первым если continuity активна
+        base_image_paths = [f"{REFS_DIR}\\{name}_00001_.png" for name in entities]
+        if continuity_mode in ("soft", "hard"):
+            image_paths = [previous_image_path] + base_image_paths
+        else:
+            image_paths = base_image_paths
+
+        # Cap на 5 (FLUX.2 Klein hard limit). На всякий случай — prompt_builder
+        # уже это учитывает через picture_offset, но safety net.
+        image_paths = image_paths[:5]
+
+        print(f"continuity_type: {continuity_type}")
+        print(f"prev_image: {previous_image_path}")
         print("Промпт (raw):")
         print(scene["image_prompt"])
         print("Промпт (final):")
@@ -428,35 +469,49 @@ async def main():
         generated_image_name = img_files[0]
         print(f"Изображение готово: {generated_image_name}")
 
+        # Зафиксировать путь для следующей итерации.
+        # ComfyUI сохраняет как "{filename_prefix}_00001_.png" => image_gen/{i+1}_00001_.png
+        previous_image_path = f"{GEN_IMG_DIR}\\{i + 1}_00001_.png"
+
     await comfy_mgr.stop()
     folder_to_create = f"C:\\Users\\Loopy\\Desktop\\ComfyUI_windows_portable\\ComfyUI\\output\\{datetime.datetime.today().strftime('%Y-%m-%d')}"
     unique_path = get_unique_dir_name(folder_to_create)
     os.makedirs(unique_path)
 
-    # --- ЭТАП 3.1: Получение промптов для видео от Gemma ---
+    # --- ЭТАП 3.1: Получение промптов для видео от Qwen3-VL через llama-server ---
     print("\n--- Сбор промптов для видео ---")
+    print("Стартуем llama-server...")
+    await llama_mgr.start()
+    print(f"llama-server готов на {llama_mgr.base_url}")
+
     video_prompts = []
     scene_frames = []
 
-    for i, scene in enumerate(plan["scenes"]):
-        print(f"Генерация промпта для сцены {scene['scene_id']}...")
-        image_path = f"C:\\Users\\Loopy\\Desktop\\ComfyUI_windows_portable\\ComfyUI\\output\\image_gen\\{i + 1}_00001_.png"
-        frames_raw  = SRT_json["scenes"][i]["frames"]
-        frames = round_to_valid_frames_ltx(frames_raw, mode="nearest")
-        prompt = await get_video_prompt_for_ltx_from_ollama(
-            scene_text=scene["text_scene"],
-            video_prompt=scene["video_prompt"],
-            image_path=image_path,
-            n_frames=frames,
-            fps=24,
-            previous_recap=scene["previous_recap"],
-        )
-        video_prompts.append(prompt)
-        scene_frames.append(frames)
-        print(prompt)
-        print(f"Промпт для сцены {scene['scene_id']} получен.")
-
-    await unload_ollama_model()
+    try:
+        for i, scene in enumerate(plan["scenes"]):
+            print(f"Генерация промпта для сцены {scene['scene_id']}...")
+            image_path = f"C:\\Users\\Loopy\\Desktop\\ComfyUI_windows_portable\\ComfyUI\\output\\image_gen\\{i + 1}_00001_.png"
+            frames_raw = SRT_json["scenes"][i]["frames"]
+            frames = round_to_valid_frames_ltx(frames_raw, mode="nearest")
+            prompt = await get_video_prompt_for_ltx_from_ollama(
+                scene_text=scene["text_scene"],
+                video_prompt=scene["video_prompt"],
+                image_path=image_path,
+                n_frames=frames,
+                fps=24,
+                previous_recap=scene["previous_recap"],
+                continuity_type=scene.get("continuity_type", "new_cut"),  # NEW
+            )
+            video_prompts.append(prompt)
+            scene_frames.append(frames)
+            print(prompt)
+            print(f"Промпт для сцены {scene['scene_id']} получен.")
+    finally:
+        # Всегда гасим сервер, даже если что-то упало в loop'е —
+        # иначе модель так и будет жрать RAM/VRAM до конца жизни процесса.
+        print("Гасим llama-server...")
+        await llama_mgr.stop()
+        print("llama-server остановлен")
 
     await comfy_mgr.start()
 

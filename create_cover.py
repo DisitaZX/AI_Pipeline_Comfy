@@ -47,7 +47,7 @@ def create_cover(input_image_path, text, output_path, font_path="C:\\Users\\Loop
 # Пример использования:
 create_cover(
     input_image_path=f"C:\\Users\\Loopy\\Desktop\\ComfyUI_windows_portable\\ComfyUI\\output\\image_gen\\1_00001_.png",
-    text="Арка злодея: часть 10",
+    text="Арка злодея: часть 11",
     output_path="result_cover.jpg",
     font_size=50
 )
