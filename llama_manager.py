@@ -45,7 +45,7 @@ class LlamaServerManager:
         cache_type_v: str = "turbo3",
         extra_args: Sequence[str] = (),
         log_path: str | os.PathLike | None = None,
-        startup_timeout: float = 600.0,   # 35B-A3B на CPU грузится ~3-5 мин
+        startup_timeout: float = 600.0,  # 35B-A3B на CPU грузится ~3-5 мин
         shutdown_timeout: float = 30.0,
         port_free_timeout: float = 60.0,
     ):
@@ -69,12 +69,18 @@ class LlamaServerManager:
 
         cmd: list[str] = [
             self.llama_server_bin,
-            "--model", self.model_path,
-            "--host", self.host,
-            "--port", str(self.port),
-            "--ctx-size", str(ctx_size),
-            "--cache-type-k", cache_type_k,
-            "--cache-type-v", cache_type_v,
+            "--model",
+            self.model_path,
+            "--host",
+            self.host,
+            "--port",
+            str(self.port),
+            "--ctx-size",
+            str(ctx_size),
+            "--cache-type-k",
+            cache_type_k,
+            "--cache-type-v",
+            cache_type_v,
         ]
         if n_cpu_moe is not None:
             cmd += ["--n-cpu-moe", str(n_cpu_moe)]
@@ -219,7 +225,7 @@ class LlamaServerManager:
 
 # ---------------------------------------------------------------- singleton
 
-LLAMA_SERVER_BIN = r"C:\Users\Loopy\Desktop\llama_TurboQuant\llama-server.exe"
+LLAMA_SERVER_BIN = r"C:\Users\Loopy\Desktop\turboQFork\llama-server.exe"
 LLAMA_MODEL = r"C:\local_models\gemma-4-E4B-it-UD-Q8_K_XL.gguf"
 LLAMA_MMPROJ = r"C:\local_models\gemma-4-E4B-it-mmproj\mmproj-BF16.gguf"
 
@@ -241,12 +247,14 @@ llama_mgr = LlamaServerManager(
 
 def main():
     """Sanity-check: запустить, дождаться готовности, сразу погасить."""
+
     async def _run():
         await llama_mgr.start()
         print(f"OK, listening on {llama_mgr.base_url}")
         await asyncio.sleep(2)
         await llama_mgr.stop()
         print("stopped")
+
     asyncio.run(_run())
 
 

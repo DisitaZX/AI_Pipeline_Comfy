@@ -57,7 +57,7 @@
   },
   "268": {
     "inputs": {
-      "text": "A luxurious underground guest room with polished rare wood parquet floors, handmade leather sofas, floor-to-ceiling panoramic windows overlooking a calm artificial lake, soft morning sunlight streaming in casting golden patches on the floor, Pixar CGI Toon Style with warm soft lighting, detailed wood grain and leather texture, two single beds with rumpled dark sheets.",
+      "text": "2.5D Anime Style, young Chinese man in his early 20s, messy short black hair, sharp alert eyes, wearing a white loose t-shirt, sports shorts, sneakers without socks. Slim build, slightly tanned skin, expression ranges from sleepy to defiant, calm under pressure. Detailed facial features, anime shading, vibrant colors.\n        ",
       "clip": [
         "264",
         0
@@ -70,7 +70,7 @@
   },
   "269": {
     "inputs": {
-      "text": "worst quality, inconsistent motion, blurry, jittery, distorted, watermark, morphing faces, fingers deformed, extra limbs, unnatural colors, flickering, ghosting, anime, manga, 2d animation, cel-shaded, hand-drawn, painterly, flat colors, sharp lineart, line art, watercolor, sketch, ink drawing, comic book style, blood",
+      "text": "worst quality, inconsistent motion, blurry, jittery, distorted, watermark, morphing faces, fingers deformed, extra limbs, unnatural colors, flickering, ghosting, blood",
       "clip": [
         "264",
         0
@@ -110,7 +110,7 @@
   },
   "272": {
     "inputs": {
-      "seed": 380340083657250,
+      "seed": 209799733508628,
       "steps": [
         "273",
         0
@@ -164,7 +164,7 @@
   },
   "278": {
     "inputs": {
-      "lora_name": "Qwen-Image-2512-Lightning-8steps-V1.0-bf16.safetensors",
+      "lora_name": "Qwen-Image-2512-Lightning-8steps-V1.0-fp32.safetensors",
       "strength_model": 1,
       "model": [
         "267",

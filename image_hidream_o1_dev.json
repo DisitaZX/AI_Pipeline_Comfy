@@ -1,0 +1,267 @@
+{
+  "6": {
+    "inputs": {
+      "ckpt_name": "hidream_o1_image_dev_bf16.safetensors"
+    },
+    "class_type": "CheckpointLoaderSimple",
+    "_meta": {
+      "title": "Загрузить сheckpoint"
+    }
+  },
+  "104": {
+    "inputs": {
+      "positive": [
+        "110",
+        0
+      ],
+      "negative": [
+        "188",
+        0
+      ],
+      "images.image_1": [
+        "234",
+        0
+      ],
+      "images.image_2": [
+        "235",
+        0
+      ],
+      "images.image_3": [
+        "233",
+        0
+      ],
+      "images.image_4": [
+        "236",
+        0
+      ],
+      "images.image_5": [
+        "237",
+        0
+      ]
+    },
+    "class_type": "HiDreamO1ReferenceImages",
+    "_meta": {
+      "title": "HiDream-O1 Reference Images"
+    }
+  },
+  "105": {
+    "inputs": {
+      "samples": [
+        "108",
+        0
+      ],
+      "vae": [
+        "6",
+        2
+      ]
+    },
+    "class_type": "VAEDecode",
+    "_meta": {
+      "title": "Декодировать VAE"
+    }
+  },
+  "108": {
+    "inputs": {
+      "add_noise": true,
+      "noise_seed": 332814002584326,
+      "cfg": 1,
+      "model": [
+        "124",
+        0
+      ],
+      "positive": [
+        "104",
+        0
+      ],
+      "negative": [
+        "104",
+        1
+      ],
+      "sampler": [
+        "125",
+        0
+      ],
+      "sigmas": [
+        "112",
+        0
+      ],
+      "latent_image": [
+        "156",
+        0
+      ]
+    },
+    "class_type": "SamplerCustom",
+    "_meta": {
+      "title": "Пользовательский выборщик"
+    }
+  },
+  "110": {
+    "inputs": {
+      "text": [
+        "171",
+        0
+      ],
+      "clip": [
+        "6",
+        1
+      ]
+    },
+    "class_type": "CLIPTextEncode",
+    "_meta": {
+      "title": "Кодирование текста CLIP (Запрос)"
+    }
+  },
+  "112": {
+    "inputs": {
+      "scheduler": "normal",
+      "steps": 28,
+      "denoise": 1,
+      "model": [
+        "124",
+        0
+      ]
+    },
+    "class_type": "BasicScheduler",
+    "_meta": {
+      "title": "Основной scheduler"
+    }
+  },
+  "124": {
+    "inputs": {
+      "noise_scale": 7.6,
+      "model": [
+        "6",
+        0
+      ]
+    },
+    "class_type": "ModelNoiseScale",
+    "_meta": {
+      "title": "ModelNoiseScale"
+    }
+  },
+  "125": {
+    "inputs": {
+      "s_noise": 1,
+      "s_noise_end": 1,
+      "noise_clip_std": 2.5
+    },
+    "class_type": "SamplerLCM",
+    "_meta": {
+      "title": "SamplerLCM"
+    }
+  },
+  "156": {
+    "inputs": {
+      "width": 2048,
+      "height": 2048,
+      "batch_size": 1
+    },
+    "class_type": "EmptyHiDreamO1LatentImage",
+    "_meta": {
+      "title": "Empty HiDream-O1 Latent Image"
+    }
+  },
+  "171": {
+    "inputs": {
+      "value": "A young Asian male with short messy black hair, sharp narrow yellow eyes, slender build, wearing a navy blue ride-hailing driver uniform with white collar trim and a black name tag on the left chest. 3D creamy CG art style. plain neutral background, no environmental props, no cropping"
+    },
+    "class_type": "PrimitiveStringMultiline",
+    "_meta": {
+      "title": "User Prompt"
+    }
+  },
+  "188": {
+    "inputs": {
+      "text": "",
+      "clip": [
+        "6",
+        1
+      ]
+    },
+    "class_type": "CLIPTextEncode",
+    "_meta": {
+      "title": "Кодирование текста CLIP (Запрос)"
+    }
+  },
+  "227": {
+    "inputs": {
+      "filename_prefix": "hidream_o1",
+      "images": [
+        "258",
+        0
+      ]
+    },
+    "class_type": "SaveImage",
+    "_meta": {
+      "title": "Сохранить изображение"
+    }
+  },
+  "233": {
+    "inputs": {
+      "image": "",
+      "custom_width": 0,
+      "custom_height": 0
+    },
+    "class_type": "VHS_LoadImagePath",
+    "_meta": {
+      "title": "Load Image (Path) 🎥🅥🅗🅢"
+    }
+  },
+  "234": {
+    "inputs": {
+      "image": "",
+      "custom_width": 0,
+      "custom_height": 0
+    },
+    "class_type": "VHS_LoadImagePath",
+    "_meta": {
+      "title": "Load Image (Path) 🎥🅥🅗🅢"
+    }
+  },
+  "235": {
+    "inputs": {
+      "image": "",
+      "custom_width": 0,
+      "custom_height": 0
+    },
+    "class_type": "VHS_LoadImagePath",
+    "_meta": {
+      "title": "Load Image (Path) 🎥🅥🅗🅢"
+    }
+  },
+  "236": {
+    "inputs": {
+      "image": "",
+      "custom_width": 0,
+      "custom_height": 0
+    },
+    "class_type": "VHS_LoadImagePath",
+    "_meta": {
+      "title": "Load Image (Path) 🎥🅥🅗🅢"
+    }
+  },
+  "237": {
+    "inputs": {
+      "image": "",
+      "custom_width": 0,
+      "custom_height": 0
+    },
+    "class_type": "VHS_LoadImagePath",
+    "_meta": {
+      "title": "Load Image (Path) 🎥🅥🅗🅢"
+    }
+  },
+  "258": {
+    "inputs": {
+      "aggressive": true,
+      "image": [
+        "105",
+        0
+      ]
+    },
+    "class_type": "FreeMemoryImage",
+    "_meta": {
+      "title": "Free Memory (Image)"
+    }
+  }
+}

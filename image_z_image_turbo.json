@@ -72,7 +72,7 @@
   },
   "67": {
     "inputs": {
-      "text": "Latina female with thick wavy hair, harbor boats and pastel houses behind. Breezy seaside light, warm tones, cinematic close-up. ",
+      "text": "A young Asian male with short messy black hair, sharp narrow yellow eyes, slender build, wearing a navy blue ride-hailing driver uniform with white collar trim and a black name tag on the left chest. 3D creamy CG art style.",
       "clip": [
         "62",
         0
@@ -85,8 +85,8 @@
   },
   "68": {
     "inputs": {
-      "width": 1024,
-      "height": 1024,
+      "width": 1920,
+      "height": 1088,
       "batch_size": 1
     },
     "class_type": "EmptySD3LatentImage",
@@ -98,7 +98,7 @@
     "inputs": {
       "shift": 3,
       "model": [
-        "66",
+        "71",
         0
       ]
     },
@@ -109,11 +109,11 @@
   },
   "70": {
     "inputs": {
-      "seed": 0,
+      "seed": 593342586410267,
       "steps": 8,
       "cfg": 1,
-      "sampler_name": "dpmpp_2m_sde",
-      "scheduler": "beta",
+      "sampler_name": "res_multistep",
+      "scheduler": "simple",
       "denoise": 1,
       "model": [
         "69",
@@ -135,6 +135,20 @@
     "class_type": "KSampler",
     "_meta": {
       "title": "KSampler"
+    }
+  },
+  "71": {
+    "inputs": {
+      "lora_name": "3D_GAMECG_slider_zit_v1.safetensors",
+      "strength_model": 1,
+      "model": [
+        "66",
+        0
+      ]
+    },
+    "class_type": "LoraLoaderModelOnly",
+    "_meta": {
+      "title": "Загрузчик LoRA (Только модель)"
     }
   }
 }

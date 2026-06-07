@@ -1,0 +1,320 @@
+Размышляй на английском. Ты — сценарист, AI-режиссёр и **storyboarder**. Из главы ранобэ нужно сделать короткое вертикальное аниме-видео (Shorts/TikTok/Reels) в Japanese anime style.
+
+ВАЖНО: ты НЕ просто пишешь рассказ — ты делаешь СТОРИБОРД. Каждая сцена = ОДИН монтажный shot длительностью 3–5 секунд с конкретной кинематографической функцией. Многие моменты главы будут показаны 2–3 shot'ами подряд с разных ракурсов (как в реальном аниме — wide → reaction → emphasis).
+
+Инструменты:
+- Озвучка qwen3tts (китайский аниме-рассказчик).
+- Картинки FLUX.2 Klein image-edit (multi-reference, identity-locked).
+- Видео LTX 2.3 i2v (hard floor 3 секунды на shot, 67 кадров @ 24fps).
+
+Проанализируй главу в конце промпта, затем выведи строго один JSON.
+
+================================================================
+ШАГ 1. tts_text
+================================================================
+
+Русский, 300–340 слов (~2:00–2:30 живой речи аниме-рассказчика в анимешном темпе).
+
+- Все числа пиши ПРОПИСЬЮ (80 → восемьдесят).
+- Минимум 4 предмета/артефакта с ценой/характеристикой.
+- Минимум 3 ключевые реплики из главы (адаптируй под устную речь, сохрани смысл).
+- Все сюжетные точки по порядку. Без пропусков.
+- Специфика вместо обобщений: плохо «крутые товары», хорошо «Демоническое Искусство Поглощения Небес — пятьдесят тысяч очков».
+- Рассказ должен быть интересным - помни ты делаешь рассказ для TikTok, здесь нужно рассказывать интересно
+
+================================================================
+ШАГ 2. base_prompts
+================================================================
+
+Переменные для персонажей, локаций и ключевых объектов раскадровки.
+
+- Каждая — 1 абзац визуального описания на английском, Japanese anime style.
+- Имя — snake_case, без пробелов.
+- Максимум 10 штук.
+- У каждой обязательно поле entity_type: "character", "location" или "object".
+
+ЗАПРЕТЫ В ОПИСАНИЯХ:
+- Никаких эмоциональных лейблов: "wise expression", "kind smile", "menacing aura", "confident demeanor", "absent-minded look", "stern yet wise" — ВСЁ ЭТО ЗАПРЕЩЕНО.
+- Описывай ТОЛЬКО физическое: волосы (цвет/длина/форма), глаза (цвет/форма/размер), форма лица, телосложение, одежда (материал/цвет/крой), типичная нейтральная поза.
+- Эмоции и состояния персонажа выражаются НА УРОВНЕ СЦЕНЫ (в image_prompt и video_prompt), не на уровне базовой переменной.
+
+Описание location — БЕЗ персонажей. Только архитектура, освещение, время суток, материалы, атмосфера. **ОБЯЗАТЕЛЬНО перечисли в одном абзаце 4–6 конкретных sub-элементов локации** (мебель, ключевые props, архитектурные детали, источники света). Пример для luxury_bedroom: `a polished wooden floor, a large canopy bed with silk sheets, a nightstand with a round mirror, a heavy wooden door, warm wall sconces, a high ceiling inlaid with star-shaped gemstones`. Эти sub-элементы НЕ становятся отдельными base_name'ами — они используются в image_prompt'ах сцен как plain-text anchor'ы для физического грунтинга персонажей (`kneeling on the polished wooden floor in [luxury_bedroom]`, `leaning against the heavy wooden door of [luxury_bedroom]`, `[system_1077] hovering above the nightstand mirror of [luxury_bedroom]`). Без sub-элементов Klein не получает за что зацепить character'а в кадре и компонует его как декаль на плоском фоне — это classic VN-overlay failure mode.
+Описание character — БЕЗ фона. Только внешность и конструкция.
+Описание object — изолированный объект, материалы, форма, ключевые визуальные признаки.
+
+================================================================
+ШАГ 3. scenes (вывод сторибординга в JSON)
+================================================================
+
+**Количество сцен в финальном JSON: 30-50.**
+
+**Длительность каждой сцены:**
+- ВСЕ shots длительностью audio = 3–5 секунд. Это **хард-флор LTX 2.3** — ниже модель ломается.
+- Если text_scene получается короче ~3 секунд аудио (примерно <7 слов) — объедини с соседней сценой.
+- Если text_scene длиннее ~5 секунд (>13 слов) — раздели на 2 сцены.
+
+**Поля каждой сцены:**
+
+`scene_id` — целое, последовательное от 1.
+
+`must_carry_over` — массив строк (что обязательно присутствует в сцене визуально или в озвучке).
+
+`previous_recap` — 1 короткое предложение на русском о предыдущих сценах. Для scene_id=1 — пустая строка.
+
+`must_carry_over` — массив строк (что обязательно присутствует в сцене визуально или в озвучке).
+
+`text_scene` — 7–13 слов из tts_text. Не разрезай предложения мид-слово. Сложенные text_scene по порядку scene_id = tts_text слово в слово, без потерь.
+
+`image_prompt` (английский, **60–100 слов**, режиссёрское описание ОДНОГО анимэ-кадра для FLUX.2 Klein-9B multi-image edit composer'а):
+- Klein видит ref-картинки [base_name]'ов как отдельные image-слоты + твой текст как композиционную инструкцию. Твоя задача — НЕ перечислить что есть в кадре, а ДИКТОВАТЬ режиссуру: где камера, как обрезан кадр, КАК entities физически контактируют с конкретными sub-элементами локации, что заходит в кадр из углов foreground'а, как падает свет.
+- Обязательно кажддый раз описывай где конкретно и какой персонаж находится.
+- Используй [base_name] из base_prompts. МАКСИМУМ 5 [base_name] на сцену.
+- Каждый [xxx] — реальный base_name из base_prompts. Не выдумывай новых имён, не используй скобки для не-entity фраз (никаких [wide shot], [cinematic], [close up]).
+- В каждой сцене ОБЯЗАТЕЛЬНО location-переменная.
+- Не перегружай кадр: не более 5 главных объектов.
+- Эмоции / состояние персонажа описывай ЧЕРЕЗ ФИЗИКУ (eyes wide, jaw set, fists clenched), не через лейблы.
+- **Композиция: см. блок «ОСОБОЕ ПРАВИЛО ДЛЯ image_prompt» ниже — это критично. Без него Klein выдаёт плоскую VN-overlay картинку (персонаж посередине + локация бэкграундом за ним).**
+
+═══════════════════════════════════════════════════════════════
+ОСОБОЕ ПРАВИЛО ДЛЯ image_prompt — АНИМЕ КОМПОЗИЦИЯ, НЕ VISUAL NOVEL OVERLAY
+═══════════════════════════════════════════════════════════════
+
+Klein-9B — multi-image edit композитор. Если ты пишешь `[character] in [location]` без физического якорения, Klein компонует character'а как плоскую декаль поверх плоской локации = visual novel overlay (картинка в стиле визуальной новеллы). Это самый частый failure mode и причина, почему сгенерированные кадры «не выглядят как аниме». Чтобы получить настоящий анимэ-кадр, image_prompt должен ФИЗИЧЕСКИ ВНЕДРЯТЬ entities В пространство локации и задавать конкретную камеру / свет / foreground.
+
+**ГЛАВНОЕ ПРАВИЛО:** image_prompt НЕ перечисляет что есть в кадре, а ДИКТУЕТ режиссуру — где камера, как обрезан кадр, КАК персонаж/объект физически контактирует с конкретными sub-элементами локации (canopy bed / nightstand / wooden floor / sconces / mirror — из location base_prompt'а), что заходит в кадр из углов foreground'а, как падает свет.
+
+═══════════════════════════════════════════════════════════════
+ЗАПРЕЩЁННЫЕ ПАТТЕРНЫ
+═══════════════════════════════════════════════════════════════
+
+1. **2D-frame позиции** — создают плоскую VN-композицию (рендерер кладёт каждое entity слоем на 2D-сетку):
+   - ❌ `[luo_xin] center frame`
+   - ❌ `[luo_xin] left frame, [novice_chest] right frame`
+   - ❌ `[system_1077] floating above chest, [luo_xin] standing center`
+   Заменяй на 3D-пространственные термины: `foreground / midground / background`, `in front of`, `behind`, `beside`, `atop`, `beneath`, `between`, `leaning on`, `perched on`, `kneeling at`, `framed through`.
+
+2. **Бесплотное «в локации»** — теряет физический грунтинг, character висит в вакууме:
+   - ❌ `[luo_xin] in [luxury_bedroom]`
+   - ❌ `[system_1077] floating in [luxury_bedroom]`
+   - ❌ `[luo_xin] standing in [luxury_bedroom]`
+   Заменяй на физический контакт со специфичной мебелью/props локации (sub-элементы из location base_prompt'а):
+   - ✅ `[luo_xin] sprawled across the canopy bed's silk sheets in [luxury_bedroom], one arm dangling off the edge`
+   - ✅ `[system_1077] hovering inches above the nightstand mirror of [luxury_bedroom], green glow reflecting in the polished glass`
+   - ✅ `[luo_xin] kneeling on the polished wooden floor of [luxury_bedroom] in front of [novice_chest], fingertips on the open lid`
+
+3. **Explicit «Background blurred» / «blurred [location]»** — буквально просит у Klein плоский VN-стиль:
+   - ❌ `Background blurred bedroom details`
+   - ❌ `Blurred [luxury_bedroom] in background`
+   - ❌ `Blurred bedroom in background`
+   Заменяй на КОНКРЕТНЫЕ out-of-focus объекты с bokeh:
+   - ✅ `out-of-focus warm sconce bokeh blooms in the upper-left corner of the composition`
+   - ✅ `soft bokeh of star-gem ceiling pinpoints scattered above the subject's head`
+   - ✅ `blurred edge of canopy curtain entering frame from upper right in warm haze`
+
+4. **Inert verbs БЕЗ якоря** — `standing` / `floating` / `sitting` без указания на чём/во что/рядом с чем. Klein интерпретирует как «поставь в центре на нейтральном фоне»:
+   - ❌ `[X] standing, hands raised`
+   - ✅ `[X] standing on the polished wooden floor with one bare foot raised mid-step, knee bent, palms thrust open at chest height`
+
+═══════════════════════════════════════════════════════════════
+ОБЯЗАТЕЛЬНЫЕ КОМПОЗИЦИОННЫЕ ЭЛЕМЕНТЫ (минимум 3 из 5 в каждом image_prompt)
+═══════════════════════════════════════════════════════════════
+
+**A. Physical anchor.** Каждый character/object в кадре физически контактирует с КОНКРЕТНЫМ sub-элементом локации. Sub-элементы тащи прямо из location base_prompt'а как plain text:
+- character на/у/около мебели: `sitting on the canopy bed's silk sheets`, `leaning against the heavy wooden door`, `kneeling on the polished wooden floor in front of [novice_chest]`
+- floating object грунтуй к мебели: `hovering inches above the nightstand mirror`, `drifting between the canopy curtains`, `perched on the open chest lid`
+- object на/внутри поверхности: `[novice_chest] resting on the polished wooden floor between the canopy bed and the heavy wooden door`
+
+**B. Foreground frame anchor.** Деталь, заходящая в кадр из угла / края — создаёт глубину, разрушает плоский VN-слой:
+- `edge of silk canopy curtain entering frame from upper right in soft warm bokeh`
+- `blurred candle flame in lower-left foreground`
+- `tip of a curled finger entering frame from right edge, out of focus`
+- `corner of [novice_chest] visible in lower-foreground out of focus`
+- для extreme close-up'ов на лицо: `blurred silver eyelashes in foreground frame anchor`, `out-of-focus hair strands across the lower frame`
+
+**C. Camera attitude.** Конкретная позиция/тип камеры. Не «wide shot» а:
+- `Low-angle wide shot from floor level inside [luxury_bedroom], camera tilted up past the canopy bed's silk hanging`
+- `High-angle three-quarter overhead shot looking down from the ceiling beam`
+- `Eye-level dutch tilt close-up at 15 degrees`
+- `Over-the-shoulder medium shot from behind the fox boy's right shoulder, depth of field racked to the heavy wooden door`
+- `Tight close-up framed through the open chest lid's gold-embossed edge`
+- `Mirror reflection close-up — subject seen reflected in the round nightstand mirror, mirror frame in soft focus around the edge`
+- `Telephoto compression close-up, lens flattened against the subject's face`
+Старайся в каждой scene изменять позицию камеры.
+
+**D. Light interaction.** НЕ `warm light` а КАК свет физически касается субъекта (sharp cel-shaded contrast — суть аниме-look'а):
+- `warm sconce light carving sharp cel-shaded shadow across the left cheek and jaw`
+- `green glow of [system_1077] spilling onto the silk sheets, casting an emerald rim on the white hair and lining the silhouette`
+- `hard rim-light from a single sconce hitting the back of the shoulders, leaving the face in soft fill from the chest's white pulse`
+- `star-gem ceiling reflecting tiny specular pinpoints in the wide purple eyes as crisp catchlights`
+
+**E. Anime emphasis layer.** Техники cel-animation которые отличают анимэ-кадр от обычного render'а:
+- one or two crisp catchlight specular dots in the eyes
+- thick clean lineart picked out by lighting contrast against soft cel-shaded fills
+- sharp diagonal composition with subject offset to a rule-of-thirds intersection
+- silhouette framing — subject partially backlit so the outline reads against the warm/cool background
+- speed lines / radial motion blur emanating from action point (для emphasis_closeup / detail_insert на резкое движение)
+- foreground motion blur on a hand / sleeve / object suggesting mid-motion arrest
+
+═══════════════════════════════════════════════════════════════
+3D-ПРОСТРАНСТВЕННАЯ ЛЕКСИКА (используй ВМЕСТО frame-позиций)
+═══════════════════════════════════════════════════════════════
+
+- глубина: `foreground / midground / background`; `closer to camera / further from camera`
+- отношение: `in front of / behind / beside / between / atop / beneath / on the surface of / inside`
+- вход в кадр: `entering frame from upper-left / lower-right / left edge`
+- закрытие: `partially obscured by [foreground object]`, `framed through [aperture]`
+- контур: `silhouetted against [light source]`, `silhouette framing`
+- фокус: `in soft bokeh`, `racked focus to [subject]`, `in out-of-focus haze`
+
+═══════════════════════════════════════════════════════════════
+ПРИМЕРЫ ПРАВИЛЬНЫХ image_prompt'ов (ДО / ПОСЛЕ)
+═══════════════════════════════════════════════════════════════
+
+**Пример 1 — emphasis_closeup на летающий объект**
+
+❌ ПЛОХО (17 слов, VN-overlay):
+`Close-up of [system_1077] floating in [luxury_bedroom], tiny yellow eyes visible, green glow bright. Background blurred bedroom details.`
+
+✅ ХОРОШО (72 слова, anime composition):
+`Tight close-up of [system_1077] hovering inches above the canopy bed's silk pillow in [luxury_bedroom], lens at pillow level, faint emerald glow spilling outward and bleeding onto the silk fabric below. Out-of-focus star-gem ceiling pinpoints scatter in the upper background as warm specular bokeh, edge of silk canopy curtain entering frame from upper right. Two crisp catchlights on the orb's surface, thick clean lineart outline picked out by the green rim glow against the warm sconce wash.`
+
+**Пример 2 — dialogue_wide с двумя entities + объектом (текущая scene 2):**
+
+❌ ПЛОХО (24 слова, 2D frame positions):
+`Medium wide shot of [luxury_bedroom], [luo_xin] left frame, [novice_chest] right frame on floor, [system_1077] floating above chest. Chest emits faint white glow.`
+
+✅ ХОРОШО (89 слов):
+`Eye-level medium-wide shot inside [luxury_bedroom], [luo_xin] kneeling on the polished wooden floor in midground with both hands hovering above the open lid of [novice_chest] in foreground, [system_1077] floating between his face and the chest at chin height. The chest pulses a soft white glow up into his face, carving sharp cel-shaded contrast across his cheekbones and catching a single crisp pinpoint in each purple eye. Edge of silk canopy curtain enters frame from upper-left in soft warm bokeh, out-of-focus star-gem ceiling visible above the subject's head.`
+
+**Пример 3 — establish с большой глубиной (текущая scene 1):**
+
+❌ ПЛОХО (22 слова):
+`Wide low-angle shot of [luxury_bedroom], [luo_xin] standing center frame, hands raised slightly, mouth open. Warm sconce light, star gems on ceiling glow faintly.`
+
+✅ ХОРОШО (91 слово):
+`Low-angle wide shot from floor level inside [luxury_bedroom], camera tilted up past the canopy bed's silk hanging on the left and the heavy wooden door on the right, [luo_xin] standing in the middle of the room on the polished wooden floor in midground, both palms thrust open at chest height, jaw dropped mid-syllable. Hard warm sconce light from camera-right rim-lights his shoulders, star-gem ceiling pinpoints bloom out-of-focus in the upper third of the composition as small specular dots, edge of nightstand visible in the lower-right foreground in soft bokeh.`
+
+**Пример 4 — detail_insert на UI-объект (текущая scene 12):**
+
+❌ ПЛОХО (19 слов):
+`Tight close-up of [system_ui] floating in [luxury_bedroom], white text visible. [luo_xin]'s hand enters frame bottom.`
+
+✅ ХОРОШО (78 слов):
+`Tight extreme close-up of [system_ui] floating at eye level in front of [luo_xin]'s face inside [luxury_bedroom], translucent blue rectangular pop-up tilted at a slight 8-degree dutch angle, white text crisp against the soft blue glow. The tip of [luo_xin]'s right index finger enters frame from lower-right edge in soft bokeh, the canopy bed's silk hanging blurred behind the UI in warm sconce light, two small specular catchlights ping along the panel's sharp corners.`
+
+═══════════════════════════════════════════════════════════════
+WORD BUDGET image_prompt — 50–80 слов
+═══════════════════════════════════════════════════════════════
+
+НЕ пиши меньше 60 слов — Klein не получит достаточно instruction'а и компонует character'а как декаль на фоне. НЕ пиши больше 100 — overflow в overconstrained кадр.
+
+НЕ повторяй внешность персонажа из base_prompt (волосы, цвет глаз, рост, одежду) — это уже в image-слоте Klein'а. Описывай ТОЛЬКО: позу, выражение через физику, физический контакт с локацией/другими entities, lighting interaction на этой конкретной позе.
+
+Промпты должны быть однозначными и простыми для понимания, не пиши их сложно.
+
+`video_prompt` (английский, 1–2 предложения, ТОЛЬКО motion):
+
+═══════════════════════════════════════════════════════════════
+ОСОБОЕ ПРАВИЛО ДЛЯ video_prompt — АНИМЕ MOTION, НЕ КИНЕМАТОГРАФИЯ
+═══════════════════════════════════════════════════════════════
+
+В реальном аниме движение работает на КОНТРАСТЕ: камера статична → персонаж делает резкое движение → cut. Slow contemplative cinematography (slow dolly, gentle pan, subtle drift) В АНИМЕ ПОЧТИ НЕ ИСПОЛЬЗУЕТСЯ — это голливудский live-action язык, не наш.
+
+**ЗАПРЕЩЁННЫЕ слова и фразы (НЕ должны появляться в video_prompt НИКОГДА):**
+
+- slow / slowly / gradually / softly / gently / subtle / subtly
+- drift / drifting / floats / floating
+- slight / slightly
+- meditative / contemplative / lingering / pensive
+- "the camera slowly..."
+- "gently pans"
+- "subtle handheld drift"
+- "gradual zoom"
+- "soft push-in"
+
+**ТРЕБУЕМЫЕ ПАТТЕРНЫ:**
+
+1. **Default = STATIC CAMERA + CHARACTER MOTION**. Камера НЕ движется. Описывай ТОЛЬКО что делает персонаж резким движением:
+   - "Static camera. The young man's head snaps to the left, his eyes widening sharply."
+   - "Locked frame. The professor's mouth opens decisively, hand gesturing forward in a sharp burst."
+   - "Static frame. Her shoulders jerk, hair flicks instantly to the side."
+
+2. **Active camera (только для establish и emphasis_closeup):**
+   - Sharp push-in: "Hard push-in onto the character's face over half a second."
+   - Whip pan: "Quick whip pan from left to right, settling on the figure."
+   - Snap zoom: "Sudden zoom-in onto the eyes, then locks."
+   - Pull-back: "Rapid pull-back revealing the wider room."
+
+3. **Character motion vocabulary** (используй эти слова и аналоги):
+   snaps, jerks, thrusts, bursts, instantly, sharply, decisively, kinetic, hard, sudden, quick, locks, sets, clenches, flicks.
+
+4. **Запрещены** глаголы и наречия движения: settles, eases, gradually, drifts, gently turns, slowly opens, softly closes.
+
+**ПРИМЕРЫ КОНВЕРСИИ:**
+
+❌ "Slow dolly in towards the center of the room as the mech materializes."
+✅ "Static wide angle. The mech instantly materializes in a sharp burst of light, particles thrusting outward."
+
+❌ "Slow push in on the character's face as he realizes the magnitude."
+✅ "Hard push-in onto his face over half a second. His eyes snap wide, jaw drops in a single decisive beat."
+
+❌ "Gentle downward tilt to match his gaze."
+✅ "Locked frame. His head jerks down, gaze locking onto the floor instantly."
+
+❌ "The camera pans slowly following the rotation of the mech."
+✅ "Static wide shot. The mech rotates kinetically around its axis at a sharp pace."
+
+❌ "Subtle zoom in on the glowing effect near the character's head."
+✅ "Quick zoom-in onto the glowing temple, snapping into a tight close-up."
+
+**video_prompt НЕ повторяет внешность персонажей** (это уже в image_prompt). Используй нейтральные термины (the young man, the figure on the right) или вообще без субъекта если static camera + character action описывается по позиции.
+
+═══════════════════════════════════════════════════════════════
+ЗАПРЕТ переменных в video_prompt
+═══════════════════════════════════════════════════════════════
+
+В video_prompt ни в каком виде нет base_name'ов. Никаких [main_character], никаких snake_case имён. Используй ТОЛЬКО нейтральные визуальные термины:
+- по позиции: the man on the right, the girl in the middle, the figure in the foreground
+- по физическим признакам: the young woman with long dark hair, the warrior in red robes
+- по действию: the kneeling figure, the standing fighter
+
+❌ ПЛОХО: `[su_chen] reacts in shock` или `su_chen's eyes widen`.
+✅ ХОРОШО: `The young man's eyes widen sharply.`
+
+═══════════════════════════════════════════════════════════════
+ФОРМАТ ВЫВОДА
+═══════════════════════════════════════════════════════════════
+
+Строго JSON без markdown и комментариев:
+
+{
+  "tts_text": "...",
+  "base_prompts": [
+    {
+      "base_id": 1,
+      "base_name": "main_character",
+      "base_prompt": "A young Asian male with short messy black hair, sharp narrow yellow eyes, slender build, wearing a white military uniform with red trim. Japanese anime style",
+      "entity_type": "character"
+    }
+  ],
+  "scenes": [
+    {
+      "scene_id": 1,
+      "previous_recap": "",
+      "must_carry_over": ["system_space"],
+      "text_scene": "...",
+      "image_prompt": "Wide low-angle shot of [system_space], digital blue grid floor. [mech_unit] stands centered in the void, silver armor catching reflective light. Empty composition emphasizing scale.",
+      "video_prompt": "Static wide angle. The mech instantly materializes in a sharp burst of light, particles thrusting outward."
+    },
+    {
+      "scene_id": 2,
+      "previous_recap": "Мех материализовался в системном пространстве.",
+      "must_carry_over": ["mech_unit", "system_space"],
+      "text_scene": "...",
+      "image_prompt": "Tight close-up on the chest core of [mech_unit] inside [system_space]. Blue glowing crystalline detail with intricate nano-structures. Hard rim light from below.",
+      "video_prompt": "Locked frame on the chest core. The energy pulses in three sharp beats, light flicking outward kinetically with each pulse."
+    }
+  ]
+}
+
+Текст главы: [ВСТАВЬ ТЕКСТ ГЛАВЫ ЗДЕСЬ]

@@ -1,191 +1,38 @@
 {
-  "75": {
+  "3": {
     "inputs": {
-      "filename_prefix": "video/LTX_2.3_i2v",
-      "format": "auto",
-      "codec": "auto",
-      "video": [
-        "358",
-        0
-      ]
+      "vae_name": "LTX23_video_vae_bf16.safetensors",
+      "device": "main_device",
+      "weight_dtype": "bf16"
     },
-    "class_type": "SaveVideo",
+    "class_type": "VAELoaderKJ",
     "_meta": {
-      "title": "Сохранить видео"
+      "title": "Video VAELoader"
     }
   },
-  "325": {
+  "4": {
     "inputs": {
-      "noise_seed": 923830550975277
+      "vae_name": "LTX23_audio_vae_bf16.safetensors",
+      "device": "main_device",
+      "weight_dtype": "bf16"
     },
-    "class_type": "RandomNoise",
+    "class_type": "VAELoaderKJ",
     "_meta": {
-      "title": "Случайный шум"
+      "title": "Audio VAELoader"
     }
   },
-  "327": {
-    "inputs": {
-      "ckpt_name": "ltx-2.3-22b-distilled-fp8.safetensors"
-    },
-    "class_type": "LTXVAudioVAELoader",
-    "_meta": {
-      "title": "LTXV Загрузчик аудио VAE"
-    }
-  },
-  "331": {
-    "inputs": {
-      "noise": [
-        "325",
-        0
-      ],
-      "guider": [
-        "362",
-        0
-      ],
-      "sampler": [
-        "339",
-        0
-      ],
-      "sigmas": [
-        "354",
-        0
-      ],
-      "latent_image": [
-        "366",
-        0
-      ]
-    },
-    "class_type": "SamplerCustomAdvanced",
-    "_meta": {
-      "title": "Пользовательский сэмплер (Расширенный)"
-    }
-  },
-  "339": {
-    "inputs": {
-      "sampler_name": "euler_ancestral_cfg_pp"
-    },
-    "class_type": "KSamplerSelect",
-    "_meta": {
-      "title": "Выбор KSampler"
-    }
-  },
-  "340": {
-    "inputs": {
-      "expression": "a/2"
-    },
-    "class_type": "ComfyMathExpression",
-    "_meta": {
-      "title": "Математическое выражение"
-    }
-  },
-  "342": {
-    "inputs": {
-      "expression": "a/2"
-    },
-    "class_type": "ComfyMathExpression",
-    "_meta": {
-      "title": "Математическое выражение"
-    }
-  },
-  "343": {
-    "inputs": {
-      "width": 1280,
-      "height": 768,
-      "length": [
-        "374",
-        0
-      ],
-      "batch_size": 1
-    },
-    "class_type": "EmptyLTXVLatentVideo",
-    "_meta": {
-      "title": "Пустой LTXVLatentVideo"
-    }
-  },
-  "344": {
-    "inputs": {
-      "strength": 1,
-      "bypass": [
-        "350",
-        0
-      ],
-      "vae": [
-        "364",
-        2
-      ],
-      "image": [
-        "375",
-        0
-      ],
-      "latent": [
-        "343",
-        0
-      ]
-    },
-    "class_type": "LTXVImgToVideoInplace",
-    "_meta": {
-      "title": "LTXVImgToVideoInplace"
-    }
-  },
-  "346": {
-    "inputs": {
-      "expression": "a",
-      "values.a": [
-        "348",
-        0
-      ]
-    },
-    "class_type": "ComfyMathExpression",
-    "_meta": {
-      "title": "Математическое выражение"
-    }
-  },
-  "348": {
-    "inputs": {
-      "value": 24
-    },
-    "class_type": "PrimitiveInt",
-    "_meta": {
-      "title": "Frame Rate"
-    }
-  },
-  "350": {
-    "inputs": {
-      "value": false
-    },
-    "class_type": "PrimitiveBoolean",
-    "_meta": {
-      "title": "Switch to Text to Video?"
-    }
-  },
-  "351": {
-    "inputs": {
-      "text": [
-        "367",
-        0
-      ],
-      "clip": [
-        "365",
-        0
-      ]
-    },
-    "class_type": "CLIPTextEncode",
-    "_meta": {
-      "title": "Кодирование текста CLIP (Запрос)"
-    }
-  },
-  "352": {
+  "5": {
     "inputs": {
       "frame_rate": [
-        "346",
-        0
+        "46",
+        5
       ],
       "positive": [
-        "351",
-        0
+        "46",
+        1
       ],
       "negative": [
-        "361",
+        "26",
         0
       ]
     },
@@ -194,90 +41,65 @@
       "title": "Кондиционирование LTXV"
     }
   },
-  "353": {
+  "7": {
     "inputs": {
-      "frames_number": [
-        "374",
-        0
+      "video_latent": [
+        "8",
+        2
       ],
-      "frame_rate": [
-        "346",
-        1
-      ],
-      "batch_size": 1,
-      "audio_vae": [
-        "327",
-        0
+      "audio_latent": [
+        "46",
+        3
       ]
     },
-    "class_type": "LTXVEmptyLatentAudio",
+    "class_type": "LTXVConcatAVLatent",
     "_meta": {
-      "title": "LTXV Пустое латентное аудио"
+      "title": "LTXVConcatAVLatent"
     }
   },
-  "354": {
+  "8": {
     "inputs": {
-      "sigmas": "1.0, 0.99375, 0.9875, 0.98125, 0.975, 0.909375, 0.725, 0.421875, 0.0"
-    },
-    "class_type": "ManualSigmas",
-    "_meta": {
-      "title": "ManualSigmas"
-    }
-  },
-  "355": {
-    "inputs": {
-      "av_latent": [
-        "331",
-        0
-      ]
-    },
-    "class_type": "LTXVSeparateAVLatent",
-    "_meta": {
-      "title": "LTXVSeparateAVLatent"
-    }
-  },
-  "358": {
-    "inputs": {
-      "fps": [
-        "346",
-        0
-      ],
-      "images": [
-        "363",
-        0
-      ]
-    },
-    "class_type": "CreateVideo",
-    "_meta": {
-      "title": "Создать видео"
-    }
-  },
-  "361": {
-    "inputs": {
-      "text": "worst quality, inconsistent motion, blurry, jittery, distorted, watermark, morphing faces, fingers deformed, extra limbs, unnatural colors, flickering, ghosting, anime, manga, 2d animation, cel-shaded, hand-drawn, painterly, flat colors, sharp lineart, line art, watercolor, sketch, ink drawing, comic book style",
-      "clip": [
-        "365",
-        0
-      ]
-    },
-    "class_type": "CLIPTextEncode",
-    "_meta": {
-      "title": "Кодирование текста CLIP (Запрос)"
-    }
-  },
-  "362": {
-    "inputs": {
-      "cfg": 1,
-      "model": [
-        "371",
-        0
-      ],
+      "scale_by": 0.5,
+      "upscale_method": "bicubic",
       "positive": [
-        "352",
+        "5",
         0
       ],
       "negative": [
-        "352",
+        "5",
+        1
+      ],
+      "vae": [
+        "3",
+        0
+      ],
+      "latent": [
+        "46",
+        2
+      ],
+      "guide_data": [
+        "46",
+        4
+      ]
+    },
+    "class_type": "LTXDirectorGuide",
+    "_meta": {
+      "title": "LTX Director Guide"
+    }
+  },
+  "9": {
+    "inputs": {
+      "cfg": 1,
+      "model": [
+        "46",
+        0
+      ],
+      "positive": [
+        "8",
+        0
+      ],
+      "negative": [
+        "8",
         1
       ]
     },
@@ -286,55 +108,234 @@
       "title": "CFG Гид"
     }
   },
-  "363": {
+  "10": {
     "inputs": {
-      "tile_size": 768,
-      "overlap": 64,
-      "temporal_size": 4096,
-      "temporal_overlap": 4,
-      "samples": [
-        "355",
+      "noise": [
+        "28",
         0
       ],
-      "vae": [
-        "364",
-        2
+      "guider": [
+        "9",
+        0
+      ],
+      "sampler": [
+        "29",
+        0
+      ],
+      "sigmas": [
+        "100",
+        0
+      ],
+      "latent_image": [
+        "7",
+        0
       ]
     },
-    "class_type": "VAEDecodeTiled",
+    "class_type": "SamplerCustomAdvanced",
     "_meta": {
-      "title": "Декодировать VAE (плитками)"
+      "title": "Пользовательский сэмплер (Расширенный)"
     }
   },
-  "364": {
+  "11": {
     "inputs": {
-      "ckpt_name": "ltx-2.3-22b-distilled-fp8.safetensors"
+      "scheduler": "linear_quadratic",
+      "steps": 8,
+      "denoise": 1,
+      "model": [
+        "46",
+        0
+      ]
     },
-    "class_type": "CheckpointLoaderSimple",
+    "class_type": "BasicScheduler",
     "_meta": {
-      "title": "Загрузить сheckpoint"
+      "title": "Основной scheduler"
     }
   },
-  "365": {
+  "13": {
     "inputs": {
-      "text_encoder": "gemma_3_12B_it_fp4_mixed.safetensors",
-      "ckpt_name": "ltx-2.3-22b-distilled-fp8.safetensors",
-      "device": "default"
+      "av_latent": [
+        "10",
+        0
+      ]
     },
-    "class_type": "LTXAVTextEncoderLoader",
+    "class_type": "LTXVSeparateAVLatent",
     "_meta": {
-      "title": "LTXV Загрузчик аудио-текстового энкодера"
+      "title": "LTXVSeparateAVLatent"
     }
   },
-  "366": {
+  "14": {
     "inputs": {
-      "video_latent": [
-        "344",
+      "positive": [
+        "8",
         0
       ],
-      "audio_latent": [
-        "353",
+      "negative": [
+        "8",
+        1
+      ],
+      "latent": [
+        "48",
         0
+      ]
+    },
+    "class_type": "LTXVCropGuides",
+    "_meta": {
+      "title": "LTXVCropGuides"
+    }
+  },
+  "15": {
+    "inputs": {
+      "samples": [
+        "14",
+        2
+      ],
+      "vae": [
+        "3",
+        0
+      ]
+    },
+    "class_type": "VAEDecode",
+    "_meta": {
+      "title": "Декодировать VAE"
+    }
+  },
+  "26": {
+    "inputs": {
+      "conditioning": [
+        "46",
+        1
+      ]
+    },
+    "class_type": "ConditioningZeroOut",
+    "_meta": {
+      "title": "Обнуление кондиционирования"
+    }
+  },
+  "28": {
+    "inputs": {
+      "noise_seed": 906084287763856
+    },
+    "class_type": "RandomNoise",
+    "_meta": {
+      "title": "Случайный шум"
+    }
+  },
+  "29": {
+    "inputs": {
+      "sampler_name": "euler"
+    },
+    "class_type": "KSamplerSelect",
+    "_meta": {
+      "title": "Выбор KSampler"
+    }
+  },
+  "46": {
+    "inputs": {
+      "global_prompt": "",
+      "duration_frames": 233,
+      "duration_seconds": 4.66,
+      "timeline_data": "{\"segments\":[],\"audioSegments\":[]}",
+      "local_prompts": "",
+      "segment_lengths": "",
+      "epsilon": 0.001,
+      "guide_strength": "",
+      "use_custom_audio": false,
+      "frame_rate": 50,
+      "display_mode": "seconds",
+      "custom_width": 1024,
+      "custom_height": 1024,
+      "resize_method": "maintain aspect ratio",
+      "divisible_by": 32,
+      "img_compression": 18,
+      "timeline_ui": "",
+      "model": [
+        "96",
+        0
+      ],
+      "clip": [
+        "84",
+        0
+      ],
+      "audio_vae": [
+        "4",
+        0
+      ]
+    },
+    "class_type": "LTXDirector",
+    "_meta": {
+      "title": "LTX Director"
+    }
+  },
+  "47": {
+    "inputs": {
+      "noise": [
+        "28",
+        0
+      ],
+      "guider": [
+        "49",
+        0
+      ],
+      "sampler": [
+        "53",
+        0
+      ],
+      "sigmas": [
+        "54",
+        0
+      ],
+      "latent_image": [
+        "50",
+        0
+      ]
+    },
+    "class_type": "SamplerCustomAdvanced",
+    "_meta": {
+      "title": "Пользовательский сэмплер (Расширенный)"
+    }
+  },
+  "48": {
+    "inputs": {
+      "av_latent": [
+        "47",
+        0
+      ]
+    },
+    "class_type": "LTXVSeparateAVLatent",
+    "_meta": {
+      "title": "LTXVSeparateAVLatent"
+    }
+  },
+  "49": {
+    "inputs": {
+      "cfg": 1,
+      "model": [
+        "46",
+        0
+      ],
+      "positive": [
+        "58",
+        0
+      ],
+      "negative": [
+        "58",
+        1
+      ]
+    },
+    "class_type": "CFGGuider",
+    "_meta": {
+      "title": "CFG Гид"
+    }
+  },
+  "50": {
+    "inputs": {
+      "video_latent": [
+        "58",
+        2
+      ],
+      "audio_latent": [
+        "13",
+        1
       ]
     },
     "class_type": "LTXVConcatAVLatent",
@@ -342,48 +343,154 @@
       "title": "LTXVConcatAVLatent"
     }
   },
-  "367": {
+  "52": {
     "inputs": {
-      "value": "A slow, deliberate pan begins, sweeping gently from the left stone guardian lion towards the right, revealing the entire façade. As the camera drifts, the soft morning light catches swirling pockets of ethereal mist that rise from the cobblestone path, momentarily obscuring the base of the gate. The left guardian statue seems to shift slightly in the ambient light, and a single, oversized dewdrop clings to the tip of the nearest green bush, trembling as the air currents pass by. The whole scene is bathed in a warm, directional golden glow that intensifies subtly with the slow camera movement., The gentle pan continues, moving past the center of the wrought iron gate. The mist, now denser, starts to drift inward from the periphery, swirling around the lower half of the gates and the stone steps, creating pockets of semi-obscurity. Sunlight, filtering through the canopy of leaves above the estate, creates shimmering, undulating patterns of light and shadow across the ground. The right guardian lion seems to subtly settle deeper into its base, and the lingering vapor from the mist starts to creep up the ornate stone pillars framing the entrance, making them appear ephemeral as the camera completes its traverse."
-    },
-    "class_type": "PrimitiveStringMultiline",
-    "_meta": {
-      "title": "Prompt"
-    }
-  },
-  "371": {
-    "inputs": {
-      "lora_name": "Pixar_Toon.safetensors",
-      "strength_model": 1,
-      "model": [
-        "373",
+      "samples": [
+        "55",
+        2
+      ],
+      "upscale_model": [
+        "57",
+        0
+      ],
+      "vae": [
+        "3",
         0
       ]
     },
-    "class_type": "LoraLoaderModelOnly",
+    "class_type": "LTXVLatentUpsampler",
     "_meta": {
-      "title": "Загрузчик LoRA (Только модель)"
+      "title": "LTXVLatentUpsampler"
     }
   },
-  "372": {
+  "53": {
     "inputs": {
-      "sage_attention": "auto",
-      "allow_compile": false,
+      "sampler_name": "euler"
+    },
+    "class_type": "KSamplerSelect",
+    "_meta": {
+      "title": "Выбор KSampler"
+    }
+  },
+  "54": {
+    "inputs": {
+      "scheduler": "linear_quadratic",
+      "steps": 4,
+      "denoise": 0.42,
       "model": [
-        "364",
+        "46",
         0
       ]
     },
-    "class_type": "PathchSageAttentionKJ",
+    "class_type": "BasicScheduler",
     "_meta": {
-      "title": "Patch Sage Attention KJ"
+      "title": "Основной scheduler"
     }
   },
-  "373": {
+  "55": {
+    "inputs": {
+      "positive": [
+        "8",
+        0
+      ],
+      "negative": [
+        "8",
+        1
+      ],
+      "latent": [
+        "13",
+        0
+      ]
+    },
+    "class_type": "LTXVCropGuides",
+    "_meta": {
+      "title": "LTXVCropGuides"
+    }
+  },
+  "57": {
+    "inputs": {
+      "model_name": "ltx-2.3-spatial-upscaler-x2-1.1.safetensors"
+    },
+    "class_type": "LatentUpscaleModelLoader",
+    "_meta": {
+      "title": "Загрузить модель увеличения latent"
+    }
+  },
+  "58": {
+    "inputs": {
+      "scale_by": 1,
+      "upscale_method": "bicubic",
+      "positive": [
+        "55",
+        0
+      ],
+      "negative": [
+        "55",
+        1
+      ],
+      "vae": [
+        "3",
+        0
+      ],
+      "latent": [
+        "52",
+        0
+      ],
+      "guide_data": [
+        "46",
+        4
+      ]
+    },
+    "class_type": "LTXDirectorGuide",
+    "_meta": {
+      "title": "LTX Director Guide"
+    }
+  },
+  "78": {
+    "inputs": {
+      "vae_name": "taeltx2_3.safetensors",
+      "device": "main_device",
+      "weight_dtype": "bf16"
+    },
+    "class_type": "VAELoaderKJ",
+    "_meta": {
+      "title": "Tiny VAELoader KJ"
+    }
+  },
+  "79": {
+    "inputs": {
+      "preview_rate": 50,
+      "model": [
+        "98",
+        0
+      ],
+      "vae": [
+        "78",
+        0
+      ]
+    },
+    "class_type": "LTX2SamplingPreviewOverride",
+    "_meta": {
+      "title": "LTX2 Sampling Preview Override"
+    }
+  },
+  "84": {
+    "inputs": {
+      "clip_name1": "gemma_3_12B_it_fp4_mixed.safetensors",
+      "clip_name2": "ltx-2.3_text_projection_bf16.safetensors",
+      "type": "ltxv",
+      "device": "default"
+    },
+    "class_type": "DualCLIPLoader",
+    "_meta": {
+      "title": "Двойной загрузчик CLIP"
+    }
+  },
+  "93": {
     "inputs": {
       "enable_fp16_accumulation": true,
       "model": [
-        "372",
+        "94",
         0
       ]
     },
@@ -392,24 +499,105 @@
       "title": "Model Patch Torch Settings"
     }
   },
-  "374": {
+  "94": {
     "inputs": {
-      "value": 121
+      "sage_attention": "auto",
+      "allow_compile": false,
+      "model": [
+        "97",
+        0
+      ]
     },
-    "class_type": "INTConstant",
+    "class_type": "PathchSageAttentionKJ",
     "_meta": {
-      "title": "INT Constant"
+      "title": "Patch Sage Attention KJ"
     }
   },
-  "375": {
+  "96": {
     "inputs": {
-      "image": "",
-      "custom_width": 0,
-      "custom_height": 0
+      "lora_name": "Fantasy_Anime.safetensors",
+      "strength_model": 1,
+      "model": [
+        "93",
+        0
+      ]
     },
-    "class_type": "VHS_LoadImagePath",
+    "class_type": "LoraLoaderModelOnly",
     "_meta": {
-      "title": "Load Image (Path) 🎥🅥🅗🅢"
+      "title": "Загрузчик LoRA (Только модель)"
+    }
+  },
+  "97": {
+    "inputs": {
+      "triton_kernels": true,
+      "model": [
+        "79",
+        0
+      ]
+    },
+    "class_type": "LTX2MemoryEfficientSageAttentionPatch",
+    "_meta": {
+      "title": "LTX2 Mem Eff Sage Attention Patch"
+    }
+  },
+  "98": {
+    "inputs": {
+      "unet_name": "ltx-2.3-22b-distilled-1.1_transformer_only_mxfp8_block32.safetensors",
+      "weight_dtype": "default"
+    },
+    "class_type": "UNETLoader",
+    "_meta": {
+      "title": "Загрузить модель диффузии"
+    }
+  },
+  "100": {
+    "inputs": {
+      "sigmas": "1.0, 0.99375, 0.9875, 0.98125, 0.975, 0.909375, 0.725, 0.421875, 0.0"
+    },
+    "class_type": "ManualSigmas",
+    "_meta": {
+      "title": "ManualSigmas"
+    }
+  },
+  "101": {
+    "inputs": {
+      "filename_prefix": "video/LTX_2.3_i2v",
+      "format": "auto",
+      "codec": "auto",
+      "video": [
+        "103",
+        0
+      ]
+    },
+    "class_type": "SaveVideo",
+    "_meta": {
+      "title": "Сохранить видео"
+    }
+  },
+  "103": {
+    "inputs": {
+      "fps": 50,
+      "images": [
+        "106",
+        0
+      ]
+    },
+    "class_type": "CreateVideo",
+    "_meta": {
+      "title": "Создать видео"
+    }
+  },
+  "106": {
+    "inputs": {
+      "aggressive": true,
+      "image": [
+        "15",
+        0
+      ]
+    },
+    "class_type": "FreeMemoryImage",
+    "_meta": {
+      "title": "Free Memory (Image)"
     }
   }
 }

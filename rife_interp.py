@@ -29,7 +29,7 @@ from pathlib import Path
 # Configure once. Override with rife_exe= argument if needed.
 RIFE_EXE = os.environ.get(
     "RIFE_EXE",
-    r"C:\Users\Loopy\Desktop\rife-ncnn-vulkan-20221029-windows\rife-ncnn-vulkan.exe",
+    r"C:\Program Files\rife-ncnn-vulkan-20221029-windows\rife-ncnn-vulkan.exe",
 )
 RIFE_MODEL = os.environ.get("RIFE_MODEL", "rife-v4.6")  # or "rife-v4.26"
 

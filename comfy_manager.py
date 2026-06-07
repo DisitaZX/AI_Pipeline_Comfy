@@ -29,16 +29,16 @@ import aiohttp
 
 class ComfyManager:
     def __init__(
-            self,
-            comfy_root: str | os.PathLike,
-            host: str = "127.0.0.1",
-            port: int = 8188,
-            bat_name: str = "run_nvidia_gpu.bat",
-            launch_cmd: Sequence[str] | None = None,
-            log_path: str | os.PathLike | None = None,
-            startup_timeout: float = 240.0,
-            shutdown_timeout: float = 30.0,
-            port_free_timeout: float = 60.0,
+        self,
+        comfy_root: str | os.PathLike,
+        host: str = "127.0.0.1",
+        port: int = 8188,
+        bat_name: str = "run_nvidia_gpu.bat",
+        launch_cmd: Sequence[str] | None = None,
+        log_path: str | os.PathLike | None = None,
+        startup_timeout: float = 240.0,
+        shutdown_timeout: float = 30.0,
+        port_free_timeout: float = 60.0,
     ):
         """
         comfy_root: корень ComfyUI_windows_portable (содержит run_nvidia_gpu.bat).
@@ -205,7 +205,7 @@ class ComfyManager:
         await self.start()
 
 
-COMFY_ROOT = r"C:\Users\Loopy\Desktop\ComfyUI_windows_portable"
+COMFY_ROOT = r"C:\Users\Loopy\Desktop\comfyui"
 
 comfy_mgr = ComfyManager(
     comfy_root=COMFY_ROOT,
@@ -214,11 +214,14 @@ comfy_mgr = ComfyManager(
     # extra_args=["--lowvram"],  # если нужно
 )
 
+
 def main():
     asyncio.run(comfy_mgr.start())
     time.sleep(10)
     asyncio.run(comfy_mgr.restart())
     time.sleep(10)
     asyncio.run(comfy_mgr.stop())
+
+
 if __name__ == "__main__":
     main()

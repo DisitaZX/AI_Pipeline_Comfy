@@ -1,25 +1,11 @@
-"""Детерминистический prompt-builder для Qwen Image Edit 2511 (без LLM в loop'е).
+"""Детерминистический prompt-builder для FLUX.2 Klein multi-reference image edit.
 
-Эмпирически подтверждено на сборке justus16:
-  * `Picture N (descriptive alias)` сильно повышает adherence к каждой entity
-    (модель перестаёт "терять" второстепенных персонажей, см. кейс Picture 2 =
-    девушка в side-profile сцене).
-  * Развёрнутые CHAR-anchored camera-фразы (где стоит камера, на какой высоте,
-    куда направлена) надёжно переопределяют композицию reference'а — короткое
-    "side profile medium shot." теряется на vision-токенах.
-  * Перестановка image1/image2/image3 в энкодере НЕ помогает заметно — Qwen-VL
-    в Qwen Image Edit Plus не сильно чувствителен к позиции vision-токена,
-    но очень чувствителен к количеству и качеству TEXT-токенов вокруг
-    каждого упоминания Picture N.
-
-Этот модуль:
-  - Развёртывает короткие camera-presets в CHAR-anchored фразы (`CAMERA_HINTS_RICH`).
-  - Для каждой entity извлекает short alias из её `base_prompt` (или берёт
-    из явного override `bp["short_alias"]`).
-  - Подменяет `[entity]` в `scene["image_prompt"]` на `Picture N (alias)`,
-    дедупит entity, лимитит до 3 (hard cap у `TextEncodeQwenImageEditPlus`),
-    режет неизвестные `[bracketed]` токены.
-  - Аппендит общий style stack для Pixar 3D CGI Toon look.
+Задача модуля:
+  - Для каждой entity извлекает short alias из её `base_prompt`.
+  - Подменяет `[base_name]` в `scene["image_prompt"]` на `{alias} from image N`,
+    дедупит entity, лимитит до 5 (hard cap у Klein multi-ref).
+  - Reorder: characters/objects первыми (identity-critical), location последней.
+  - Добавляет `high_budget_anime_movie_style` prefix.
 
 Никаких сетевых вызовов, никаких LLM. Полностью детерминистический.
 """
@@ -30,96 +16,187 @@ import re
 from typing import Dict, List, Tuple
 
 
-# ============================================================ camera presets
+# ============================================================ style stack
 
-# Развёрнутые camera-only фразы для каждого пресета из CAMERA_PRESETS
-# (chunk_prompts_2.py:CAMERA_PRESETS).
+# STYLE_STACK — РАЗВЁРНУТЫЙ style descriptor, используется ТОЛЬКО для
+# генерации базовых entity-refs через `qwen_variant_instruction` (character
+# face / location side-views и т.п.). Туда нужно много текста — ref-картинки
+# рисуются с нуля, без визуального contextа, поэтому стиль приходится
+# проговаривать.
 #
-# ВАЖНО: фразы НЕ упоминают что находится в кадре (никаких "subjects", "both",
-# "viewer", "the subject", "two-shot", "their faces", "head and shoulders" и
-# т.п.). Это сделано намеренно — иначе Qwen Edit 2511 трактует эти токены как
-# content-signal и дорисовывает лишних людей/объектов в кадр (в т.ч. на сценах
-# где должен быть один объект). Каждая фраза говорит ТОЛЬКО про камеру:
-# где она стоит, как наклонена, какое framing/lens/perspective.
-CAMERA_HINTS_RICH: Dict[str, str] = {
-    "low angle wide shot": (
-        "Low angle shot, camera placed near floor level and tilted upward, "
-        "wide framing with a lot of headroom, dramatic upward perspective"
-    ),
-    "high angle medium shot": (
-        "High angle shot, camera elevated above the action and tilted "
-        "downward at roughly 45 degrees, medium framing, foreshortened "
-        "top-down perspective"
-    ),
-    "eye-level close-up": (
-        "Eye-level shot, tight close-up framing, direct horizontal "
-        "perspective, shallow depth of field"
-    ),
-    "over-the-shoulder medium shot": (
-        "Over-the-shoulder camera angle, medium framing with a soft "
-        "out-of-focus foreground edge in the bottom corner of frame, "
-        "classic shoulder-anchored perspective"
-    ),
-    "extreme wide establishing shot": (
-        "Extreme wide establishing shot, camera pulled far back, very "
-        "wide framing, deep field of view, epic environmental scale"
-    ),
-    "tight close-up on face": (
-        "Tight close-up shot, camera placed extremely close, very shallow "
-        "depth of field, intimate macro framing"
-    ),
-    "three-quarter view medium shot": (
-        "Three-quarter angle, camera roughly 45 degrees off direct front, "
-        "medium framing, classic portrait-style composition"
-    ),
-    "front-on medium-wide shot": (
-        "Front-on view, camera placed directly facing forward at chest "
-        "level, medium-wide framing, symmetric centered composition"
-    ),
-    "side profile medium shot": (
-        "Side profile shot, camera positioned perpendicular to the action "
-        "axis at hip level, medium framing, classic profile silhouette "
-        "composition"
-    ),
-    "dutch angle medium shot": (
-        "Dutch angle, camera tilted roughly 15 to 20 degrees off horizontal, "
-        "medium framing, dramatic skewed composition with tilted horizon"
-    ),
+# Для финальных keyframe-prompt'ов (`build_qwen_edit_prompt` для Klein c1)
+# используется только компактный "high_budget_anime_movie_style" prefix —
+# стиль уже зашит в латентах reference'ов, повторение длинной style-фразы
+# съедает text-attention budget впустую.
+STYLE_STACK = (
+    "high_budget_anime_movie_style, 3D cinematic anime, detailed sculptural character design "
+    "with realistic skin and fabric shaders, dramatic volumetric cinematic lighting, "
+    "shallow depth of field, filmic color grading, stylized anime proportions with "
+    "physically-based rendering, soft ambient occlusion, clean sharp edges, "
+    "high production value environment, cinematic atmosphere."
+)
+
+
+# ============================================================ entity types
+
+# Базовые роли в plan'е (поле base_prompts[].entity_type). GROK обязан
+# выставлять одно из трёх значений на каждой переменной. Любое другое —
+# strict fail в build_qwen_edit_prompt и в стадии генерации рефов.
+ENTITY_TYPES: tuple[str, ...] = ("character", "location", "object")
+
+
+# Ref-варианты на каждую entity_type. Index 0 — "seed", который рисуется
+# text-to-image (Z-Anime для старого Z-Anime.json workflow или FLUX.2 для
+# нового image_flux2_klein_base_refs.json) с подсказкой про каноническую
+# позу/ракурс. Все последующие индексы (если они есть) — Qwen Image-Edit
+# от seed'а (тот же subject, другая сторона/кадрирование). Все варианты
+# находятся в eye-level horizontal perspective, чтобы не конфликтовать с
+# произвольным camera_preset сцены.
+#
+# locations: 4 поворота вокруг центра (front/right/left/back), все при
+#   камере ~1.6m над землёй. Front — seed (text-to-image), остальные
+#   три — Qwen-edit от seed'а.
+# characters: ОДИН реф — полный рост (fullbody) text-to-image. Никаких
+#   Qwen-edit вариантов: face-портрет был удалён, во всех сценах
+#   character'а Klein получает только fullbody-реф. Это даёт стабильную
+#   identity-preservation (один и тот же latent на всех сценах), а
+#   композировать close-up портрет на сцене Klein умеет и сам по
+#   image_prompt'у.
+# objects: один реф без variant-суффикса (как было раньше).
+_ENTITY_VARIANTS_BY_TYPE: dict[str, tuple[str, ...]] = {
+    "character": (),
+    "location":  (),
+    "object":    (),
 }
 
 
-def rich_angle_phrase(preset: str) -> str:
-    """CHAR-anchored cinematic фраза для пресета. Если пресет не в словаре —
-    возвращаем сам пресет как fallback (не валим pipeline)."""
-    return CAMERA_HINTS_RICH.get(preset, preset)
+def entity_variants(entity_type: str) -> tuple[str, ...]:
+
+    if entity_type not in _ENTITY_VARIANTS_BY_TYPE:
+        raise ValueError(
+            f"unknown entity_type {entity_type!r}; expected one of {ENTITY_TYPES}"
+        )
+    return _ENTITY_VARIANTS_BY_TYPE[entity_type]
 
 
-# ============================================================ style stack
+def entity_seed_variant(entity_type: str) -> str:
+    """Имя seed-варианта (генерится text-to-image). Пусто для object."""
+    variants = entity_variants(entity_type)
+    return variants[0] if variants else ""
 
-# Style stack который аппендится в конец каждого финального prompt'а.
-# Вокабуляр ровно тот же что в SYSTEM_PROMPT_IMAGE из chunk_prompts_2.py
-# (Pixar 3D CGI Toon look), плюс стандартные cinematic-токены освещения.
-# P1x4r LoRA-триггер НЕ включён намеренно — в текущем qwen_image.json нет
-# LoraLoaderModelOnly для P1x4r чекпойнта (см. node 179 — там только
-# Qwen-Image-Edit-2511-Lightning-8steps-V1.0). Если ты в будущем подключишь
-# P1x4r LoRA, добавь её триггер в начало STYLE_STACK или префиксом angle-фразы.
-STYLE_STACK = (
-    "Pixar CGI Toon Style, stylized CGI character, pixar-like 3D render, "
-    "cinematic animated character, high-end animated film style, "
-    "soft volumetric lighting, PBR textures, subsurface scattering on skin, "
-    "smooth highlights"
-)
 
+def entity_klein_variants(entity_type: str) -> tuple[str, ...]:
+    """Имена variant'ов которые надо догенерить через Klein-edit из seed'а."""
+    variants = entity_variants(entity_type)
+    return variants[1:] if len(variants) > 1 else ()
+
+
+def entity_ref_filename(base_name: str, variant: str | None) -> str:
+    """Имя файла ref-картинки (как пишет ComfyUI SaveImage).
+
+    SaveImage аппендит "_00001_.png" к filename_prefix. Соглашение:
+      - object  (variant пуст/None): "{base_name}_00001_.png"
+      - char/loc (variant задан):     "{base_name}_{variant}_00001_.png"
+    """
+    if variant:
+        return f"{base_name}_{variant}_00001_.png"
+    return f"{base_name}_00001_.png"
+
+
+# ============================================================ ref-gen prompts
+
+
+def seed_prompt_for_entity(entity_type: str, base_prompt: str) -> str:
+    """Text-to-image prompt для seed-рефа (через Z-Anime).
+
+    Аппендит к base_prompt'у entity-type-specific framing: канонический
+    eye-level ракурс, plain background, чтобы Klein потом от этого seed'а
+    мог рисовать варианты без артефактов.
+
+    Strict-fail если entity_type не в ENTITY_TYPES.
+    """
+    if entity_type == "character":
+        return (
+            f"{base_prompt} "
+
+            f"plain neutral background, no environmental "
+            f"props, no cropping"
+        )
+    if entity_type == "location":
+        return (
+            f"{base_prompt}, wide establishing shot seen from the front "
+            f"side at mid-level view (camera height roughly 1.6 meters above "
+            f"the ground), level horizontal perspective with the horizon "
+            f"line across the middle of the frame, facing into the "
+            f"location with all main features visible, no characters or "
+            f"people in the frame"
+        )
+    if entity_type == "object":
+        return f"{base_prompt}"
+    raise ValueError(
+        f"unknown entity_type {entity_type!r}; expected one of {ENTITY_TYPES}"
+    )
+
+
+def qwen_variant_instruction(
+    entity_type: str,
+    variant: str,
+    base_prompt: str,
+    style_stack: str = STYLE_STACK,
+) -> str:
+    """Prompt для Qwen-Image-Edit, который от seed-рефа рисует variant.
+
+    Qwen Edit отзывчив на императивные инструкции и явное описание
+    целевого state'а. В отличие от Klein-edit (preservation-biased)
+    Qwen Edit реально умеет в умеренный 3D-поворот для архитектурных
+    объектов, если ему сказать что должно появиться в кадре после
+    поворота и что должно исчезнуть.
+
+    Picture 1 = seed-реф (передаётся в Qwen как единственный input image,
+    подключённый ко всем трём слотам image1/image2/image3 либо только
+    к image1 — patch функция решает).
+
+    Strict-fail если variant не из entity_klein_variants(entity_type).
+    Имя функции по историческим причинам сохраняет namespace
+    klein_*; см. ниже alias `klein_variant_instruction` для обратной
+    совместимости с импортом.
+    """
+    if entity_type == "character":
+        # У character больше нет Qwen-edit вариантов: единственный реф —
+        # fullbody seed (text-to-image), face-портрет был удалён. Если
+        # сюда попали — это баг вызывающей стороны (entity_klein_variants
+        # пуст для character'а и цикл должен быть пропущен).
+        raise ValueError(
+            f"character has no qwen-edit variants; got variant={variant!r}. "
+            f"entity_klein_variants('character') = "
+            f"{entity_klein_variants('character')!r}. The caller should "
+            f"skip the qwen-edit loop entirely for characters."
+        )
+
+    if entity_type == "location":
+
+        raise ValueError(
+            f"unknown location variant {variant!r}; "
+            f"expected one of {entity_klein_variants('location')}"
+        )
+
+
+
+    raise ValueError(
+        f"unknown entity_type {entity_type!r}; expected one of {ENTITY_TYPES}"
+    )
+
+
+# Backward-compat alias: старые импорты `klein_variant_instruction`
+# теперь резолвятся в qwen-версию (variant generation переехала на
+# Qwen Image Edit; Klein остался только для chunk-keyframe'ов сцен).
+klein_variant_instruction = qwen_variant_instruction
+
+
+# ============================================================ variant pickers
 
 # ============================================================ short alias
 
-# Регексп для отрезания style-фразы вида "Pixar CGI Toon Style," (или вариаций)
-# В ЛЮБОМ месте текста — иногда GROK дописывает её и в конце base_prompt'а.
-# Не схлопываем сразу, а вырезаем все вхождения.
-_STYLE_PHRASE_RE = re.compile(
-    r"\bpixar(?:\s+(?:cgi|3d|cg|toon|cartoon))*(?:\s+style)\b\s*[,.;:\-]?\s*",
-    re.IGNORECASE,
-)
 
 # Регексп для нормализации множественных пробелов / переводов строк.
 _WS_RE = re.compile(r"\s+")
@@ -127,40 +204,46 @@ _WS_RE = re.compile(r"\s+")
 
 def short_alias_from_base_prompt(
     base_prompt: str,
-    max_words: int = 18,
-    max_clauses: int = 4,
+    max_words: int = 10,
+    max_clauses: int = 1,
 ) -> str:
-    """Эвристика: получить descriptive alias из base_prompt'а.
+    """Эвристика: получить КОМПАКТНЫЙ descriptive alias из base_prompt'а.
+
+    Цель — выдать identity-hint на 5-10 слов: достаточно чтобы Klein/Qwen
+    привязали имя к нужной entity, но не так много чтобы alias начал
+    конкурировать с reference-латентом за text-attention. Identity и так
+    в латентах ref'ов; тексту нужен только short noun phrase, не
+    полное описание персонажа на 20+ слов.
+
+    Обычный формат base_prompt'а (из GROK): "Description... Japanese anime
+    style, [extra style stuff]." — т.е. стиль в КОНЦЕ после точки.
+    Первый рез по точке уже выбрасывает style-блок. max_clauses=1 и
+    max_words=10 затем обрезают до одной короткой субъектной фразы.
 
     Шаги:
       1. Удаляем все вхождения style-фразы ("Pixar CGI Toon Style") в любом
-         месте — стилистика и так аппендится через STYLE_STACK.
+         месте — стилистика и так в reference-латентах.
       2. Режем до первой точки (точки внутри чисел вроде "1.5m" не считаем —
          ищем точку с пробелом или концом строки после).
       3. Чиним whitespace.
       4. Берём не более max_clauses запятых-разделённых клауз и не более
-         max_words слов в сумме. Это даёт компактный alias на 1-2 строки,
+         max_words слов в сумме. Это даёт alias на одну короткую фразу,
          без оборванных "deep dark eyes with" хвостов.
 
-    Примеры (из main.json):
-      "Pixar CGI Toon Style, A 185cm tall, slender, strikingly handsome young
-       man with sharp aristocratic features, jet black hair styled in a neat
-       modern fade, deep dark eyes with..."
-      → "A 185cm tall, slender, strikingly handsome young man with sharp
-         aristocratic features, jet black hair styled in a neat modern fade"
-         (4 клаузы, ~22 слова, обрезаем до 18 → последняя клауза сократится)
+    Примеры (из main.json) с дефолтами max_words=10, max_clauses=1:
+      "A thirteen-year-old Chinese youth with an aura of profound calmness,
+       deep as an abyss. He has a mortal fate. Japanese anime style."
+      → "A thirteen-year-old Chinese youth with an aura" (1 клауза, 8 слов
+         после strip trailing "of")
 
-      "A dark, damp drainage channel at night, concrete walls with visible
-       stains and shadows, Pixar CGI Toon Style"
-      → "A dark, damp drainage channel at night, concrete walls with visible
-         stains and shadows" (style-фраза вырезана из конца)
+      "The terrifying interior of the Nine Saints Demon Gates, dark ominous
+       stone architecture. Japanese anime style."
+      → "The terrifying interior of the Nine Saints Demon Gates" (1 клауза
+         срезана по запятой, 9 слов)
     """
     s = (base_prompt or "").strip()
     if not s:
         return ""
-
-    # 1. Удаляем стиль-фразы везде
-    s = _STYLE_PHRASE_RE.sub("", s)
 
     # 2. До первой точки (с пробелом или концом строки)
     m = re.search(r"\.(\s|$)", s)
@@ -191,221 +274,117 @@ def short_alias_from_base_prompt(
         else:
             s = truncated.strip()
 
-    return s.strip(" ,.;:-")
+    # Срезаем хвостовые предлоги/артикли/связки, чтобы не оставалось
+    # "with an aura of" / "of the Nine Saints Demon" / "skilled messenger of"
+    # как финал alias'а. Также чистим пунктуацию.
+    _TRAILING_FILLER = {
+        "a", "an", "the", "of", "with", "and", "or", "but", "to", "for",
+        "in", "on", "at", "by", "from", "into", "onto", "as", "is", "are",
+        "was", "were", "has", "have", "had", "be", "been", "being",
+    }
+    s = s.strip(" ,.;:-")
+    parts = s.split()
+    while parts and parts[-1].lower() in _TRAILING_FILLER:
+        parts.pop()
+    s = " ".join(parts).strip(" ,.;:-")
+
+    return s
 
 
 # ============================================================ prompt builder
 
 _BRACKET_TOKEN_RE = re.compile(r"\[([^\[\]]+)\]")
 
-
 def build_qwen_edit_prompt(
     image_prompt: str,
     base_prompts_by_name: Dict[str, dict],
-    camera_preset: str,
     max_pictures: int = 5,
-    style_stack: str = STYLE_STACK,
     *,
-    continuity_mode: str = "none",  # "none" | "soft" | "hard"
+    image_offset: int = 0,
 ) -> Tuple[str, List[str]]:
-    """Собрать финальный prompt для TextEncodeQwenImageEditPlus + список
-    entity-имён в порядке Picture 1..N.
 
-    Параметры:
-      image_prompt          - сырой `scene["image_prompt"]` с маркерами
-                              `[entity_name]`. Например:
-                              "[shen_fei] crouching before [lin_shuang] in
-                              [drainage_channel]. Pixar CGI Toon Style."
-      base_prompts_by_name  - dict {base_name: base_prompt_dict}, обычно
-                              `{bp["base_name"]: bp for bp in plan["base_prompts"]}`.
-                              Каждый bp_dict имеет ключ "base_prompt" (string)
-                              и опциональный "short_alias" (string, override
-                              для эвристики).
-      camera_preset         - выходной токен `pick_camera_preset(idx)` из
-                              chunk_prompts_2.py. Например "side profile
-                              medium shot".
-      max_pictures          - hard cap. Qwen Edit поддерживает максимум 3
-                              reference картинки.
-      style_stack           - что аппендить в конец prompt'а. По умолчанию —
-                              STYLE_STACK (Pixar 3D CGI Toon).
-
-    Возвращает:
-      (final_prompt, ordered_entities) — entity-имена в порядке появления,
-      без дубликатов, отфильтрованные по `base_prompts_by_name`. Caller
-      строит `image_paths` по этому списку.
-
-    Логика:
-      1. Резолвим entity из `[name]` маркеров image_prompt'а, фильтруя
-         только те что есть в `base_prompts_by_name` (отсеиваем мусорные
-         скобки типа `[wide shot]`), дедупаем, режем до `max_pictures`.
-      2. Каждое `[name]` подменяем на `Picture N (alias)` со всеми
-         occurrences. Alias берётся из `bp["short_alias"]` если задано,
-         иначе через `short_alias_from_base_prompt(bp["base_prompt"])`.
-      3. Любые оставшиеся `[unknown]` токены превращаем в plain text
-         (убираем скобки, оставляем содержимое).
-      4. Префиксим CHAR-anchored angle-фразой, аппендим style stack.
-
-    Пример:
-      image_prompt = "[shen_fei] crouching before [lin_shuang] in [drainage_channel]."
-      camera_preset = "side profile medium shot"
-      base_prompts_by_name = {
-          "shen_fei": {"base_prompt": "Pixar CGI Toon Style, A 185cm tall slender handsome young man with short black hair, wearing dark casual clothing", ...},
-          "lin_shuang": {"base_prompt": "Pixar CGI Toon Style, slender elegant young woman with sharp angular features, dark robes", ...},
-          "drainage_channel": {"base_prompt": "A dark, damp drainage channel at night, concrete walls with visible stains", ...},
-      }
-
-      final_prompt = (
-          "Side profile two-shot, camera at hip level perpendicular to the line "
-          "connecting both characters, framing them both from waist-up against "
-          "the background, classic side-view composition where the viewer sees "
-          "their faces in pure profile silhouettes. "
-          "Picture 1 (A 185cm tall slender handsome young man with short black "
-          "hair, wearing dark casual clothing) crouching before "
-          "Picture 2 (slender elegant young woman with sharp angular features, "
-          "dark robes) in "
-          "Picture 3 (A dark, damp drainage channel at night, concrete walls "
-          "with visible stains). "
-          "Pixar CGI Toon Style, stylized CGI character, ..."
-      )
-      ordered_entities = ["shen_fei", "lin_shuang", "drainage_channel"]
-    """
     if not isinstance(image_prompt, str) or not image_prompt.strip():
         raise ValueError("image_prompt must be a non-empty string")
+    if image_offset < 0:
+        raise ValueError(f"image_offset must be >= 0, got {image_offset}")
+
+    def _etype(name: str) -> str:
+        bp = base_prompts_by_name[name]
+        et = bp.get("entity_type")
+        if et not in ENTITY_TYPES:
+            raise ValueError(
+                f"base_prompts[{name!r}].entity_type is {et!r}; "
+                f"expected one of {ENTITY_TYPES}. Re-run GROK plan stage "
+                f"with the updated schema (each base_prompt must have "
+                f"entity_type)."
+            )
+        return et
 
     # 1. Резолвим entities в порядке появления, фильтруя по base_prompts_by_name
-    entities: List[str] = []
+    raw_entities: List[str] = []
     seen: set[str] = set()
-
-    # Если continuity_mode != "none", Picture 1 зарезервирована под previous-frame
-    # (caller пихает prev_image_path в начало image_paths). Все base entities
-    # сдвигаются на Picture 2..N, и effective max_pictures для них снижается на 1.
-    picture_offset = 1 if continuity_mode in ("soft", "hard") else 0
-    effective_max = max_pictures - picture_offset
-
     for m in _BRACKET_TOKEN_RE.finditer(image_prompt):
         name = m.group(1).strip()
         if name in base_prompts_by_name and name not in seen:
             seen.add(name)
-            entities.append(name)
-            if len(entities) >= effective_max:
-                break
+            raw_entities.append(name)
 
-    # 2. Подмена [entity] -> Picture N (alias), с учётом offset
+    # Проверяем, является ли промпт состоящим ровно из одной сущности, и это локация
+    is_single_location_only = (
+        len(raw_entities) == 1 and _etype(raw_entities[0]) == "location"
+    )
+
+    # 2. Обработка подстановок (без перестановки, в оригинальном порядке)
+    image_entities: List[str] = []
     out = image_prompt
-    for i, name in enumerate(entities):
-        bp = base_prompts_by_name.get(name, {})
+
+    for name in raw_entities:
+        et = _etype(name)
+
+        # Вычисляем alias один раз для обеих веток
+        bp = base_prompts_by_name[name]
         alias = (bp.get("short_alias") or "").strip()
         if not alias:
-            alias = short_alias_from_base_prompt(bp.get("base_prompt", ""))
+            alias = short_alias_from_base_prompt(
+                bp.get("base_prompt", ""), max_words=20
+            )
         if not alias:
             alias = name.replace("_", " ")
+        alias = alias.strip(" ,.;:-")
 
-        replacement = f"Picture {i + 1 + picture_offset} ({alias})"
-        out = re.sub(
-            r"\[\s*" + re.escape(name) + r"\s*\]",
-            replacement,
-            out,
-        )
+        # Если это локация И она не единственная сущность в промпте — используем (alias)
+        if et == "location" and not is_single_location_only:
+            replacement = f"({alias})"
+            out = re.sub(
+                r"\[\s*" + re.escape(name) + r"\s*\]",
+                replacement,
+                out,
+            )
+        else:
+            # Для character/object, а также для ЕДИНСТВЕННОЙ локации — применяем image N
+            if len(image_entities) < max_pictures:
+                image_entities.append(name)
+                picture_idx = len(image_entities) + image_offset
+                replacement = f"image {picture_idx}"
+                out = re.sub(
+                    r"\[\s*" + re.escape(name) + r"\s*\]",
+                    replacement,
+                    out,
+                )
 
-    # 3. Стрипаем оставшиеся неизвестные [bracketed] → plain text
+    # 3. Стрипаем оставшиеся неизвестные или превысившие лимит [bracketed] → plain text
     out = _BRACKET_TOKEN_RE.sub(lambda m: m.group(1).strip(), out)
 
-    # 3.5. Удаляем style-фразы из body — иначе будет дублирование с STYLE_STACK
-    # в финальном prompt'е (image_prompt'ы из GROK plan'а часто оканчиваются
-    # "Pixar CGI Toon Style, cinematic lighting." или похоже).
-    out = _STYLE_PHRASE_RE.sub("", out)
-    # Подчищаем оставшиеся артефакты типа ", cinematic lighting." в конце
-    # (style вырезан, но повисший хвост со стилистикой остаётся).
-    # Снимаем хвостовые orphaned-фрагменты "., cinematic lighting" / ", glowing
-    # interface" и т.п. — но только из конца body, чтобы не ломать действие.
-    out = re.sub(r"[,\s]+(?:cinematic|glowing|detailed|intense|atmospheric|moody)\s+\w+\s*\.?\s*$", "", out, flags=re.IGNORECASE)
     # Финальный cleanup: лишние " , " и пробелы
     out = re.sub(r"\s*,\s*,\s*", ", ", out)
     out = re.sub(r"\s*,\s*\.", ".", out)
     out = re.sub(r"\.\s*\.+", ".", out)
 
-    # 4. Финальная сборка: angle + continuity prefix + body + style stack
+    # 4. Финальная сборка: только style flag + body.
     body = _WS_RE.sub(" ", out).strip(" ,.;:-")
-    angle = rich_angle_phrase(camera_preset).rstrip(". ").strip()
-    style = style_stack.strip().rstrip(".")
 
-    if continuity_mode == "soft":
-        continuity_prefix = (
-            "Picture 1 shows the immediately preceding moment of this same scene. "
-            "The action below is a direct continuation: characters keep the same "
-            "pose, expression, clothing, body position, and any props they were "
-            "holding from Picture 1. Camera angle may shift to the new framing "
-            "described below, but character state is preserved."
-        )
-    elif continuity_mode == "hard":
-        continuity_prefix = (
-            "Picture 1 shows the exact previous frame of this same scene. "
-            "This image is the very next moment, with only minor incremental "
-            "motion: characters in identical pose, expression, clothing, and "
-            "position; props in identical placement. The camera does NOT cut — "
-            "framing and angle remain the same as Picture 1."
-        )
-    else:
-        continuity_prefix = ""
-
-    if continuity_prefix:
-        final = f"{angle}. {continuity_prefix} {body}. {style}.".strip()
-    else:
-        final = f"{angle}. {body}. {style}.".strip()
+    final = f"{body}.".strip()
     final = _WS_RE.sub(" ", final)
-    return final, entities
-
-
-# ============================================================ self-test
-
-if __name__ == "__main__":
-    # Быстрый sanity-check на base_prompts из реального main.json
-    import json
-    import sys
-
-    plan_path = sys.argv[1] if len(sys.argv) > 1 else "main.json"
-    with open(plan_path, "r", encoding="utf-8") as f:
-        plan = json.load(f)
-
-    base_prompts_by_name = {bp["base_name"]: bp for bp in plan.get("base_prompts", [])}
-
-    print("=" * 70)
-    print("base_prompts → short_alias")
-    print("=" * 70)
-    for name, bp in base_prompts_by_name.items():
-        alias = short_alias_from_base_prompt(bp.get("base_prompt", ""))
-        print(f"  {name:25s} -> {alias}")
-
-    print()
-    print("=" * 70)
-    print("Sample built prompts (first 5 scenes)")
-    print("=" * 70)
-
-    # CAMERA_PRESETS из chunk_prompts_2.py
-    camera_presets = [
-        "low angle wide shot",
-        "high angle medium shot",
-        "eye-level close-up",
-        "over-the-shoulder medium shot",
-        "extreme wide establishing shot",
-        "tight close-up on face",
-        "three-quarter view medium shot",
-        "front-on medium-wide shot",
-        "side profile medium shot",
-        "dutch angle medium shot",
-    ]
-
-    for i, scene in enumerate(plan.get("scenes", [])[:5]):
-        camera = camera_presets[i % len(camera_presets)]
-        try:
-            final, ents = build_qwen_edit_prompt(
-                image_prompt=scene["image_prompt"],
-                base_prompts_by_name=base_prompts_by_name,
-                camera_preset=camera,
-            )
-        except Exception as e:
-            print(f"\n--- scene {scene.get('scene_id')} FAILED: {e} ---")
-            continue
-        print(f"\n--- scene {scene.get('scene_id')} ({camera}) ---")
-        print(f"  entities: {ents}")
-        print(f"  prompt:   {final}")
+    
+    # Возвращаем final и только те сущности, которые реально стали "image N"
+    return final, image_entities

@@ -16,7 +16,7 @@
     "inputs": {
       "shift": 3.1,
       "model": [
-        "179",
+        "209",
         0
       ]
     },
@@ -62,7 +62,7 @@
   },
   "175": {
     "inputs": {
-      "prompt": "worst quality, inconsistent motion, blurry, jittery, distorted, watermark, morphing faces, fingers deformed, extra limbs, unnatural colors, flickering, ghosting, anime, manga, 2d animation, cel-shaded, hand-drawn, painterly, flat colors, sharp lineart, line art, watercolor, sketch, ink drawing, comic book style, three hand, extra hand",
+      "prompt": "worst quality, inconsistent motion, blurry, jittery, distorted, watermark, morphing faces, fingers deformed, extra limbs, unnatural colors, flickering, ghosting, hand-drawn, painterly, flat colors, sharp lineart, line art, watercolor, sketch, ink drawing, comic book style, three hand, extra hand",
       "clip": [
         "184",
         0
@@ -72,15 +72,15 @@
         0
       ],
       "image1": [
-        "202",
-        0
-      ],
-      "image2": [
         "200",
         0
       ],
-      "image3": [
+      "image2": [
         "201",
+        0
+      ],
+      "image3": [
+        "202",
         0
       ]
     },
@@ -91,7 +91,7 @@
   },
   "177": {
     "inputs": {
-      "prompt": "[image 1] standing before injured [image 2] and injured [image 3] in a dark drainage channel. Pixar CGI Toon Style, cinematic lighting.\"",
+      "prompt": "transform into 3d style. Low-angle medium-wide shot from the front passenger seat floor of (A compact ride-sharing car interior with gray fabric front seats), camera tilted up to frame image 1 sitting in the driver's seat in midground, both hands gripping the gray fabric steering wheel, jaw dropped mid-syllable. His elbows rest on the cracked black plastic center console, the mounted smartphone navigation app visible on the dashboard in the background. Blurred edge of the gray fabric front passenger seat enters frame from lower-right in warm cabin light bokeh. Dim overhead cabin light catches a crisp catchlight in his narrow yellow eyes, sharp cel-shaded shadow across his left cheek. Thick clean lineart outlines his messy hair against the warm background.",
       "clip": [
         "184",
         0
@@ -101,15 +101,15 @@
         0
       ],
       "image1": [
-        "202",
-        0
-      ],
-      "image2": [
         "200",
         0
       ],
-      "image3": [
+      "image2": [
         "201",
+        0
+      ],
+      "image3": [
+        "202",
         0
       ]
     },
@@ -134,7 +134,7 @@
   },
   "180": {
     "inputs": {
-      "value": 1
+      "value": 3
     },
     "class_type": "PrimitiveFloat",
     "_meta": {
@@ -173,7 +173,7 @@
   },
   "191": {
     "inputs": {
-      "seed": 42,
+      "seed": 912804868632856,
       "steps": [
         "187",
         0
@@ -225,7 +225,7 @@
   },
   "200": {
     "inputs": {
-      "image": "\"C:\\Users\\Loopy\\Desktop\\ComfyUI_windows_portable\\ComfyUI\\output\\base_image_gen\\lin_xue_00001_.png\"",
+      "image": "",
       "custom_width": 0,
       "custom_height": 0
     },
@@ -236,7 +236,7 @@
   },
   "201": {
     "inputs": {
-      "image": "\"C:\\Users\\Loopy\\Desktop\\ComfyUI_windows_portable\\ComfyUI\\output\\base_image_gen\\lin_shuang_00001_.png\"",
+      "image": "",
       "custom_width": 0,
       "custom_height": 0
     },
@@ -247,7 +247,7 @@
   },
   "202": {
     "inputs": {
-      "image": "\"C:\\Users\\Loopy\\Desktop\\ComfyUI_windows_portable\\ComfyUI\\output\\base_image_gen\\shen_fei_00001_.png\"",
+      "image": "",
       "custom_width": 0,
       "custom_height": 0
     },
@@ -258,13 +258,68 @@
   },
   "203": {
     "inputs": {
-      "width": 1280,
-      "height": 720,
+      "width": 1920,
+      "height": 1088,
       "batch_size": 1
     },
     "class_type": "EmptyLatentImage",
     "_meta": {
       "title": "Пустое латентное изображение"
+    }
+  },
+  "207": {
+    "inputs": {
+      "lora_name": "qwen-image-edit-2511-multiple-angles-lora.safetensors",
+      "strength_model": 0.9,
+      "model": [
+        "179",
+        0
+      ]
+    },
+    "class_type": "LoraLoaderModelOnly",
+    "_meta": {
+      "title": "Загрузчик LoRA (Только модель)"
+    }
+  },
+  "208": {
+    "inputs": {
+      "sage_attention": "auto",
+      "allow_compile": false,
+      "model": [
+        "210",
+        0
+      ]
+    },
+    "class_type": "PathchSageAttentionKJ",
+    "_meta": {
+      "title": "Patch Sage Attention KJ"
+    }
+  },
+  "209": {
+    "inputs": {
+      "enable_fp16_accumulation": true,
+      "model": [
+        "208",
+        0
+      ]
+    },
+    "class_type": "ModelPatchTorchSettings",
+    "_meta": {
+      "title": "Model Patch Torch Settings"
+    }
+  },
+  "210": {
+    "inputs": {
+      "lora_name": "3DChineseStyle_25.safetensors",
+      "strength_model": 0.9,
+      "model": [
+        "207",
+        0
+      ]
+    },
+    "class_type": "LoraLoaderModelOnly",
+    "_meta": {
+      "title": "Загрузчик LoRA (Только модель)"
     }
   }
 }

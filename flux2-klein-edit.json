@@ -1,17 +1,4 @@
 {
-  "94": {
-    "inputs": {
-      "filename_prefix": "Flux2-Klein-4b-base",
-      "images": [
-        "133",
-        0
-      ]
-    },
-    "class_type": "SaveImage",
-    "_meta": {
-      "title": "Сохранить изображение"
-    }
-  },
   "131": {
     "inputs": {
       "sampler_name": "euler"
@@ -28,7 +15,7 @@
         0
       ],
       "guider": [
-        "144",
+        "178",
         0
       ],
       "sampler": [
@@ -67,7 +54,7 @@
   },
   "134": {
     "inputs": {
-      "noise_seed": 42
+      "noise_seed": 641334322956128
     },
     "class_type": "RandomNoise",
     "_meta": {
@@ -76,7 +63,7 @@
   },
   "135": {
     "inputs": {
-      "unet_name": "flux-2-klein-9b.safetensors",
+      "unet_name": "flux-2-klein-9b-kv.safetensors",
       "weight_dtype": "default"
     },
     "class_type": "UNETLoader",
@@ -86,7 +73,7 @@
   },
   "136": {
     "inputs": {
-      "vae_name": "full_encoder_small_decoder.safetensors"
+      "vae_name": "flux2-vae.safetensors"
     },
     "class_type": "VAELoader",
     "_meta": {
@@ -106,7 +93,7 @@
   },
   "139": {
     "inputs": {
-      "upscale_method": "lanczos",
+      "upscale_method": "nearest-exact",
       "megapixels": 1,
       "resolution_steps": 1,
       "image": [
@@ -121,7 +108,7 @@
   },
   "140": {
     "inputs": {
-      "upscale_method": "lanczos",
+      "upscale_method": "nearest-exact",
       "megapixels": 1,
       "resolution_steps": 1,
       "image": [
@@ -136,7 +123,7 @@
   },
   "141": {
     "inputs": {
-      "clip_name": "qwen_3_8b_fp8mixed.safetensors",
+      "clip_name": "qwen_3_8b.safetensors",
       "type": "flux2",
       "device": "default"
     },
@@ -147,7 +134,7 @@
   },
   "142": {
     "inputs": {
-      "text": "Over-the-shoulder camera angle, medium framing with a soft out-of-focus foreground edge in the bottom corner of frame, classic shoulder-anchored perspective. Picture 1 (A younger woman with white hair) bursting through a door into the Picture 2 (Interior of a traditional Chinese teahouse room) with a look of panic and urgency, Picture 3 (Handsome man wearing white shirt) standing in middle of the room through on Picture 4 (The girl wearing assasins suit with dark hair). Pixar CGI Toon Style, stylized CGI character, pixar-like 3D render, cinematic animated character, high-end animated film style, soft volumetric lighting, PBR textures, subsurface scattering on skin, smooth highlights.",
+      "text": "Japanese anime style.Eye-level medium shot from the front passenger seat inside (Inside a black sedan taxi with black leather bucket seats), facing iamge 1 sitting on the polished black leather front seat, both hands gripping the steering wheel, jaw set mid-syllable. Harsh afternoon sunlight through the windshield carves sharp cel-shaded shadows across his left cheek, single crisp catchlight in each yellow eye. Edge of the polished black leather passenger seat enters frame from lower right in soft bokeh, out-of-focus small rearview mirror visible in the upper background.\n      ",
       "clip": [
         "141",
         0
@@ -158,65 +145,15 @@
       "title": "CLIP Text Encode (Positive Prompt)"
     }
   },
-  "143": {
-    "inputs": {
-      "text": "worst quality, inconsistent motion, blurry, jittery, distorted, watermark, morphing faces, fingers deformed, extra limbs, unnatural colors, flickering, ghosting, anime, manga, 2d animation, cel-shaded, hand-drawn, painterly, flat colors, sharp lineart, line art, watercolor, sketch, ink drawing, comic book style, three hand, extra hand.",
-      "clip": [
-        "141",
-        0
-      ]
-    },
-    "class_type": "CLIPTextEncode",
-    "_meta": {
-      "title": "CLIP Text Encode ( Negative Prompt)"
-    }
-  },
-  "144": {
-    "inputs": {
-      "cfg": 1,
-      "model": [
-        "135",
-        0
-      ],
-      "positive": [
-        "169",
-        0
-      ],
-      "negative": [
-        "170",
-        0
-      ]
-    },
-    "class_type": "CFGGuider",
-    "_meta": {
-      "title": "CFG Гид"
-    }
-  },
   "145": {
     "inputs": {
-      "steps": 4,
-      "width": 1280,
-      "height": 720
+      "steps": 15,
+      "width": 1920,
+      "height": 1088
     },
     "class_type": "Flux2Scheduler",
     "_meta": {
       "title": "Flux2Scheduler"
-    }
-  },
-  "146": {
-    "inputs": {
-      "conditioning": [
-        "143",
-        0
-      ],
-      "latent": [
-        "147",
-        0
-      ]
-    },
-    "class_type": "ReferenceLatent",
-    "_meta": {
-      "title": "Эталонный латент"
     }
   },
   "147": {
@@ -243,22 +180,6 @@
       ],
       "latent": [
         "147",
-        0
-      ]
-    },
-    "class_type": "ReferenceLatent",
-    "_meta": {
-      "title": "Эталонный латент"
-    }
-  },
-  "149": {
-    "inputs": {
-      "conditioning": [
-        "146",
-        0
-      ],
-      "latent": [
-        "150",
         0
       ]
     },
@@ -301,7 +222,7 @@
   },
   "152": {
     "inputs": {
-      "upscale_method": "lanczos",
+      "upscale_method": "nearest-exact",
       "megapixels": 1,
       "resolution_steps": 1,
       "image": [
@@ -316,7 +237,7 @@
   },
   "153": {
     "inputs": {
-      "upscale_method": "lanczos",
+      "upscale_method": "nearest-exact",
       "megapixels": 1,
       "resolution_steps": 1,
       "image": [
@@ -329,22 +250,6 @@
       "title": "Масштабировать изображение до общего количества пикселей"
     }
   },
-  "154": {
-    "inputs": {
-      "conditioning": [
-        "149",
-        0
-      ],
-      "latent": [
-        "159",
-        0
-      ]
-    },
-    "class_type": "ReferenceLatent",
-    "_meta": {
-      "title": "Эталонный латент"
-    }
-  },
   "155": {
     "inputs": {
       "conditioning": [
@@ -353,22 +258,6 @@
       ],
       "latent": [
         "159",
-        0
-      ]
-    },
-    "class_type": "ReferenceLatent",
-    "_meta": {
-      "title": "Эталонный латент"
-    }
-  },
-  "156": {
-    "inputs": {
-      "conditioning": [
-        "154",
-        0
-      ],
-      "latent": [
-        "157",
         0
       ]
     },
@@ -427,7 +316,7 @@
   },
   "160": {
     "inputs": {
-      "image": "\"C:\\Users\\Loopy\\Desktop\\ComfyUI_windows_portable\\ComfyUI\\output\\base_image_gen\\lin_xue_00001_.png",
+      "image": "",
       "custom_width": 0,
       "custom_height": 0
     },
@@ -438,7 +327,7 @@
   },
   "161": {
     "inputs": {
-      "image": "\"C:\\Users\\Loopy\\Desktop\\ComfyUI_windows_portable\\ComfyUI\\output\\base_image_gen\\teahouse_room_00001_.png\"",
+      "image": "",
       "custom_width": 0,
       "custom_height": 0
     },
@@ -449,7 +338,7 @@
   },
   "162": {
     "inputs": {
-      "image": "\"C:\\Users\\Loopy\\Desktop\\ComfyUI_windows_portable\\ComfyUI\\output\\base_image_gen\\shen_fei_00001_.png",
+      "image": "",
       "custom_width": 0,
       "custom_height": 0
     },
@@ -460,7 +349,7 @@
   },
   "163": {
     "inputs": {
-      "image": "\"C:\\Users\\Loopy\\Desktop\\ComfyUI_windows_portable\\ComfyUI\\output\\base_image_gen\\lin_shuang_00001_.png\"",
+      "image": "",
       "custom_width": 0,
       "custom_height": 0
     },
@@ -471,11 +360,11 @@
   },
   "167": {
     "inputs": {
-      "upscale_method": "lanczos",
+      "upscale_method": "nearest-exact",
       "megapixels": 1,
       "resolution_steps": 1,
       "image": [
-        "171",
+        "175",
         0
       ]
     },
@@ -516,31 +405,243 @@
       "title": "Эталонный латент"
     }
   },
-  "170": {
+  "175": {
     "inputs": {
-      "conditioning": [
-        "156",
-        0
-      ],
-      "latent": [
-        "168",
-        0
-      ]
-    },
-    "class_type": "ReferenceLatent",
-    "_meta": {
-      "title": "Эталонный латент"
-    }
-  },
-  "171": {
-    "inputs": {
-      "image": "\"C:\\Users\\Loopy\\Desktop\\ComfyUI_windows_portable\\ComfyUI\\output\\base_image_gen\\lin_shuang_00001_.png\"",
+      "image": "",
       "custom_width": 0,
       "custom_height": 0
     },
     "class_type": "VHS_LoadImagePath",
     "_meta": {
       "title": "Load Image (Path) 🎥🅥🅗🅢"
+    }
+  },
+  "178": {
+    "inputs": {
+      "cfg": 1,
+      "model": [
+        "135",
+        0
+      ],
+      "positive": [
+        "169",
+        0
+      ],
+      "negative": [
+        "179",
+        0
+      ]
+    },
+    "class_type": "CFGGuider",
+    "_meta": {
+      "title": "CFG Гид"
+    }
+  },
+  "179": {
+    "inputs": {
+      "conditioning": [
+        "142",
+        0
+      ]
+    },
+    "class_type": "ConditioningZeroOut",
+    "_meta": {
+      "title": "Обнуление кондиционирования"
+    }
+  },
+  "185": {
+    "inputs": {
+      "aggressive": true,
+      "image": [
+        "133",
+        0
+      ]
+    },
+    "class_type": "FreeMemoryImage",
+    "_meta": {
+      "title": "Free Memory (Image)"
+    }
+  },
+  "248": {
+    "inputs": {
+      "unet_name": "z-anime-distill-8step-bf16.safetensors",
+      "weight_dtype": "default"
+    },
+    "class_type": "UNETLoader",
+    "_meta": {
+      "title": "Загрузить модель диффузии"
+    }
+  },
+  "249": {
+    "inputs": {
+      "upscale_method": "lanczos",
+      "scale_by": 1.5,
+      "image": [
+        "185",
+        0
+      ]
+    },
+    "class_type": "ImageScaleBy",
+    "_meta": {
+      "title": "Масштабировать изображение на"
+    }
+  },
+  "250": {
+    "inputs": {
+      "image": [
+        "249",
+        0
+      ]
+    },
+    "class_type": "GetImageSizeAndCount",
+    "_meta": {
+      "title": "Get Image Size & Count"
+    }
+  },
+  "253": {
+    "inputs": {
+      "aggressive": true,
+      "image": [
+        "252:146",
+        0
+      ]
+    },
+    "class_type": "FreeMemoryImage",
+    "_meta": {
+      "title": "Free Memory (Image)"
+    }
+  },
+  "254": {
+    "inputs": {
+      "filename_prefix": "Flux2-Klein-4b-base",
+      "images": [
+        "253",
+        0
+      ]
+    },
+    "class_type": "SaveImage",
+    "_meta": {
+      "title": "Сохранить изображение"
+    }
+  },
+  "252:146": {
+    "inputs": {
+      "samples": [
+        "252:190",
+        0
+      ],
+      "vae": [
+        "252:186",
+        0
+      ]
+    },
+    "class_type": "VAEDecode",
+    "_meta": {
+      "title": "Декодировать VAE"
+    }
+  },
+  "252:149": {
+    "inputs": {
+      "shift": 3,
+      "model": [
+        "248",
+        0
+      ]
+    },
+    "class_type": "ModelSamplingAuraFlow",
+    "_meta": {
+      "title": "Выборка модели AuraFlow"
+    }
+  },
+  "252:186": {
+    "inputs": {
+      "vae_name": "ae.safetensors"
+    },
+    "class_type": "VAELoader",
+    "_meta": {
+      "title": "Загрузить VAE"
+    }
+  },
+  "252:187": {
+    "inputs": {
+      "text": "Anime illustration, 4K cinematic scenes",
+      "clip": [
+        "252:144",
+        0
+      ]
+    },
+    "class_type": "CLIPTextEncode",
+    "_meta": {
+      "title": "Кодирование текста CLIP (Запрос)"
+    }
+  },
+  "252:188": {
+    "inputs": {
+      "conditioning": [
+        "252:187",
+        0
+      ]
+    },
+    "class_type": "ConditioningZeroOut",
+    "_meta": {
+      "title": "Обнуление кондиционирования"
+    }
+  },
+  "252:189": {
+    "inputs": {
+      "pixels": [
+        "250",
+        0
+      ],
+      "vae": [
+        "252:186",
+        0
+      ]
+    },
+    "class_type": "VAEEncode",
+    "_meta": {
+      "title": "Кодировать VAE"
+    }
+  },
+  "252:144": {
+    "inputs": {
+      "clip_name": "qwen_3_4b.safetensors",
+      "type": "lumina2",
+      "device": "default"
+    },
+    "class_type": "CLIPLoader",
+    "_meta": {
+      "title": "Загрузить CLIP"
+    }
+  },
+  "252:190": {
+    "inputs": {
+      "seed": 42,
+      "steps": 8,
+      "cfg": 1,
+      "sampler_name": "res_multistep",
+      "scheduler": "simple",
+      "denoise": 0.35,
+      "model": [
+        "252:149",
+        0
+      ],
+      "positive": [
+        "252:187",
+        0
+      ],
+      "negative": [
+        "252:188",
+        0
+      ],
+      "latent_image": [
+        "252:189",
+        0
+      ]
+    },
+    "class_type": "KSampler",
+    "_meta": {
+      "title": "KSampler"
     }
   }
 }
