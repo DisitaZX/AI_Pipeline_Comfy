@@ -1,0 +1,521 @@
+{
+  "generated_at": "2026-06-16 18:42:01",
+  "num_scenes": 34,
+  "fps": 50,
+  "scenes": [
+    {
+      "scene_index": 0,
+      "scene_id": 1,
+      "plan": {
+        "num_chunks": 1,
+        "global_prompt": "Eye-level medium shot captures the presenter on a brightly lit studio stage as she delivers her formal greeting to an unseen audience tier beyond. The camera holds static focus while the performer executes sharp, dynamic motions; initially sweeping one arm outward in a grand gesture before allowing it to settle into an open presentation pose. Her mouth forms crisp syllables of welcome while she elevates the silver microphone toward her face for emphasis. High-contrast overhead spotlights rake intensely across the stage, creating saturated highlights and deep cinematic shadows that define the space. Ambient studio hum mixes with the clear delivery of the Russian greeting as subtle light flares catch in the polished black floor reflections.",
+        "total_frames": 145,
+        "chunks": [
+          {
+            "video_prompt": "The presenter completes her initial outward sweep of the arm toward the crowd, transitioning immediately into a poised stance. Her head subtly tilts while she speaks the opening phrase, maintaining strong eye contact with the camera lens as the microphone is held steady near her chin. The overhead spotlight flares intensify briefly against the dark background audience area.",
+            "length_frames": 145
+          }
+        ]
+      }
+    },
+    {
+      "scene_index": 1,
+      "scene_id": 2,
+      "plan": {
+        "num_chunks": 1,
+        "global_prompt": "Inside a high-contrast modern television studio bathed in deep blue and vibrant purple volumetric ambient light, the host stands centered on a polished black stage under intense overhead spotlights. The scene captures a moment of sudden dramatic declaration, where sharp kinetic energy dictates the motion. She executes a rapid pivot while simultaneously thrusting one hand back toward the colossal glowing LED wall screen dominating the background. This gesture is synchronized with an abrupt, forceful turn of her head and torso. Cinematic focus maintains crisp detail on her expressive face amidst the high-gloss environment, emphasizing the immediacy of the live broadcast moment. The atmosphere pulses with a subtle mechanical hum overlayed by the sharp acoustic quality of spoken text.",
+        "total_frames": 185,
+        "chunks": [
+          {
+            "video_prompt": "Starting from the keyframe pose, the host executes a sudden and dramatic rotational pivot, her body smoothly shifting to face forward while her free hand forcefully extends back toward the massive luminous screen. Her head follows this momentum with an abrupt snap of movement, locking eyes with the camera as she delivers the declaration; dust motes subtly float in the strong beams of light.",
+            "length_frames": 185
+          }
+        ]
+      }
+    },
+    {
+      "scene_index": 2,
+      "scene_id": 3,
+      "plan": {
+        "num_chunks": 1,
+        "global_prompt": "A static eye-level medium shot captures the presenter within a high-production television studio environment under intense overhead spotlights, creating dramatic cel-shaded contrast. The scene is dominated by her emphatic delivery as she speaks into a professional microphone. Her hands execute sharp, deliberate gestures at chest height, punctuating her explanation of the broadcast format. The polished black floor reflects the harsh white and warm amber key lights, which sculpt her silhouette with strong rim lighting against the deep background bokeh. Ambient studio hum provides continuity while the presenter's voice cuts through in a crisp burst, driving the kinetic energy of this segment. Her hair catches subtle volumetric light as she tilts her head slightly toward the camera audience tier.",
+        "total_frames": 177,
+        "chunks": [
+          {
+            "video_prompt": "The standing figure raises both hands and rapidly gestures outward while delivering speech into the microphone; her posture shifts subtly with each word, reinforcing the explanation. Overhead spotlights blaze down, creating sharp highlights on her green dress as she maintains intense eye contact. The studio ambience holds steady beneath the clear articulation of her voice.",
+            "length_frames": 177
+          }
+        ]
+      }
+    },
+    {
+      "scene_index": 3,
+      "scene_id": 4,
+      "plan": {
+        "num_chunks": 1,
+        "global_prompt": "An eye-level medium-wide shot captures the elegant host within a high-production television studio environment at night. The polished black floor reflects intense overhead spotlights and sweeping blue volumetric light beams that define the scene's dramatic contrast. The woman in the fitted emerald green dress is captured mid-gesture, her body angled toward the sleek white panel desk while she delivers an introduction. Her momentum builds as she fully extends one arm toward the expert setup area, simultaneously pulling the microphone closer to her mouth for a commanding announcement. Subtle city lights glow through the massive studio windows behind the set, contrasting with the sharp neon accents and deep shadows of the foreground furniture. The camera remains static yet intensely focused on her kinetic presentation.",
+        "total_frames": 161,
+        "chunks": [
+          {
+            "video_prompt": "The host completes the dramatic sweep of her outstretched arm toward the panel desk as she holds the microphone steady against her chest, maintaining strong eye contact with the implied audience. Her posture shifts from announcement to confident introduction; a slight forward tilt in her torso emphasizes the declaration 'Встречайте трёх экспертов!'. Ambient studio hum blends with her clear voice and soft footfalls on the polished floor.",
+            "length_frames": 161
+          }
+        ]
+      }
+    },
+    {
+      "scene_index": 4,
+      "scene_id": 5,
+      "plan": {
+        "num_chunks": 1,
+        "global_prompt": "Inside a high-production television studio, the medium-wide shot captures two figures centered behind a curved white panel desk. The host initiates the scene by leaning forward sharply and thrusting an extended microphone toward the guest, creating immediate tension in the foreground. In response to the announcement of her arrival, the seated young woman subtly shifts upward on her plush chair; her shoulders elevate slightly as she snaps her head directly towards the camera with a bright, composed expression. The environment is dominated by dramatic overhead spotlights that carve harsh cel-shaded contrast across the scene, while out-of-focus LED wall panels bloom in the background bokeh, providing deep environmental color. A steadycam movement holds this dynamic interaction, emphasizing the sudden shift of attention from the host to the newly introduced guest amidst a low hum of studio ambience and faint crowd murmur.",
+        "total_frames": 209,
+        "chunks": [
+          {
+            "video_prompt": "The standing host leans in rapidly, driving the microphone forward toward the seated figure. The young woman pushes up slightly on her swivel chair as she catches the mic thrust, smoothly pivoting her head to meet the camera's gaze with a deliberate, radiant smile. Overhead lights cast sharp highlights onto their faces while ambient studio noise swells briefly before settling into room tone.",
+            "length_frames": 209
+          }
+        ]
+      }
+    },
+    {
+      "scene_index": 5,
+      "scene_id": 6,
+      "plan": {
+        "num_chunks": 1,
+        "global_prompt": "A static tight close-up captures the singer within a high-production TV studio setting, bathed in dramatic theatrical lighting and cool ambient hues. The scene emphasizes professional polish with sharp cel-shaded highlights catching her facial structure against a shallow depth of field bokeh backdrop of blue and purple stage lights. She initiates the performance by subtly shifting her weight forward over the curved white desk; simultaneously, she executes a quick, expressive tilt of her head as if projecting sound, accompanied by an immediate widening of her bright smile. Her hands remain steady on the polished desktop while subtle atmospheric motes float in the cone of overhead spotlights. The low-frequency hum of studio equipment anchors the environment, punctuated only by the soft resonance of her imminent vocal delivery.",
+        "total_frames": 145,
+        "chunks": [
+          {
+            "video_prompt": "The young singer leans slightly closer to the viewer across the desk; she executes a fluid head tilt and rapidly widens her smile in an immediate beat. Her gaze remains focused forward as she subtly shifts her posture, initiating movement from a seated position toward performance. Overhead spotlights rake intensely across her face, contrasting sharply with the diffused blue-purple glow blooming behind her.",
+            "length_frames": 145
+          }
+        ]
+      }
+    },
+    {
+      "scene_index": 6,
+      "scene_id": 7,
+      "plan": {
+        "num_chunks": 1,
+        "global_prompt": "A tight medium close-up within a highly polished broadcast studio captures the young woman delivering an energetic monologue from behind her curved white desk. Overhead spotlights carve crisp, hard contrast across her face and bright clothing, emphasizing volumetric light shafts cutting through ambient air particles. As she speaks passionately into the microphone, her head maintains a dynamic tilt, transitioning from a gesture of affection near her chest to an open-handed declaration toward the camera lens. The atmosphere is charged with polished professionalism; background monitors glow with abstract blue data streams, while soft bokeh blurs foreground equipment. A steadycam movement initiates a very slow push-in as she drives home her point, creating visual intensity and intimate focus on her earnest expression.",
+        "total_frames": 161,
+        "chunks": [
+          {
+            "video_prompt": "The young woman continues speaking with bright conviction; her right hand shifts from pressing against her chest to an open, expressive gesture outward. Her eyes widen momentarily as she emphasizes the line, maintaining direct eye contact while a subtle steadycam push-in tightens the framing on her animated facial expression. Crisp room tone and clear vocal projection define the soundscape of this focused broadcast moment.",
+            "length_frames": 161
+          }
+        ]
+      }
+    },
+    {
+      "scene_index": 7,
+      "scene_id": 8,
+      "plan": {
+        "num_chunks": 1,
+        "global_prompt": "The eye-level medium-wide shot holds a static composition inside the high-gloss television studio. The nearer figure subtly settles back into her swivel chair while holding an open, pleasant smile towards the other participant. Concurrently, the darker-haired guest executes a smooth turn of her upper body and head toward the camera lens, establishing intense eye contact. Overhead spotlights cast sharp, defined contrast across the white paneling, emphasizing volumetric light filtering through the background's deep bokeh effect. The shallow depth of field isolates both figures against the vibrant LED glow. A low ambient room tone permeates the space as their movement concludes, preparing for a shift in conversational focus.",
+        "total_frames": 169,
+        "chunks": [
+          {
+            "video_prompt": "The nearer woman eases back into her swivel chair with a controlled gesture while maintaining her gentle smile across the desk surface. The dark-haired guest completes her deliberate turn, locking her direct gaze onto the camera lens as soft highlights catch the fabric of her dress in the overhead light.",
+            "length_frames": 169
+          }
+        ]
+      }
+    },
+    {
+      "scene_index": 8,
+      "scene_id": 9,
+      "plan": {
+        "num_chunks": 1,
+        "global_prompt": "A medium shot within a high-end television studio captures the seated woman as she executes a deliberate turn toward the camera. The static locked camera maintains eye level, utilizing shallow depth of field to isolate her against the luminous bokeh of the LED wall behind her. Overhead spotlights cast sharp, dramatic highlights and deep cinematic shadows across her features, creating intense cel-shaded contrast. Her movement begins with a smooth rotation from profile before culminating in a single, composed dip of the head. The atmosphere is defined by volumetric lighting cutting through faint ambient studio haze, accompanied by low room tone and subtle mechanical hums.",
+        "total_frames": 225,
+        "chunks": [
+          {
+            "video_prompt": "The seated woman smoothly rotates her torso to face forward, maintaining steady eye contact as she settles into a composed posture. She executes one slow, deliberate dip of the head in acknowledgment. Light catches the sheen of her hair and dress fabric during this measured movement. The camera remains perfectly stable while ambient studio sound fills the space.",
+            "length_frames": 225
+          }
+        ]
+      }
+    },
+    {
+      "scene_index": 9,
+      "scene_id": 10,
+      "plan": {
+        "num_chunks": 1,
+        "global_prompt": "A tight close-up shot inside a futuristic television studio captures the young woman behind the curved desk as she delivers an intense confession. The static locked camera holds steady on her face while the dramatic overhead spotlights rake hard across her features, creating sharp cel-shaded highlights and deep shadows that define her expression. Her primary action involves lifting one hand toward her temple, followed by a small, deliberate head shake synchronized with her spoken Russian dialogue. She pauses mid-sentence, allowing her eyes to lower slightly as she conveys vulnerability through subtle body language. The shallow depth of field keeps the focus intensely sharp on her face while atmospheric background lights drift in soft bokeh across the studio environment. Ambient room tone blends with the crisp echo of her voice.",
+        "total_frames": 185,
+        "chunks": [
+          {
+            "video_prompt": "The woman's hand rises slowly toward her temple, fingers brushing against her skin as she speaks the confession; a micro-tremor runs through her jaw during the delivery. Her head gives a sharp, slight shake to emphasize her words before settling back into frame focus. The hard studio light catches reflections in her lowered eyes while subtle movement causes strands of hair to shift near her cheek.",
+            "length_frames": 185
+          }
+        ]
+      }
+    },
+    {
+      "scene_index": 10,
+      "scene_id": 11,
+      "plan": {
+        "num_chunks": 1,
+        "global_prompt": "Inside a high-production TV studio, two figures are framed in an eye-level medium shot behind a sleek white panel desk. Overhead spotlights cast hard, cel-shaded shadows across the polished set and subjects, creating intense contrast against the softly glowing LED wall display in the background bokeh. The seated woman maintains a poised posture while her companion observes nearby. Suddenly, the main speaker executes a sharp, deliberate turn of her head toward the camera, lifting her chin decisively as she speaks into the microphone. A low-angle composition emphasizes her authoritative presence during this moment of declaration. Ambient room tone mixes with subtle electrical hums from the studio equipment, grounding the dramatic reveal in professional reality.",
+        "total_frames": 217,
+        "chunks": [
+          {
+            "video_prompt": "The seated figure quickly rotates her head to face the lens, initiating a sudden and precise chin lift that locks eye contact within two beats. A slow dolly push subtly tracks forward during this turn, deepening the focus pull onto her expression as she delivers the line. The sharp overhead light catches the contour of her jawline, emphasizing the dramatic beat against the deep shadows.",
+            "length_frames": 217
+          }
+        ]
+      }
+    },
+    {
+      "scene_index": 11,
+      "scene_id": 12,
+      "plan": {
+        "num_chunks": 1,
+        "global_prompt": "A static locked camera maintains a tight close-up on the expert figure inside the modern television studio environment as she delivers her professional address. The scene is defined by hard overhead studio spotlights creating intense cel-shaded highlights that rake across her sharp features and dark suit fabric. She begins with an authoritative forward lean over the desk, gradually adjusting her posture to punctuate a specific point in her speech; one hand shifts slightly from its clasped position while her lips articulate measured Russian phrasing. The atmosphere is highly controlled, punctuated by volumetric light filtering through the deep blue stage bokeh behind her shoulders. Soundscape includes crisp room tone beneath the clear projection of her modulated voice.",
+        "total_frames": 169,
+        "chunks": [
+          {
+            "video_prompt": "The expert figure leans forward slightly across the desk surface while speaking; her fingers subtly adjust their interlocked position to emphasize a point in mid-sentence. The overhead spotlights maintain sharp focus on her face, creating defined shadows beneath her jawline as she holds steady eye contact with the camera lens through the static frame.",
+            "length_frames": 169
+          }
+        ]
+      }
+    },
+    {
+      "scene_index": 12,
+      "scene_id": 13,
+      "plan": {
+        "num_chunks": 1,
+        "global_prompt": "A dramatic medium-wide shot captures a striking female host dominating a high-gloss television studio set, rendered in sharp anime cel-shading contrast. Overhead spotlights blast intensely against deep blue and vibrant purple beams that sweep across the polished black floor beneath her feet. The hostess executes a powerful kinetic sequence: she abruptly flings one arm out toward an unseen entrance while simultaneously snapping her head to acknowledge the announcement. This movement is punctuated by rapid, expressive gestures as she raises the microphone for maximum impact. Dust motes briefly catch in the intense overhead lighting during her sharp movements. Cinematic focus remains locked on the dynamic motion of the speaker amidst the volumetric light shafts and shimmering specular bokeh blooming across the background.",
+        "total_frames": 233,
+        "chunks": [
+          {
+            "video_prompt": "The host, clad in a vibrant green dress, dramatically flings an arm outward toward the stage entrance while her head snaps sharply to follow the trajectory. She raises the professional microphone as she delivers the line: \"И вот хозяйка первого выпуска:\". A steadycam tracks slightly backward during this rapid gesture; harsh overhead lights create deep shadows that contrast with the intense blue floor wash, accompanied by a low mechanical studio hum and sharp Foley details of movement.",
+            "length_frames": 233
+          }
+        ]
+      }
+    },
+    {
+      "scene_index": 13,
+      "scene_id": 14,
+      "plan": {
+        "num_chunks": 1,
+        "global_prompt": "A high-contrast wide shot captures the polished black floor of a sophisticated broadcast studio as the central figure advances with powerful, measured strides toward the camera's center point. The intense overhead spotlights create sharp cel-shaded rim lighting along her silhouette and dramatically reflect off the glossy surfaces of the room. As she walks, her voluminous hair swings rhythmically in smooth arcs, mirroring the confident tempo of her forward momentum. She resolves her stride into a commanding halt at the presentation area, maintaining perfect posture as if pausing for a dramatic introduction. The background plush chairs are rendered in soft bokeh, isolating the figure within the intense studio atmosphere. A slow dolly push-in begins subtly during this progression to build anticipation against the low hum of professional broadcast equipment.",
+        "total_frames": 225,
+        "chunks": [
+          {
+            "video_prompt": "The woman takes two deliberate steps across the reflective floor; her violet gown flows dynamically with each stride. Her head remains level, projecting high confidence as she moves into a centered stance and comes to a smooth stop. The camera executes a slow dolly in, enhancing the visibility of her poised figure against the backdrop's diffused light.",
+            "length_frames": 225
+          }
+        ]
+      }
+    },
+    {
+      "scene_index": 14,
+      "scene_id": 15,
+      "plan": {
+        "num_chunks": 1,
+        "global_prompt": "A locked eye-level medium shot captures the standing woman within a high-contrast modern television studio environment. The scene is dominated by sharp overhead spotlights that carve dramatic cel-shaded shadows across her features, creating intense specular highlights and deep cinematic contrast against the softly glowing LED bokeh backdrop. Her dark hair moves dynamically as she executes a deliberate turn of her head over her shoulder toward the lens. This single beat of movement causes her voluminous strands to cascade rapidly, catching the hard light sources while subtle ambient studio hums fill the space. The static composition emphasizes her commanding presence on the polished black floor amidst professional set furniture and stage lighting apparatuses.",
+        "total_frames": 145,
+        "chunks": [
+          {
+            "video_prompt": "The woman swiftly turns her head over her shoulder, initiating a powerful shift in her dark hair which flows dynamically against the sharp overhead spotlighting. The static camera holds steady as she meets the viewer's gaze; faint wind currents subtly disturb strands around her face. A low-volume studio ambience plays underneath the TTS audio: \"уже десять лет, но никто не знает, кто её муж.\"",
+            "length_frames": 145
+          }
+        ]
+      }
+    },
+    {
+      "scene_index": 15,
+      "scene_id": 16,
+      "plan": {
+        "num_chunks": 1,
+        "global_prompt": "A medium shot captures a figure in an intense television studio environment bathed in high-contrast cinematic lighting. The scene opens as the subject decisively lowers herself onto a plush violet velvet sofa, her movements sharp and deliberate rather than relaxed. Her upper body maintains perfect vertical alignment as she settles into the seating arrangement. Overhead spotlights carve stark, cel-shaded shadows across her defined features, creating intense visual separation from the soft bokeh bloom of the LED wall behind her. As she achieves equilibrium on the sofa, one hand deliberately moves to smooth the intricate folds of her gown while her head executes a controlled pivot toward the camera lens. The ambient soundscape includes subtle studio room tone and a low mechanical hum from unseen equipment, underscoring the dramatic gravity of the moment before she speaks.",
+        "total_frames": 145,
+        "chunks": [
+          {
+            "video_prompt": "The woman sinks into the deep cushions, her posture immediately commanding attention; she uses one hand to deliberately pull down the silk-like fabric across her lap. Her gaze locks onto the viewer as her head completes its turn toward the camera lens. The fine strands of her dark hair shift slightly with the movement, reflecting the hard overhead spotlights in a glossy sheen.",
+            "length_frames": 145
+          }
+        ]
+      }
+    },
+    {
+      "scene_index": 16,
+      "scene_id": 17,
+      "plan": {
+        "num_chunks": 1,
+        "global_prompt": "A tight close-up shot captures the central figure seated on a plush violet velvet sofa within a highly polished broadcast studio environment. The camera remains static and locked down, utilizing an extremely shallow depth of field that isolates her from the subtly blurred high-end set background. Her measured speech is punctuated by precise vocal cadence as she articulates difficult concepts with quiet conviction. Overheard cinematic spotlights cast hard, defined cel-shaded highlights across her facial planes, creating brilliant twin catchlights in her steady gaze toward the lens. The ambient soundscape features crisp room tone mixed with microphone proximity focus, emphasizing the delivery of her Russian dialogue.",
+        "total_frames": 145,
+        "chunks": [
+          {
+            "video_prompt": "The woman maintains a composed posture while speaking directly to camera; her lips articulate clearly as she delivers measured lines, followed by a momentary subtle shift in her chin and eyes. The harsh overhead studio lights emphasize sharp shadows beneath her jawline, contrasting with the soft glow catching the deep purple fabric of her dress.",
+            "length_frames": 145
+          }
+        ]
+      }
+    },
+    {
+      "scene_index": 17,
+      "scene_id": 18,
+      "plan": {
+        "num_chunks": 1,
+        "global_prompt": "A tight cinematic close-up captures the woman seated on a plush violet velvet interview sofa within a high-production television studio setting; stark overhead spotlights deliver sharp, cel-shaded highlights across her features while a soft blue stage glow creates deep bokeh in the background. The camera is static and locked down, focusing intimately on her delivery as she speaks with controlled intensity. As she delivers the line, there are subtle kinetic shifts: her eyes drift downward momentarily, and her shoulders ease slightly into relaxation between phrases. Volumetric light catches faint particles suspended in the air around the set while ambient studio hum provides a low foundation to the scene. The focus remains razor-sharp on her expressive face throughout this intimate moment.",
+        "total_frames": 153,
+        "chunks": [
+          {
+            "video_prompt": "Her gaze dips momentarily as she articulates the phrase, followed by a minute relaxation of tension visible in her shoulders and upper back; lips move softly and rhythmically with the spoken Russian text. The steadycam remains perfectly locked on her face, emphasizing the subtle shift from focused intensity to composed delivery within the brightly lit studio.",
+            "length_frames": 153
+          }
+        ]
+      }
+    },
+    {
+      "scene_index": 18,
+      "scene_id": 19,
+      "plan": {
+        "num_chunks": 1,
+        "global_prompt": "A high-contrast medium shot inside a luxurious broadcast studio captures the poised woman seated on violet velvet. The static locked camera holds steady as she articulates her thought, initially gesturing toward an unseen point before smoothly executing a decisive head turn to track the immense glowing LED screen dominating the background. Overhead spotlights carve harsh cel-shaded definition across her features, while the cool blue light from the screen casts subtle volumetric highlights onto her profile and shoulders during the shift in focus. Her dark hair catches the studio's intense key lights as she leans slightly into the gesture. The atmosphere is controlled and polished; a low mechanical hum of professional equipment anchors the soundscape beneath her measured delivery.",
+        "total_frames": 145,
+        "chunks": [
+          {
+            "video_prompt": "The woman maintains eye contact momentarily before sweeping her extended hand towards the massive LED wall, causing her head to pivot in a single fluid beat. The deep violet fabric of her gown subtly shifts with the motion. She holds the new focal point in her gaze while continuing her sentence: \"...он на три года младше.\" A soft room tone mixes with faint studio ambience.",
+            "length_frames": 145
+          }
+        ]
+      }
+    },
+    {
+      "scene_index": 19,
+      "scene_id": 20,
+      "plan": {
+        "num_chunks": 1,
+        "global_prompt": "A medium shot captures the poised woman seated on a plush violet velvet interview sofa within a sophisticated television studio environment. She maintains intense but gentle eye contact with the camera as she delivers her monologue about family life. As she speaks, she shifts her posture minimally, leaning slightly forward to emphasize a point, and raises one hand in a controlled gesture of explanation, fingers subtly splaying outward. The high-contrast overhead spotlights define sharp contours on her face, creating pronounced shadows beneath her cheekbones while catching bright specular highlights in her eyes; the soft bokeh from the LED wall behind her blooms with diffused cyan light. Her expression conveys thoughtful engagement through slight crinkling around the orbital area and a deliberate pacing of speech. The camera holds static, allowing the subtle micro-movements to dominate the frame, underscored by clear room tone mixed with ambient studio hum.",
+        "total_frames": 185,
+        "chunks": [
+          {
+            "video_prompt": "The woman sustains her gaze while slowly adjusting her weight on the sofa cushion; she raises a hand from her lap and executes a brief, precise gesture toward an unseen point off-camera. Her mouth moves in measured cadence as she emphasizes the family details, maintaining steady eye contact throughout this short segment.",
+            "length_frames": 185
+          }
+        ]
+      }
+    },
+    {
+      "scene_index": 20,
+      "scene_id": 21,
+      "plan": {
+        "num_chunks": 1,
+        "global_prompt": "Inside a high-contrast television studio, a tight close-up captures the woman seated on a plush violet velvet sofa under dramatic overhead spotlights that cast hard, cel-shaded highlights across her features. The static locked camera maintains shallow depth of field, allowing the background city skyline view to melt into soft bokeh behind her polished form. She is captured mid-delivery during an interview segment; she momentarily pauses her speech, subtly lifting one hand in a precise, contained gesture as if emphasizing a point about intelligence. Her head tilts slightly forward and then settles back as a faint, genuine smile begins to spread across her lips. The air holds the low hum of studio equipment alongside crisp room tone, creating an intimate yet highly polished broadcast aesthetic.",
+        "total_frames": 145,
+        "chunks": [
+          {
+            "video_prompt": "The woman completes her small hand gesture, fingers delicately poised before slowly allowing them to lower into a resting position on the velvet armrest. Her head maintains its gentle tilt as the nascent smile widens smoothly across her face, while the light catches the subtle movement of her hair strands near her shoulder. The static camera holds steady on this concluding moment of expression.",
+            "length_frames": 145
+          }
+        ]
+      }
+    },
+    {
+      "scene_index": 21,
+      "scene_id": 22,
+      "plan": {
+        "num_chunks": 1,
+        "global_prompt": "A medium eye-level shot within a high-contrast television studio captures the seated woman delivering an emphatic statement against a backdrop of dynamic blue and violet light. The subject begins by extending one open palm toward the massive glowing LED wall displaying 'EXPERT,' her posture commanding attention as she speaks into the professional environment. Her head then executes a sharp, rapid rotation to perfectly track the trajectory of her gesturing hand toward the screen's illuminated content. Overhead spotlights carve harsh, cel-shaded definition across the plush violet velvet and flowing purple fabric of her dress. The massive LED panel casts intense cyan and magenta rim lighting onto her profile, contrasting with deep cinematic shadows cast by the studio lights; drifting atmospheric dust subtly catches the focused beams overhead. This highly polished setup maintains a stable locked camera perspective throughout the kinetic action.",
+        "total_frames": 145,
+        "chunks": [
+          {
+            "video_prompt": "The woman leans slightly forward as she projects an open palm gesture toward the large glowing screen, her gaze fixed on the display's light signature; in immediate follow-through, her head snaps quickly to align with her hand movement. The camera holds steady, emphasizing the crisp contrast between her dark hair and the brilliant violet glow emanating from the studio wall. Subtle room tone hum accompanies the focused physical motion.",
+            "length_frames": 145
+          }
+        ]
+      }
+    },
+    {
+      "scene_index": 22,
+      "scene_id": 23,
+      "plan": {
+        "num_chunks": 1,
+        "global_prompt": "A static medium-wide shot is locked onto a domestic study during warm morning light, utilizing soft cel-shaded contrast filtering through sheer window curtains. The older figure sits at a wide wooden desk, leaning forward over an open textbook toward the younger girl seated beside him. He executes deliberate instructional gestures while explaining complex material, his finger making rhythmic contact with the page. Dust motes are visible floating in the intense shafts of sunlight that rake across the polished wood surface and the figures' shoulders. The environment is rich with stacked books on a towering background shelf, softly blurred by shallow depth of field bokeh. As he speaks, his head tilts slightly, maintaining focused eye contact with the student while delivering precise instructions about the subject matter.",
+        "total_frames": 145,
+        "chunks": [
+          {
+            "video_prompt": "The older figure gently taps the textbook page in a measured rhythm as he leans into the discussion; \"обзор триста шестьдесят градусов! На экране — отец.\" The younger girl looks up at him, her expression attentive and focused. Steadycam holds the static frame while warm sunlight emphasizes the subtle movement of his sleeve and the delicate particles drifting through the air.",
+            "length_frames": 145
+          }
+        ]
+      }
+    },
+    {
+      "scene_index": 23,
+      "scene_id": 24,
+      "plan": {
+        "num_chunks": 1,
+        "global_prompt": "A tight medium close-up captures a young man seated at a heavy wooden desk within a warm home study environment; he is intensely focused on an open textbook. His posture is rigidly concentrated as his gaze drifts slowly across the densely printed page. The subtle kinetic movement includes his index finger momentarily tracing a line of text before pausing, followed by a minute tightening around his jawline that indicates deep processing or internal conflict. Warm, volumetric sunlight streams through nearby windows, creating pronounced highlights on the polished wood and casting long, soft shadows; dust motes drift visibly in these light shafts. The static shot holds steady as he remains immersed in study material amidst the ambient quiet of the room.",
+        "total_frames": 185,
+        "chunks": [
+          {
+            "video_prompt": "Static composition frames the young man bent over his textbook; his fingers hover above the paper, then slowly tap a single word while his eyes scan rapidly down the column. The warm window light catches the fine texture of his sweater and illuminates the subtle tension in his neck muscles. A soft room tone is punctuated by the faint whisper of turning pages.",
+            "length_frames": 185
+          }
+        ]
+      }
+    },
+    {
+      "scene_index": 24,
+      "scene_id": 25,
+      "plan": {
+        "num_chunks": 1,
+        "global_prompt": "An eye-level medium shot inside a dimly lit home study, captured with a static locked camera in sharp anime cel-shaded style. The young student is hunched over a wide wooden writing desk, intensely focused on the stack of homework papers before her. She gradually increases the physical tension: shoulders drawing tighter and head bowing deeper into concentration as she grips the pencil. Cool dim light filters through sheer window curtains, casting hard shadows that define her small frame against the background shelving units filled with books. Tiny dust motes are visible catching the pale shafts of sunlight filtering across the desk surface. Her knuckles whiten slightly on the writing instrument during short pauses before resuming furious scratching motion, while a low mechanical hum from outside punctuates the quiet environment.",
+        "total_frames": 161,
+        "chunks": [
+          {
+            "video_prompt": "The young student’s shoulders visibly tighten and slump further into her work posture; she presses down harder with the pencil tip against the paper. Her head dips lower over the task, emphasizing intense concentration as small fragments of lead scratch rapidly across the page surface. The movement is rapid yet controlled, showcasing increasing academic pressure in a static shot.",
+            "length_frames": 161
+          }
+        ]
+      }
+    },
+    {
+      "scene_index": 25,
+      "scene_id": 26,
+      "plan": {
+        "num_chunks": 1,
+        "global_prompt": "A static tight close-up captures the heavy stillness inside a dimly lit home study, where cold, diffused sunlight filters through sheer curtains, casting sharp cel-shaded shadows across the wooden desk and subject. The young girl slumps deeper against the wide desktop surface; her posture collapses incrementally as she sinks into defeat. Her head descends until it nearly brushes scattered papers, while her gaze locks onto a fixed point of emptiness before slowly drifting down to her resting hand. Minute dust motes drift visible in the weak beams cutting through the air. The atmosphere is heavy with quiet resignation and academic failure, punctuated only by the subtle soundscape of room tone and shallow breaths.",
+        "total_frames": 161,
+        "chunks": [
+          {
+            "video_prompt": "The girl's shoulders sink lower into the wooden desk as she succumbs to exhaustion; her previously dull eyes fixate blankly on the scattered documents. Her right hand relaxes completely, falling still onto the grain of the desktop with a quiet tap sound effect. The static camera holds steady, emphasizing the deepening shadows cast by the weak window light.",
+            "length_frames": 161
+          }
+        ]
+      }
+    },
+    {
+      "scene_index": 26,
+      "scene_id": 27,
+      "plan": {
+        "num_chunks": 1,
+        "global_prompt": "A static tight close-up captures the atmosphere of a cold home study dominated by deep shadows cast from dim window light; the frame maintains shallow depth of field focused sharply on the seated figure. The young girl occupies the worn office chair at the large wooden writing desk in an isolated tableau. She performs sharp, contained physical movements as she draws herself inward and her vacant gaze descends toward the tabletop below, conveying profound internal withdrawal. Volumetric dust particles float visibly within the shafts of cold sunlight cutting across the cluttered workspace. This highly contrasted scene emphasizes oppressive silence punctuated only by faint room tone and the rustle of fabric against wood.",
+        "total_frames": 185,
+        "chunks": [
+          {
+            "video_prompt": "The girl clenches her knees tighter against her chest, pulling her elbows inward until they rest heavily on her thighs; simultaneously, her empty eyes slowly track downward from a fixed point to stare blankly at the worn surface of the desk. The static composition is framed with an intimate lens feel, allowing only soft bokeh elements in the background, while cold light pools and carves deep cel-shaded shadows around her hunched form.",
+            "length_frames": 185
+          }
+        ]
+      }
+    },
+    {
+      "scene_index": 27,
+      "scene_id": 28,
+      "plan": {
+        "num_chunks": 1,
+        "global_prompt": "A tight close-up captures the young man seated at a wide wooden desk in his study during late afternoon golden hour. Starting from an intense focus on the open textbook, the scene explodes into sudden kinetic energy as he achieves absolute realization. His head snaps upward and forward with sharp momentum, followed by his eyes suddenly snapping fully open to fixate just beyond the frame. Simultaneously, one hand slams down onto the pages of the book in a decisive gesture that punctuates this moment of understanding. The warm window light rakes sharply across his features, creating dramatic high-contrast cel shading and intense catchlights within his focused gaze. This powerful shot utilizes an extreme shallow depth of field to isolate him against the softly blurred environment, while ambient room tone is underscored by a sudden, sharp intake of breath.",
+        "total_frames": 145,
+        "chunks": [
+          {
+            "video_prompt": "The young man's head lifts abruptly from the book, his eyes snapping wide open in sudden clarity; he fixes his gaze forward as his jaw sets with resolute determination. His hand presses firmly onto the paper surface in a sharp, impactful motion across three beats of time. The cinematic focus remains locked on his facial expression and the crisp texture of the turning page.",
+            "length_frames": 145
+          }
+        ]
+      }
+    },
+    {
+      "scene_index": 28,
+      "scene_id": 29,
+      "plan": {
+        "num_chunks": 1,
+        "global_prompt": "An eye-level medium shot captures the intimate scene inside a warmly lit home study where an older figure gently directs his young daughter across a wide wooden desk. The man pivots and smoothly guides her small frame towards him with firm but careful pressure on her shoulders. Warm morning sunlight streams through large windows, illuminating volumetric dust motes dancing above the open textbooks and casting soft highlights onto their hair and clothing. Their faces are close over the surface as he maintains focused eye contact while she leans into his space, reacting to the motion. The scene is stabilized by a slow steadycam push-in that emphasizes the connection between them, utilizing a shallow depth of field that keeps only the subjects in crisp focus against the softly blurred background shelves and ambient light sources. A quiet room tone underlies the subtle creak of wood as she shifts her weight.",
+        "total_frames": 201,
+        "chunks": [
+          {
+            "video_prompt": "The man executes a controlled pivot, his hands firmly resting on the daughter's shoulder blades to rotate her body slightly toward him over the desk. Her posture adjusts instantly under his direction; she glances up at him with an engaged expression as they face each other directly across the open journal. The steadycam holds tight on their interaction while morning light flares softly off the polished wooden surface, capturing a momentary stillness in the gentle movement.",
+            "length_frames": 201
+          }
+        ]
+      }
+    },
+    {
+      "scene_index": 29,
+      "scene_id": 30,
+      "plan": {
+        "num_chunks": 1,
+        "global_prompt": "A static tight two-shot composition inside a warmly lit home study, centered on the wooden writing desk where a man and young girl are engaged in conversation over an open book. The scene is dominated by warm window light casting soft cel-shaded contrast across their features, highlighted by out-of-focus bokeh from sheer curtains behind them. The older figure leans inward toward the girl with focused gravity, his hands resting lightly on her shoulders as he speaks earnestly; this motion dictates a slow, intimate progression of dialogue and concern. The younger subject maintains intense eye contact while visibly processing his words through subtle shifts in posture and facial expression. Ambient room tone mixes with the gentle rustle of turning pages under the concentrated focus of the moment.",
+        "total_frames": 201,
+        "chunks": [
+          {
+            "video_prompt": "The man’s head inclines slightly as he emphasizes his point, his mouth moving rhythmically while gazing down at her; the young girl absorbs his concern, her wide eyes widening further in response to his earnest voice. Her posture shifts subtly against the chair, maintaining a fixed gaze across the shared pages of the open book.",
+            "length_frames": 201
+          }
+        ]
+      }
+    },
+    {
+      "scene_index": 30,
+      "scene_id": 31,
+      "plan": {
+        "num_chunks": 1,
+        "global_prompt": "A tightly framed close-up captures a young student rigidly frozen at her wooden study desk within the sunlit home office. The atmosphere is thick with sudden realization and suspense, illuminated by warm afternoon window light that carves deep shadows beneath her eyes. Her initial shock holds as she slowly processes the gravity of the situation; her shoulders subtly tense, and her grip on the polished wood edge tightens further into white-knuckled tension. A shallow depth of field isolates her intense facial expression from the blurred background academic clutter. The camera remains static, locking onto her wide, unblinking eyes as a low room tone is punctuated only by the faint sound of rapid breathing.",
+        "total_frames": 193,
+        "chunks": [
+          {
+            "video_prompt": "The girl maintains an immediate state of physical stillness after the sudden realization; her lips press thinner while her pupils slightly dilate in focus. Her hands, clamped tightly to the desk edge, exhibit a minute tremor that slowly subsides into rigid control. The warm directional light emphasizes the sharp tension around her mouth and jawline as she holds the terrified gaze toward an unseen point just past the camera lens.",
+            "length_frames": 193
+          }
+        ]
+      }
+    },
+    {
+      "scene_index": 31,
+      "scene_id": 32,
+      "plan": {
+        "num_chunks": 1,
+        "global_prompt": "An eye-level medium shot captures a young female student seated at a wooden writing desk within a sunlit home study. The static composition is bathed in warm, high-contrast raking window light that casts sharp shadows across the room's polished surfaces. She is poised rigidly upright on her office chair, studying an imposing stack of homework papers visible just outside the frame’s edge. Her gaze rapidly shifts back and forth towards these assignments, indicating mounting cognitive pressure and suspicion. The air in the study feels heavy with late afternoon warmth, illuminated by shafts of sunlight cutting through dust motes drifting near the window. A faint pencil scratching sound provides ambient rhythm to her silent internal conflict regarding the demands placed upon her.",
+        "total_frames": 169,
+        "chunks": [
+          {
+            "video_prompt": "The young student's eyes dart quickly toward the dense stack of homework, followed by a sharp, sudden stiffening through her shoulders and neck. She pauses this rapid eye movement, tilting her head slightly as if listening to an unspoken question; her fingers momentarily twitch on the desk surface before she settles back into rigid posture. The high-contrast light emphasizes the taut muscles in her jaw.",
+            "length_frames": 169
+          }
+        ]
+      }
+    },
+    {
+      "scene_index": 32,
+      "scene_id": 33,
+      "plan": {
+        "num_chunks": 1,
+        "global_prompt": "A tight close-up captures intense domestic tension within a warm, detailed home study environment under high contrast lighting. The young woman in the office chair bolts upright with sudden kinetic energy, her fists clenching tightly against her knees as she rapidly projects denial to the older figure beside her. Her mouth snaps open mid-protest while her wide eyes frantically dart away from his gaze. Warm window light slices across their faces, emphasizing crisp cel-shaded highlights and deep shadows that define their expressions of sudden conflict. The camera remains static with a shallow depth of field isolating them against blurred bookshelves; the air is thick with unspoken pressure punctuated by ambient room tone before she delivers her sharp line. This moment captures the explosive burst of suppressed resistance.",
+        "total_frames": 201,
+        "chunks": [
+          {
+            "video_prompt": "The young woman violently snaps upright, forcing a sudden vocal projection while rapidly shifting her gaze away from the older figure's direct stare; her initial protest is immediately undercut by the hurried lie. The old man maintains a steady, watchful posture as she speaks, his expression remaining composed despite her outburst. A faint mechanical hum of an unseen appliance fills the study air just before she says: “Я... я не устала!”",
+            "length_frames": 201
+          }
+        ]
+      }
+    },
+    {
+      "scene_index": 33,
+      "scene_id": 34,
+      "plan": {
+        "num_chunks": 2,
+        "global_prompt": "An eye-level medium-wide shot captures a tense exchange inside a sunlit home study during morning hours. The warm light rakes dramatically across the desk and subjects, emphasizing cel-shaded contrast against deep shadows under the window frame. A subtle shallow depth of field keeps focus sharp on the figures while soft bokeh blurs academic papers in the foreground. The man leans forward slightly toward the girl at the wide wooden writing desk; his open hand begins to extend a measured offering gesture. As he moves, the young woman stiffens perceptibly against the heavy wood surface, her posture locking down as she maintains an intense, fixed gaze upon him. Ambient room tone mixes with faint outside traffic sounds, establishing immediate domestic tension.",
+        "total_frames": 329,
+        "chunks": [
+          {
+            "video_prompt": "The man's hand progresses forward slowly in a deliberate offering motion across the desk surface while the girl reacts by gripping the edge tighter with both hands; her wide eyes do not break contact as she processes his action, shoulders held rigid. The camera remains static, allowing the kinetic tension of their fixed postures to dominate the frame.",
+            "length_frames": 165
+          },
+          {
+            "video_prompt": "The extended hand pauses mid-air above the open book on the desk while the girl’s focused stare holds unwavering; a slight tremor passes through her jawline before settling. The warm morning light catches subtle reflections in their eyes, and the sound of low room hum sustains the moment's heavy quietude.",
+            "length_frames": 164
+          }
+        ]
+      }
+    }
+  ]
+}

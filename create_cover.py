@@ -43,10 +43,10 @@ def create_cover(
     img.save(output_path)
     print(f"Обложка сохранена: {output_path}")
 
-"""# Пример
-create_cover(
+# Пример
+"""create_cover(
     input_image_path="C:\\Users\\Loopy\\Desktop\\comfyui\\ComfyUI\\output\\image_gen\\1_c1_00001_.png",
-    text="Богатейший извозчик: 5 часть",
+    text="Супер папа: 1 часть",
     output_path="result_cover.jpg",
     font_size=150,
 )"""

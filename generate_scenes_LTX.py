@@ -947,7 +947,7 @@ async def main():
     print(f"Запуск Whisper для синхронизации...")
     await asyncio.to_thread(
         align_to_aeneas_json,
-        "output_00001_.mp3",
+        "output_00001.mp3",
         "aeneas_text.txt",
         "map.json",
         language="ru",
@@ -958,7 +958,7 @@ async def main():
     print(f"Запуск Whisper word-level...")
     await asyncio.to_thread(
         align_to_aeneas_json,
-        "output_00001_.mp3",
+        "output_00001.mp3",
         "aeneas_words.txt",
         "map_words.json",
         language="ru",
@@ -1266,7 +1266,7 @@ async def main():
     print("Копирование файлов")
     source_dir = f"C:\\Users\\Loopy\\Desktop\\comfyui\\ComfyUI\\output\\AI_VIDEO"
     target_dir = f"{unique_path}"
-    files_to_copy = ["list.txt", "output_00001_.mp3", "audio.mp3", "subs.ass"]
+    files_to_copy = ["list.txt", "output_00001.mp3", "audio.mp3", "subs.ass"]
     for file_name in files_to_copy:
         source_path = os.path.join(source_dir, file_name)
         target_path = os.path.join(target_dir, file_name)
@@ -1296,13 +1296,13 @@ async def main():
 
     stdout, stderr = await process.communicate()
 
-    audio_duration = get_audio_duration("output_00001_.mp3")
+    audio_duration = get_audio_duration("output_00001.mp3")
     command = [
         "ffmpeg",
         "-i",
         "output.mp4",
         "-i",
-        "output_00001_.mp3",
+        "output_00001.mp3",
         "-filter_complex",
         "[0:v]tpad=stop_mode=clone:stop=-1[v]",
         "-map",
@@ -1414,7 +1414,7 @@ async def main():
     from create_cover import create_cover
     create_cover(
         input_image_path="C:\\Users\\Loopy\\Desktop\\comfyui\\ComfyUI\\output\\image_gen\\1_c1_00001_.png",
-        text="Богатейший извозчик: 6 часть",
+        text="Богатейший извозчик: 10 часть",
         output_path="result_cover.jpg",
         font_size=150,
     )
