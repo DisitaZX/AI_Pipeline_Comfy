@@ -1,0 +1,338 @@
+{
+  "122": {
+    "inputs": {
+      "vae_name": "minimax_h3_video_vae_fp16.safetensors"
+    },
+    "class_type": "VAELoader",
+    "_meta": {
+      "title": "Загрузить VAE"
+    }
+  },
+  "123": {
+    "inputs": {
+      "vae_name": "minimax_h3_audio_vae_fp32.safetensors"
+    },
+    "class_type": "VAELoader",
+    "_meta": {
+      "title": "Загрузить VAE"
+    }
+  },
+  "125": {
+    "inputs": {
+      "samples": [
+        "128",
+        0
+      ],
+      "vae": [
+        "122",
+        0
+      ]
+    },
+    "class_type": "VAEDecode",
+    "_meta": {
+      "title": "Декодировать VAE"
+    }
+  },
+  "126": {
+    "inputs": {
+      "sampler_name": "euler"
+    },
+    "class_type": "KSamplerSelect",
+    "_meta": {
+      "title": "Выбор KSampler"
+    }
+  },
+  "127": {
+    "inputs": {
+      "scheduler": "simple",
+      "steps": 8,
+      "denoise": 1,
+      "model": [
+        "165",
+        0
+      ]
+    },
+    "class_type": "BasicScheduler",
+    "_meta": {
+      "title": "Основной scheduler"
+    }
+  },
+  "128": {
+    "inputs": {
+      "noise": [
+        "132",
+        0
+      ],
+      "guider": [
+        "129",
+        0
+      ],
+      "sampler": [
+        "126",
+        0
+      ],
+      "sigmas": [
+        "127",
+        0
+      ],
+      "latent_image": [
+        "137",
+        1
+      ]
+    },
+    "class_type": "SamplerCustomAdvanced",
+    "_meta": {
+      "title": "Пользовательский сэмплер (Расширенный)"
+    }
+  },
+  "129": {
+    "inputs": {
+      "model": [
+        "165",
+        0
+      ],
+      "conditioning": [
+        "137",
+        0
+      ]
+    },
+    "class_type": "BasicGuider",
+    "_meta": {
+      "title": "Основной гид"
+    }
+  },
+  "130": {
+    "inputs": {
+      "unet_name": "minimax_h3_ref2va_int8_convrot.safetensors",
+      "weight_dtype": "default"
+    },
+    "class_type": "UNETLoader",
+    "_meta": {
+      "title": "Загрузить модель диффузии"
+    }
+  },
+  "131": {
+    "inputs": {
+      "clip_name": "qwen3vl_32b_minimax_h3_int8_convrot.safetensors",
+      "type": "minimax",
+      "device": "default"
+    },
+    "class_type": "CLIPLoader",
+    "_meta": {
+      "title": "Загрузить CLIP"
+    }
+  },
+  "132": {
+    "inputs": {
+      "noise_seed": 90268642282106
+    },
+    "class_type": "RandomNoise",
+    "_meta": {
+      "title": "Случайный шум"
+    }
+  },
+  "137": {
+    "inputs": {
+      "prompt": "subject_definitions:\n<Subject 1> is the character in <Picture 1>: Single figure alone in frame, full-length vertical portrait, a 25-year-old East Asian woman, tall and slim, sharp heart-shaped face, pale skin, narrow upturned amber-brown eyes with heavy black eyeliner, glossy red lips, shoulder-length wavy chestnut hair with a side part, wearing a fitted wine-red satin evening gown with thin straps, diamond drop earrings, a wide gold bracelet on her right wrist and red high heels, neutral standing pose, neutral flat light grey background, Japanese anime style.\n<Subject 2> is the character in <Picture 2>: Single figure alone in frame, full-length vertical portrait, a 26-year-old East Asian woman, slender delicate build, oval face with fair skin, calm almond-shaped dark brown eyes, straight nose, thin lips without lipstick, long straight black hair reaching mid-back with a center part and one thin silver hairpin, wearing a plain charcoal-grey high-collar work dress with long sleeves, a narrow black belt and black flat shoes, a small staff badge on a grey lanyard, neutral standing pose with arms relaxed at her sides, neutral flat light grey background, no props, Japanese anime style.\n<Subject 3> is the environment in <Picture 3>: Empty grand hotel banquet hall with no people, horizontal frame, evening, tall gold-framed mirrors and cream marble columns, round tables under white cloths with low white orchid centerpieces, crystal chandeliers casting warm amber light, polished dark marble floor with soft reflections, tall windows showing distant night city lights, Japanese anime style.\n\nsummary:\n[reference generation] In <Subject 3> <Subject 1> swings an open-handed slap at <Subject 2>, who catches her wrist mid-air and refuses to let go.\n\nretention_analysis:\n<Subject 1> (appears in [Shot 1], [Shot 2]): fully_preserved - the referenced appearance, outfit and defining features are kept unchanged for the whole clip.\n<Subject 2> (appears in [Shot 1], [Shot 2]): fully_preserved - the referenced appearance, outfit and defining features are kept unchanged for the whole clip.\n<Subject 3> (appears in [Shot 1]): fully_preserved - the referenced appearance, outfit and defining features are kept unchanged for the whole clip.\n\ndetailed_description:\nAnime style.\n[Shot 1] Tight side-on medium shot at chest height inside <Subject 3>, warm chandelier light raking across cream marble columns and gold-framed mirrors. <Subject 1> in her fitted wine-red satin gown, chestnut waves swinging, has already thrown her arm forward in a full slap; <Subject 2> in her plain charcoal-grey high-collar work dress, long black hair with a thin silver hairpin, snaps her hand up and catches the wrist in mid-air a few centimetres from her cheek. The gold bracelet jolts against caught skin. Guests behind them freeze with glasses half-raised. Camera holds static, then drifts a few centimetres closer as <Subject 1> leans in, teeth showing, and pushes against the grip without moving it. <Subject 1> (S1) says in a bright brittle voice, thrown loud enough for the tables around them, <d>[Russian] Ты лезла к моему жениху.</d> Physical sound: the flat clap of palm meeting palm, satin creaking, a fork set down on porcelain.\n[Shot 2] At 00:04.500, reverse over-the-shoulder close-up favouring <Subject 2>, the red gown burning out of focus on the left edge of frame. Her face is calm, jaw set, a single strand of black hair fallen loose across her temple; her fingers stay locked around the other woman's wrist, knuckles pale from the effort, forearm steady from months of carrying a heavy child. Chandelier reflections crawl in her dark eyes. She does not raise her volume. Camera performs a very slow push-in on her eyes, the crowd blurring to gold behind her. <Subject 2> (S2) says in a quiet level voice, almost gentle, <d>[Russian] Докажите. Хоть чем-нибудь.</d> Behind her the murmur swells and someone whispers into a phone; her grip tightens once at the end of the line and <Subject 1> flinches out of frame. Physical sound: a bracelet ticking against bone, a phone camera shutter, the string quartet thinning out as players notice the fight.\n\noverall_soundscape:\nlow crowd murmur and clinking glassware under a string quartet, a sharp gasp from nearby guests, the slap of skin caught in a palm, satin rustling, a heel scraping polished marble\n\nnon_diegetic_music:\nN/A",
+      "width": 1024,
+      "height": 576,
+      "length": [
+        "159",
+        1
+      ],
+      "ref_image_size": "match",
+      "clip": [
+        "131",
+        0
+      ],
+      "vae": [
+        "122",
+        0
+      ],
+      "audio_vae": [
+        "123",
+        0
+      ],
+      "ref_images.ref_image_0": [
+        "148",
+        0
+      ],
+      "ref_images.ref_image_1": [
+        "149",
+        0
+      ],
+      "ref_images.ref_image_2": [
+        "150",
+        0
+      ],
+      "ref_images.ref_image_3": [
+        "151",
+        0
+      ],
+      "ref_images.ref_image_4": [
+        "152",
+        0
+      ]
+    },
+    "class_type": "MiniMaxH3ReferenceToVideo",
+    "_meta": {
+      "title": "MiniMax H3 Reference to Video"
+    }
+  },
+  "148": {
+    "inputs": {
+      "image": "",
+      "custom_width": 0,
+      "custom_height": 0
+    },
+    "class_type": "VHS_LoadImagePath",
+    "_meta": {
+      "title": "Load Image (Path) 🎥🅥🅗🅢"
+    }
+  },
+  "149": {
+    "inputs": {
+      "image": "",
+      "custom_width": 0,
+      "custom_height": 0
+    },
+    "class_type": "VHS_LoadImagePath",
+    "_meta": {
+      "title": "Load Image (Path) 🎥🅥🅗🅢"
+    }
+  },
+  "150": {
+    "inputs": {
+      "image": "",
+      "custom_width": 0,
+      "custom_height": 0
+    },
+    "class_type": "VHS_LoadImagePath",
+    "_meta": {
+      "title": "Load Image (Path) 🎥🅥🅗🅢"
+    }
+  },
+  "151": {
+    "inputs": {
+      "image": "",
+      "custom_width": 0,
+      "custom_height": 0
+    },
+    "class_type": "VHS_LoadImagePath",
+    "_meta": {
+      "title": "Load Image (Path) 🎥🅥🅗🅢"
+    }
+  },
+  "152": {
+    "inputs": {
+      "image": "",
+      "custom_width": 0,
+      "custom_height": 0
+    },
+    "class_type": "VHS_LoadImagePath",
+    "_meta": {
+      "title": "Load Image (Path) 🎥🅥🅗🅢"
+    }
+  },
+  "154": {
+    "inputs": {
+      "samples": [
+        "128",
+        0
+      ],
+      "vae": [
+        "123",
+        0
+      ]
+    },
+    "class_type": "VAEDecodeAudio",
+    "_meta": {
+      "title": "Декодировать аудио VAE"
+    }
+  },
+  "155": {
+    "inputs": {
+      "fps": 24,
+      "bit_depth": 8,
+      "color_space": "sRGB",
+      "codec": "none",
+      "images": [
+        "168",
+        1
+      ],
+      "audio": [
+        "154",
+        0
+      ]
+    },
+    "class_type": "CreateVideo",
+    "_meta": {
+      "title": "Создать видео"
+    }
+  },
+  "156": {
+    "inputs": {
+      "filename_prefix": "video/MiniMax_H3",
+      "format": "auto",
+      "format.codec": "auto",
+      "codec": "auto",
+      "video": [
+        "155",
+        0
+      ]
+    },
+    "class_type": "SaveVideo",
+    "_meta": {
+      "title": "Сохранить видео"
+    }
+  },
+  "158": {
+    "inputs": {
+      "value": 10
+    },
+    "class_type": "PrimitiveFloat",
+    "_meta": {
+      "title": "Float (duration)"
+    }
+  },
+  "159": {
+    "inputs": {
+      "expression": "max(5, round(a * 24)) + (5 - (max(5, round(a * 24)) % 17)) % 17",
+      "values.a": [
+        "158",
+        0
+      ]
+    },
+    "class_type": "ComfyMathExpression",
+    "_meta": {
+      "title": "Математическое выражение"
+    }
+  },
+  "165": {
+    "inputs": {
+      "lora_name": "minimax_h3_ref2v_turbo_8step_v1.0_768p_comfyui_bf16.safetensors",
+      "strength_model": 1,
+      "model": [
+        "130",
+        0
+      ]
+    },
+    "class_type": "LoraLoaderModelOnly",
+    "_meta": {
+      "title": "Загрузчик LoRA (Только модель)"
+    }
+  },
+  "168": {
+    "inputs": {
+      "clean_cache": true,
+      "image_pass": [
+        "125",
+        0
+      ]
+    },
+    "class_type": "CacheCleaner",
+    "_meta": {
+      "title": "Cache Cleaner"
+    }
+  }
+}

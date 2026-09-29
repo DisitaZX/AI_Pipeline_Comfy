@@ -1,227 +1,275 @@
 {
-  "tts_text": "Линь Шуан била крупная дрожь, она вцепилась в края кушетки так, что костяшки пальцев побелели. Боль была невыносимой, словно кто-то вырывал кусок сердца, но она не издала ни звука. Убийцы не кричат от боли. Пятая игла! Шестая! Седьмая! Руки Шэнь Фэя двигались все быстрее, золотые иглы мелькали как вспышки молний. Как только вошла восьмая игла, на коже груди Линь Шуан вздулся бугорок — паразит дернулся и был пригвожден девятой иглой. Шэнь Фэй резко дернул руку: на кончике иглы извивался черный Гу Сердечного Замка, размером с ноготь, сплошь покрытый лапками, издавая противный стрекот. Шэнь Фэй стряхнул его в фарфоровую чашу — паразит высох и превратился в черный пепел за несколько секунд. Линь Шуан тяжело дышала, вся мокрая от пота, но чужеродное в сердце исчезло. Она была свободна от цепей, сковывавших эту киллершу S-ранга с рождения. Шэнь Фэй повернулся к Линь Сюэ: «Твоя очередь». Младшая сестра легла без сопротивления, забыв вчерашние угрозы. Шэнь Фэй повторил процедуру: на пятой игле Линь Сюэ схватила его за запястье, дрожа от боли. «Последние 4 иглы. Потерпи», — его голос был якорем в море боли. Шестая, седьмая, восьмая, девятая! Второй Гу уничтожен. Линь Сюэ рухнула на кушетку, заливаясь слезами, но улыбалась: ужас десятилетий исчез. Шэнь Фэй убрал иглы в шкатулку: «Гу удален. С этого момента организация больше не властна над вами». Он достал две изумрудно-зеленые пилюли: «Это вторая порция детоксикации, выведет остатки яда Семи Шагов Погони за Душой. Примите их — и волноваться не о чем». Сестры проглотили пилюли, яд растворился в меридианах. Теперь они не инструменты организации, а свободные люди. Линь Шуан поднялась и опустилась на одно колено: «Отныне жизнь Линь Шуан принадлежит тебе. Кого прикажешь убить — того убью. Пойду в огонь и в воду, не страшась смерти». Линь Сюэ последовала ее примеру: «Я, Линь Сюэ, тоже иду за тобой. Но не делай из нас снова инструменты». Шэнь Фэй коснулся их плеч: «Встаньте. Со мной вы не инструменты. Вы — мои люди». Линь Сюэ бросилась ему на шею, рыдая и размазывая слезы по его дорогому джемперу за десятки тысяч юаней. В голове Шэнь Фэя раздался сигнал: Динь! Хозяин успешно подчинил Линь Шуан и Линь Сюэ! Оценка: ИДЕАЛЬНО! Похищение Удачи активировано! Очки Удачи Е Чэня: минус пятьсот! Текущая Удача Е Чэня: восемь тысяч пятьсот восемдесят восемь → восемь тысяч восемдесят восемь. Очки Удачи Хозяина: плюс пятьсот! Текущая Удача Хозяина: шестьсот → 1100. Симпатия Линь Шуан: девяноста пять (Мертвая Верность), Линь Сюэ: девяноста (Мертвая Верность). Шэнь Фэй отстранил Линь Сюэ: «Наплакалась?» — «Никто не плакал! Соринка в глаз попала!» Шэнь Фэй направился к выходу: «Отдыхайте. Через пару дней нужно кое-что сделать». — «Что именно?» — спросила Линь Шуан. Шэнь Фэй остановился, его губы тронула опасная улыбка: «Один оборзевший кусок дерьма притащил более ста человек на мою территорию. Помогите ему отправиться в последний путь». В комнате заполнилась жажда крови.",
-  "base_prompts": [
-    {"base_id": 1, "base_name": "lin_shuang", "base_prompt": "Pixar CGI Toon Style, young woman with long dark hair tied in a high ponytail, porcelain skin covered in faint scars from knives, bullets, and burns, slender but toned athletic build from years of assassin training, wearing a black semi-transparent sports top, delicate collarbones, thin waist, flat toned stomach, facial expression ranges from cold pride to terrified realization, eyes sharp hazel, Pixar-style soft lighting, detailed skin texture with subtle scar details."},
-    {"base_id": 2, "base_name": "lin_xue", "base_prompt": "Pixar CGI Toon Style, young woman with shoulder-length white hair, wearing a dark tactical jacket, hands trembling, Pixar-style soft lighting, detailed fabric texture of the jacket."},
-    {"base_id": 3, "base_name": "shen_fei", "base_prompt": "Pixar CGI Toon Style. A handsome young man with sharp, confident features, wearing a dark gray thin knit sweater with sleeves rolled up to elbows. He has a calm, slightly mysterious expression with a hint of a smirk. His hair is neatly tied back. High-quality character design with soft, smooth shading and expressive eyes reflecting intelligence and hidden power."},
-    {"base_id": 4, "base_name": "treatment_room", "base_prompt": "Pixar CGI Toon Style, warm-lit interior room with soft glowing ceiling lamps, central upholstered couch with light fabric, small wooden table holding a porcelain cup and needle box, door in the background leading to outside, soft volumetric lighting, cozy but functional medical space."},
-    {"base_id": 5, "base_name": "doorway", "base_prompt": "Pixar CGI Toon Style, wooden door at the end of the treatment room, warm light spilling from the room into the dark hallway beyond, simple wooden frame, no decorations, neutral background."},
-    {"base_id": 6, "base_name": "golden_needles", "base_prompt": "Pixar CGI Toon Style, set of 9 slender golden acupuncture needles, gleaming under warm light, sharp tips, held between fingers, leaving streaks of golden light as they move quickly."},
-    {"base_id": 7, "base_name": "gu_parasite", "base_prompt": "Pixar CGI Toon Style, small black parasitic insect the size of a fingernail, covered in tiny wriggling legs, segmented body, emitting a faint dark aura, wriggling on the tip of a needle, later turning into a pile of black ash."},
-    {"base_id": 8, "base_name": "porcelain_bowl", "base_prompt": "Pixar CGI Toon Style, smooth white porcelain bowl with a wide rim, sitting on a wooden table, containing a small pile of black ash, clean glaze reflecting warm lamp light."},
-    {"base_id": 9, "base_name": "needle_box", "base_prompt": "Pixar CGI Toon Style, small carved wooden box with a hinged lid, used to store golden acupuncture needles, dark wood grain, sitting on the table next to the porcelain bowl."},
-    {"base_id": 10, "base_name": "emerald_pills", "base_prompt": "Pixar CGI Toon Style, two small round pills glowing with a soft emerald green light, smooth surface, sitting on a wooden table, emitting faint detoxifying aura."},
-    {"base_id": 11, "base_name": "shen_fei_jumper", "base_prompt": "Pixar CGI Toon Style, expensive beige knitted jumper with high-quality texture, worth tens of thousands of yuan, soft fabric folds, later with tear stains and smudges on the front."},
-    {"base_id": 12, "base_name": "system_notification", "base_prompt": "Pixar CGI Toon Style, floating golden translucent text box with black system text, sharp edges, glowing softly, containing text, floating in mid-air against a dark background."}
-  ],
-  "scenes": [
-    {
-      "scene_id": 1,
-      "previous_recap": "",
-      "must_carry_over": ["Линь Шуан", "кушетка", "побелевшие костяшки пальцев"],
-      "text_scene": "Линь Шуан била крупная дрожь, она вцепилась в края кушетки так, что костяшки пальцев побелели.",
-      "image_prompt": "[lin_shuang] sitting on [treatment_room] couch, gripping edges with white knuckles, sweat on forehead, Pixar CGI Toon Style.",
-      "video_prompt": "Slow zoom in on the young woman's white-knuckled hands, shallow depth of field, soft light dust motes drifting in the air."
-    },
-    {
-      "scene_id": 2,
-      "previous_recap": "Линь Шуан лежит на кушетке, костяшки пальцев побелели от боли.",
-      "must_carry_over": ["невыносимая боль", "Линь Шуан"],
-      "text_scene": "Боль была невыносимой, словно кто-то вырывал кусок сердца, но она не издала ни звука.",
-      "image_prompt": "[lin_shuang] grimacing in pain on [treatment_room] couch, Pixar CGI Toon Style.",
-      "video_prompt": "Close-up on the woman's face, slow pan down to her clenched jaw, soft warm light flickering."
-    },
-    {
-      "scene_id": 3,
-      "previous_recap": "Линь Шуан терпит невыносимую боль, не издавая ни звука.",
-      "must_carry_over": ["Убийцы не кричат от боли", "5-я, 6-я, 7-я иглы"],
-      "text_scene": "Убийцы не кричат от боли. Пятая игла! Шестая! Седьмая!",
-      "image_prompt": "[lin_shuang] on [treatment_room] couch, golden needle streaks in the air, Pixar CGI Toon Style.",
-      "video_prompt": "Fast motion blur of golden streaks, camera shakes slightly with each needle count, rapid cuts."
-    },
-    {
-      "scene_id": 4,
-      "previous_recap": "Шэнь Фэй вводит 5-ю, 6-ю, 7-ю иглы, Линь Шуан терпит боль.",
-      "must_carry_over": ["золотые иглы", "Шэнь Фэй", "вспышки молний"],
-      "text_scene": "Руки Шэнь Фэя двигались все быстрее, золотые иглы мелькали как вспышки молний.",
-      "image_prompt": "[shen_fei] moving hands quickly with [golden_needles] in [treatment_room], Pixar CGI Toon Style.",
-      "video_prompt": "Fast handheld tracking shot of the man's hands, golden light trails left by needles, motion blur."
-    },
-    {
-      "scene_id": 5,
-      "previous_recap": "Шэнь Фэй вводит золотые иглы, они мелькают как молнии.",
-      "must_carry_over": ["8-я игла", "9-я игла", "бугорок под кожей"],
-      "text_scene": "Как только вошла восьмая игла, на коже груди Линь Шуан вздулся бугорок — паразит дернулся и был пригвожден девятой иглой.",
-      "image_prompt": "[lin_shuang] on [treatment_room] couch with a small bump on her chest, [shen_fei] nearby, Pixar CGI Toon Style.",
-      "video_prompt": "Zoom in on the small bump on the woman's chest, camera shakes as the parasite twitches."
-    },
-    {
-      "scene_id": 6,
-      "previous_recap": "Введена 9-я игла, паразит пригвожден под кожей Линь Шуан.",
-      "must_carry_over": ["Гу Сердечного Замка", "размером с ноготь", "противный стрекот"],
-      "text_scene": "Шэнь Фэй резко дернул руку: на кончике иглы извивался черный Гу Сердечного Замка, размером с ноготь, сплошь покрытый лапками, издавая противный стрекот.",
-      "image_prompt": "[shen_fei] holding a needle with [gu_parasite] wriggling on the tip, [treatment_room] background, Pixar CGI Toon Style.",
-      "video_prompt": "Close-up on the wriggling parasite, camera tilts as the man pulls the needle up, faint dark aura glowing."
-    },
-    {
-      "scene_id": 7,
-      "previous_recap": "Шэнь Фэй извлек Гу Сердечного Замка на кончике иглы.",
-      "must_carry_over": ["фарфоровая чаша", "черный пепел", "несколько секунд"],
-      "text_scene": "Шэнь Фэй стряхнул его в фарфоровую чашу — паразит высох и превратился в черный пепел за несколько секунд.",
-      "image_prompt": "[shen_fei] shaking parasite into [porcelain_bowl] in [treatment_room], Pixar CGI Toon Style.",
-      "video_prompt": "Slow motion of the parasite falling into the bowl, time-lapse effect of it turning to ash, soft glow."
-    },
-    {
-      "scene_id": 8,
-      "previous_recap": "Паразит стряхнут в фарфоровую чашу, превращается в пепел.",
-      "must_carry_over": ["Линь Шуан", "пот", "чужеродное в сердце исчезло"],
-      "text_scene": "Линь Шуан тяжело дышала, вся мокрая от пота, но чужеродное в сердце исчезло.",
-      "image_prompt": "[lin_shuang] sweating heavily on [treatment_room] couch, relaxed expression, Pixar CGI Toon Style.",
-      "video_prompt": "Camera pans over the woman's sweaty face, slow zoom out to show her slumped posture, soft light."
-    },
-    {
-      "scene_id": 9,
-      "previous_recap": "Линь Шуан чувствует, что паразит исчез, она свободна.",
-      "must_carry_over": ["S-ранг", "цепи с рождения", "свободна"],
-      "text_scene": "Она была свободна от цепей, сковывавших эту киллершу S-ранга с рождения.",
-      "image_prompt": "[lin_shuang] sitting up on [treatment_room] couch, faint ghostly chains breaking around her, Pixar CGI Toon Style.",
-      "video_prompt": "Faint translucent chains shatter around the woman, camera circles her slowly, particle effects of chain fragments."
-    },
-    {
-      "scene_id": 10,
-      "previous_recap": "Линь Шуан свободна от Гу, сковывавшего ее с рождения.",
-      "must_carry_over": ["Твоя очередь", "Линь Сюэ", "без сопротивления"],
-      "text_scene": "Шэнь Фэй повернулся к Линь Сюэ: «Твоя очередь». Младшая сестра легла без сопротивления, забыв вчерашние угрозы.",
-      "image_prompt": "[shen_fei] turning to [lin_xue] on [treatment_room] couch, Pixar CGI Toon Style.",
-      "video_prompt": "Camera pans from the man to the younger woman lying down, slow dolly shot, warm light."
-    },
-    {
-      "scene_id": 11,
-      "previous_recap": "Линь Сюэ легла на кушетку, Шэнь Фэй начинает процедуру.",
-      "must_carry_over": ["5-я игла", "ледяная рука", "твердое запястье"],
-      "text_scene": "Шэнь Фэй повторил процедуру: на пятой игле Линь Сюэ схватила его за запястье, дрожа от боли.",
-      "image_prompt": "[lin_xue] gripping [shen_fei]'s wrist on [treatment_room] couch, Pixar CGI Toon Style.",
-      "video_prompt": "Close-up on the trembling hand gripping the man's wrist, camera shakes with the woman's shivering."
-    },
-    {
-      "scene_id": 12,
-      "previous_recap": "Линь Сюэ схватила Шэнь Фэя за запястье на 5-й игле.",
-      "must_carry_over": ["Последние 4 иглы. Потерпи", "якорь в море боли"],
-      "text_scene": "«Последние 4 иглы. Потерпи», — его голос был якорем в море боли.",
-      "image_prompt": "[shen_fei] speaking calmly to [lin_xue] in [treatment_room], Pixar CGI Toon Style.",
-      "video_prompt": "Slow zoom in on the man's face, calm expression, soft volumetric light catching his features."
-    },
-    {
-      "scene_id": 13,
-      "previous_recap": "Шэнь Фэй говорит Линь Сюэ потерпеть последние 4 иглы.",
-      "must_carry_over": ["6-я,7-я,8-я,9-я иглы", "ужас десятилетий", "улыбка Линь Сюэ"],
-      "text_scene": "Шестая, седьмая, восьмая, девятая! Второй Гу уничтожен. Линь Сюэ рухнула на кушетку, заливаясь слезами, но улыбалась.",
-      "image_prompt": "[lin_xue] crying with a smile on [treatment_room] couch, Pixar CGI Toon Style.",
-      "video_prompt": "Camera tilts down to the woman collapsing on the couch, tears glistening in warm light, slow motion."
-    },
-    {
-      "scene_id": 14,
-      "previous_recap": "Извлечен второй Гу, Линь Сюэ плачет от радости.",
-      "must_carry_over": ["Гу удален", "организация не властна", "шкатулка для игл"],
-      "text_scene": "Шэнь Фэй убрал иглы в шкатулку: «Гу удален. С этого момента организация больше не властна над вами».",
-      "image_prompt": "[shen_fei] putting needles into [needle_box] in [treatment_room], Pixar CGI Toon Style.",
-      "video_prompt": "Close-up on the man's hands closing the needle box, camera pans up to his neutral face."
-    },
-    {
-      "scene_id": 15,
-      "previous_recap": "Шэнь Фэй убрал иглы, сказал что Гу удален.",
-      "must_carry_over": ["изумрудно-зеленые пилюли", "Семи Шагов Погони за Душой", "детоксикация"],
-      "text_scene": "Он достал две изумрудно-зеленые пилюли: «Это вторая порция детоксикации, выведет остатки яда Семи Шагов Погони за Душой. Примите их — и волноваться не о чем».",
-      "image_prompt": "[shen_fei] holding [emerald_pills] in [treatment_room], Pixar CGI Toon Style.",
-      "video_prompt": "Slow zoom in on the glowing green pills, soft emerald light pulsing, camera circles the man's hand."
-    },
-    {
-      "scene_id": 16,
-      "previous_recap": "Шэнь Фэй дал сестрам пилюли для детоксикации.",
-      "must_carry_over": ["яд растворился", "свободные люди", "не инструменты"],
-      "text_scene": "Сестры проглотили пилюли, яд растворился в меридианах. Теперь они не инструменты организации, а свободные люди.",
-      "image_prompt": "[lin_shuang] and [lin_xue] swallowing pills in [treatment_room], Pixar CGI Toon Style.",
-      "video_prompt": "Close-up on the sisters' faces as they swallow pills, faint green glow fading from their bodies."
-    },
-    {
-      "scene_id": 17,
-      "previous_recap": "Сестры приняли пилюли, яд выведен, они свободны.",
-      "must_carry_over": ["Отныне жизнь Линь Шуан принадлежит тебе", "S-ранг", "опустилась на колено"],
-      "text_scene": "Линь Шуан поднялась и опустилась на одно колено: «Отныне жизнь Линь Шуан принадлежит тебе. Кого прикажешь убить — того убью. Пойду в огонь и в воду, не страшась смерти».",
-      "image_prompt": "[lin_shuang] kneeling on one knee to [shen_fei] in [treatment_room], Pixar CGI Toon Style.",
-      "video_prompt": "Slow dolly shot of the woman kneeling, camera rises to show the man's surprised expression."
-    },
-    {
-      "scene_id": 18,
-      "previous_recap": "Линь Шуан опустилась на колено, поклялась в верности.",
-      "must_carry_over": ["Линь Сюэ идет за тобой", "не делай инструментами"],
-      "text_scene": "Линь Сюэ последовала ее примеру: «Я, Линь Сюэ, тоже иду за тобой. Но не делай из нас снова инструменты».",
-      "image_prompt": "[lin_xue] kneeling to [shen_fei] in [treatment_room], Pixar CGI Toon Style.",
-      "video_prompt": "Camera pans from the first woman to the second kneeling, soft warm light highlighting their figures."
-    },
-    {
-      "scene_id": 19,
-      "previous_recap": "Линь Сюэ тоже опустилась на колено, поклялась в верности.",
-      "must_carry_over": ["Встаньте. Со мной вы не инструменты. Вы — мои люди", "касается плеч"],
-      "text_scene": "Шэнь Фэй коснулся их плеч: «Встаньте. Со мной вы не инструменты. Вы — мои люди».",
-      "image_prompt": "[shen_fei] touching the sisters' shoulders in [treatment_room], Pixar CGI Toon Style.",
-      "video_prompt": "Close-up on the man's hand touching a shoulder, camera pulls back to show all three figures."
-    },
-    {
-      "scene_id": 20,
-      "previous_recap": "Шэнь Фэй сказал сестрам, что они его люди, а не инструменты.",
-      "must_carry_over": ["Линь Сюэ обнимает", "дорогой джемпер", "десятки тысяч юаней"],
-      "text_scene": "Линь Сюэ бросилась ему на шею, рыдая и размазывая слезы по его дорогому джемперу за десятки тысяч юаней.",
-      "image_prompt": "[lin_xue] hugging [shen_fei] around the waist in [treatment_room], Pixar CGI Toon Style.",
-      "video_prompt": "Slow circle shot of the hugging pair, faint tear stains appearing on the man's jumper, soft sobbing ripples."
-    },
-    {
-      "scene_id": 21,
-      "previous_recap": "Линь Сюэ обняла Шэнь Фэя, рыдает в его джемпер.",
-      "must_carry_over": ["[Динь!]", "ИДЕАЛЬНО", "Похищение Удачи активировано"],
-      "text_scene": "В голове Шэнь Фэя раздался сигнал: [Динь! Хозяин успешно подчинил Линь Шуан и Линь Сюэ! Оценка: ИДЕАЛЬНО! Похищение Удачи активировано!",
-      "image_prompt": "[system_notification] floating near [shen_fei]'s head in [treatment_room], Pixar CGI Toon Style.",
-      "video_prompt": "Golden text box floats in mid-air, camera slowly pans over the text, soft glow particles rising."
-    },
-    {
-      "scene_id": 22,
-      "previous_recap": "В голове Шэнь Фэя раздался системный сигнал о подчинении сестер.",
-      "must_carry_over": ["Удача Е Чэня: 8588 → 8088", "Удача Хозяина: 600 → 1100", "-500 и +500 очков"],
-      "text_scene": "Очки Удачи Е Чэня: -500! Текущая Удача Е Чэня: 8588 → 8088. Очки Удачи Хозяина: +500! Текущая Удача Хозяина: 600 → 1100.",
-      "image_prompt": "[system_notification] showing luck numbers near [shen_fei] in [treatment_room], Pixar CGI Toon Style.",
-      "video_prompt": "Numbers glow and change on the floating text box, camera zooms in on the shifting digits, golden light flashes."
-    },
-    {
-      "scene_id": 23,
-      "previous_recap": "Удача Е Чэня упала, Удача Шэнь Фэя выросла на 500 очков.",
-      "must_carry_over": ["95 (Мертвая Верность)", "90 (Мертвая Верность)", "Наплакалась?"],
-      "text_scene": "Симпатия Линь Шуан: 95 (Мертвая Верность), Линь Сюэ: 90 (Мертвая Верность)]. Шэнь Фэй отстранил Линь Сюэ: «Наплакалась?»",
-      "image_prompt": "[system_notification] with sympathy numbers, [shen_fei] pushing [lin_xue] back in [treatment_room], Pixar CGI Toon Style.",
-      "video_prompt": "Camera follows the man gently pushing the woman back, text box fades out in the background, soft motion."
-    },
-    {
-      "scene_id": 24,
-      "previous_recap": "Симпатия сестер достигла Мертвой Верности, Шэнь Фэй отстранил Линь Сюэ.",
-      "must_carry_over": ["Никто не плакал! Соринка в глаз попала!", "пару дней", "отдыхайте"],
-      "text_scene": "— «Никто не плакал! Соринка в глаз попала!» Шэнь Фэй направился к выходу: «Отдыхайте. Через пару дней нужно кое-что сделать».",
-      "image_prompt": "[shen_fei] walking to [doorway] with [lin_xue] wiping tears in background, Pixar CGI Toon Style.",
-      "video_prompt": "Tracking shot of the man walking to the door, camera looks back at the sisters on the couch, warm light."
-    },
-    {
-      "scene_id": 25,
-      "previous_recap": "Шэнь Фэй идет к выходу, сказал отдыхать пару дней.",
-      "must_carry_over": ["Что именно?", "опасная улыбка", "Линь Шуан"],
-      "text_scene": "— «Что именно?» — спросила Линь Шуан. Шэнь Фэй остановился, его губы тронула опасная улыбка:",
-      "image_prompt": "[lin_shuang] asking [shen_fei] near [doorway], Pixar CGI Toon Style.",
-      "video_prompt": "Camera cuts to the woman asking, then to the man's face with a slight dangerous smile, slow zoom."
-    },
-    {
-      "scene_id": 26,
-      "previous_recap": "Линь Шуан спросила о задании, Шэнь Фэй улыбнулся опасно.",
-      "must_carry_over": ["более 100 человек", "последний путь", "жажда крови"],
-      "text_scene": "«Один оборзевший кусок дерьма притащил более 100 человек на мою территорию. Помогите ему отправиться в последний путь». В комнате заполнилась жажда крови.",
-      "image_prompt": "[shen_fei] smiling dangerously in [doorway], dark red aura filling [treatment_room], Pixar CGI Toon Style.",
-      "video_prompt": "Dark red mist fills the room, camera pushes in on the man's smiling face, faint blood lust ripples in the air."
-    }
-  ]
+"title": "Поильник Нинбао / Ningbao's Sippy Cup",
+"cover_text": "Двухлетняя малышка запустила поильником в лицо звезде, которая унижала её маму!",
+"cover_text_short": "Удар поильником",
+"cover_scene_id": 14,
+"cover_time_s": 4.3,
+"part_label": "Часть 1",
+"story_outline": {
+"logline": "На светском банкете Ху Ваньюй, которую травят и обвиняют в романе с чужим женихом, отбивается от двух влиятельных обидчиц. Её маленькая дочь Нинбао, приехавшая с дядей Цинь Мо, не выдерживает и бросает поильник в лицо его девушке Бай И.",
+"protagonist_want": "Ваньюй хочет доказать, что она не соблазняла жениха Чжэньчжу, и добиться, чтобы её оставили в покое, не выдав, что Нинбао её дочь.",
+"obstacle": "Бай Чжэньчжу с помощью связей лишила Ваньюй работы и развернула против неё травлю в сети. Подруга Бай И встаёт на сторону Чжэньчжу, а у Ваньюй нет ни ресурсов, ни защитников.",
+"stakes": "Репутация и работа Ваньюй, безопасность её дочери и тайна их родства. Ещё на кону отношения Цинь Мо и Бай И.",
+"beats": [
+"scene 1: Ваньюй требует доказательств. Чжэньчжу замахивается, Ваньюй перехватывает её руку, и конфликт становится физическим.",
+"scene 2: Чжэньчжу в бешенстве угрожает Ваньюй и пытается ударить её ногой. Ставки растут: она обещает Ваньюй конец.",
+"scene 3: Ваньюй заявляет, что из-за Чжэньчжу потеряла работу и стала жертвой травли в сети. Зритель узнаёт, что она не виновата и уже давно под давлением.",
+"scene 4: Бай И вступается за Чжэньчжу и требует отпустить её. Появляется вторая противница.",
+"scene 5: Бай И объясняет причину: Чжэньчжу помолвлена со вторым молодым господином Лянем. Зритель узнаёт, в чём суть обвинения.",
+"scene 6: Ваньюй спрашивает, где Бай И увидела двусмысленные связи, и Бай И заминается. Её позиция даёт трещину.",
+"scene 7: Ваньюй напоминает про видео, где Лянь сам преследует её. Бай И признаёт это, но перекладывает вину на Ваньюй.",
+"scene 8: Ваньюй в ответ называет Цинь Мо, и Бай И вспыхивает. Зритель узнаёт, что Бай И связана с Цинь Мо.",
+"scene 9: Появляется Цинь Мо с Нинбао на руках. Нинбао узнаёт в толпе маму, гости кланяются, и Цинь Мо спешит к месту ссоры.",
+"scene 10: Бай И демонстративно дуется на Цинь Мо. Он же не смотрит на неё и спрашивает про Ваньюй: ясно, что ему важнее Ваньюй.",
+"scene 11: Ваньюй говорит, что её оскорбили и напали на неё, и заставляет себя не смотреть на дочь. Нинбао тянется к маме.",
+"scene 12: Чжэньчжу обзывает Ваньюй бесстыдницей. Бай И повторяет обвинение про Лянь.",
+"scene 13: Бай И показывает покрасневшее запястье и ждёт, что Цинь Мо бросится её утешать. Нинбао закипает.",
+"scene 14: Нинбао кричит, что Бай И обижает маму, и бросает ей в лицо поильник. Бай И ранена.",
+"scene 15: Нинбао не позволяет дяде идти к Бай И, а Цинь Мо велит персоналу проверить её лицо. Его выбор сделан.",
+"scene 16: Распорядитель докладывает про синяк и уводит Бай И к врачу. Цинь Мо торопит.",
+"scene 17: Цинь Мо представляет Нинбао как племянницу и просит не принимать всё близко к сердцу вместо наказания. Бай И теряет дар речи."
+],
+"open_threads": [
+"Почему Нинбао называет Ваньюй мамой, а Цинь Мо зовёт её племянницей, и в чём их настоящее родство.",
+"Кошмары Нинбао про злую тётю, которая погубила дядю, и её попытки защитить Цинь Мо.",
+"Второй молодой господин Лянь и его преследование Ваньюй.",
+"Месть Бай Чжэньчжу: травля в сети и потеря работы Ваньюй.",
+"Что Цинь Мо решит насчёт Бай И после этого вечера.",
+"Тайна отцовства Нинбао."
+]
+},
+"base_prompts": [
+{
+"base_name": "hu_wanyu",
+"entity_type": "character",
+"base_prompt": "Full-length vertical portrait of one young Asian woman, about 26 years old, delicate oval face, fair skin, large dark brown eyes, softly arched brows, long straight black hair tied in a low ponytail with a few loose strands, slim graceful build, wearing a simple dark emerald green satin knee-length evening dress with thin straps and a white event staff badge on a black lanyard, black flat shoes, neutral standing pose, plain light gray background, Japanese anime style",
+"voice_style": "soft, clear young adult female voice, calm and restrained, firm and cold delivery under pressure"
+},
+{
+"base_name": "bai_zhenzhu",
+"entity_type": "character",
+"base_prompt": "Full-length vertical portrait of one glamorous Asian woman, about 28 years old, sharp angular face, heavy makeup, dark red lipstick, amber eyes, wavy chestnut brown hair falling to her shoulders, wearing a tight crimson satin cocktail dress, gold necklace and large gold earrings, red high heels, neutral standing pose, plain light gray background, Japanese anime style",
+"voice_style": "sharp, shrill adult female voice, arrogant and screeching delivery"
+},
+{
+"base_name": "bai_yi",
+"entity_type": "character",
+"base_prompt": "Full-length vertical portrait of one elegant Asian woman, about 27 years old, refined oval face, fair skin, cool light brown eyes, glossy long straight black hair with a side part, wearing a floor-length ivory white silk evening gown with a side slit, pearl drop earrings, silver high heels, neutral standing pose, plain light gray background, Japanese anime style",
+"voice_style": "smooth, cool adult female voice, haughty and self-righteous delivery"
+},
+{
+"base_name": "qin_mo",
+"entity_type": "character",
+"base_prompt": "Full-length vertical portrait of one tall handsome Asian man, about 30 years old, broad shoulders, sharp jawline, deep black eyes, short black hair swept back, wearing a charcoal gray three-piece suit with a white shirt and a dark navy tie, black leather shoes, neutral standing pose, plain light gray background, Japanese anime style",
+"voice_style": "deep, warm adult male voice, calm and authoritative delivery"
+},
+{
+"base_name": "ningbao",
+"entity_type": "character",
+"base_prompt": "Full-length vertical portrait of one chubby toddler girl, about 2 years old, very round rosy cheeks, big dark eyes, short black hair tied in two tiny pigtails with pink ribbons, wearing a pale pink knitted cardigan over a white frilly dress, white baby shoes, neutral standing pose, plain light gray background, Japanese anime style",
+"voice_style": "high-pitched, sweet toddler girl voice, age two, earnest and slightly lisping delivery"
+},
+{
+"base_name": "event_manager",
+"entity_type": "character",
+"base_prompt": "Full-length vertical portrait of one middle-aged Asian man, about 45 years old, slightly plump, round face, receding short black hair, round black-framed glasses, wearing a dark navy suit with a white shirt, a gold name pin on the lapel and a small wireless earpiece, black shoes, neutral standing pose, plain light gray background, Japanese anime style",
+"voice_style": "middle-aged adult male voice, servile and hurried delivery"
+},
+{
+"base_name": "sippy_cup",
+"entity_type": "object",
+"base_prompt": "A small pastel blue toddler sippy cup with a white soft spout and two side handles, attached to a pink fabric neck strap, isolated on a plain neutral background, Japanese anime style"
+},
+{
+"base_name": "banquet_hall",
+"entity_type": "location",
+"base_prompt": "Wide empty luxurious banquet hall in the evening, large crystal chandeliers, warm golden light, polished cream marble floor, round tables with white linen and floral centerpieces, a tall floral arch at the far end, champagne towers, no people, Japanese anime style"
+},
+{
+"base_name": "banquet_entrance",
+"entity_type": "location",
+"base_prompt": "Empty grand entrance of a luxury banquet hall in the evening, tall open golden double doors, red carpet, marble columns, warm chandelier light spilling from the hall, no people, Japanese anime style"
+}
+],
+"scenes": [
+{
+"scene_id": 1,
+"duration_s": 12,
+"scene_summary": "[hu_wanyu] demands proof from [bai_zhenzhu] that she seduced her fiancé. [bai_zhenzhu] swings a slap and [hu_wanyu] catches her wrist.",
+"soundscape": "Muffled murmur of banquet guests, soft string music in the distance, a sharp slap of skin on skin, a sudden hush around the two women.",
+"video_prompt": "[Shot 1] Medium close-up in [banquet_hall], [hu_wanyu] with a low black ponytail and dark emerald satin dress stands facing [bai_zhenzhu] in her tight crimson dress and chestnut waves, blurred guests behind them, slow push-in on [hu_wanyu]. [hu_wanyu] (S1) says in a trembling but firm voice, <d>[Russian] Госпожа Бай, вы утверждаете, что я соблазняла вашего жениха. Но есть ли у вас хоть какие-то доказательства?!</d> [Shot 2] At 00:07.500, close shot, [bai_zhenzhu] swings her raised palm at [hu_wanyu]'s face and [hu_wanyu]'s slender hand snaps up and catches her wrist mid-air, slight handheld drift, sharp slap of skin on skin.",
+"dialogue": [
+{ "shot": 1, "speaker_ref": "hu_wanyu", "line": "Госпожа Бай, вы утверждаете, что я соблазняла вашего жениха. Но есть ли у вас хоть какие-то доказательства?!" }
+]
+},
+{
+"scene_id": 2,
+"duration_s": 12,
+"scene_summary": "[bai_zhenzhu], her wrist locked in [hu_wanyu]'s grip, screams threats and tries to kick her. The conflict escalates.",
+"soundscape": "Guests gasping, muffled orchestral music, shoes scuffing on marble, heavy breathing.",
+"video_prompt": "[Shot 1] Medium shot in [banquet_hall], [bai_zhenzhu] with her shoulder-length chestnut waves and crimson dress grimaces in pain, her wrist gripped by [hu_wanyu]'s hand at the edge of frame, slight handheld drift. [bai_zhenzhu] (S1) shrieks in a shrill, furious voice, <d>[Russian] Ху Ваньюй! Ты совсем страх потеряла?! Как ты смеешь причинять мне боль! Я тебе это так просто не оставлю! Тебе конец!</d> [Shot 2] At 00:09.000, low angle on the floor, [bai_zhenzhu]'s red high heel swings up in a kick while [hu_wanyu] steps back and pulls her wrist, the kick misses, a scuff of shoes on marble.",
+"dialogue": [
+{ "shot": 1, "speaker_ref": "bai_zhenzhu", "line": "Ху Ваньюй! Ты совсем страх потеряла?! Как ты смеешь причинять мне боль! Я тебе это так просто не оставлю! Тебе конец!" }
+]
+},
+{
+"scene_id": 3,
+"duration_s": 14,
+"scene_summary": "[hu_wanyu] coldly answers that [bai_zhenzhu] has hounded her since the slander began: she lost her job and is bullied online. It is clear she has been under pressure for a long time.",
+"soundscape": "Low crowd whispers, a distant clink of glasses, a faint ring of tension in the hall.",
+"video_prompt": "[Shot 1] Close-up in [banquet_hall], [hu_wanyu] with her low black ponytail and emerald green dress looks straight at [bai_zhenzhu], jaw tight, static camera. [hu_wanyu] (S1) says in a cold, steady voice, <d>[Russian] Госпожа Бай, вы ведь и так не даете мне прохода с тех самых пор, как начали клеветать, разве нет?</d> [Shot 2] At 00:08.000, tighter close-up on [hu_wanyu]'s tired but unflinching dark brown eyes, slow push-in, a faint tremor in her lips. [hu_wanyu] (S1) says quietly, <d>[Russian] Из-за вас меня выжили с работы, из-за вас меня травят в сети.</d>",
+"dialogue": [
+{ "shot": 1, "speaker_ref": "hu_wanyu", "line": "Госпожа Бай, вы ведь и так не даете мне прохода с тех самых пор, как начали клеветать, разве нет?" },
+{ "shot": 2, "speaker_ref": "hu_wanyu", "line": "Из-за вас меня выжили с работы, из-за вас меня травят в сети." }
+]
+},
+{
+"scene_id": 4,
+"duration_s": 8,
+"scene_summary": "[bai_yi] steps out of the crowd and asks [hu_wanyu] to let go of [bai_zhenzhu], taking her friend's side.",
+"soundscape": "Crowd murmur, soft heels clicking on marble, a low tense hum.",
+"video_prompt": "[Shot 1] Medium shot in [banquet_hall], [bai_yi] with her glossy long black hair and ivory white silk gown steps forward from the crowd, frowning, slight handheld drift. [bai_yi] (S1) says in a smooth, cool voice, <d>[Russian] Госпожа Ху, пожалуйста, отпустите Чжэньчжу. Ее можно понять, она просто не сдержалась.</d> [Shot 2] At 00:05.500, close shot, [bai_zhenzhu] glares smugly at [hu_wanyu] with her wrist still held, [hu_wanyu]'s hand tightening on it, static.",
+"dialogue": [
+{ "shot": 1, "speaker_ref": "bai_yi", "line": "Госпожа Ху, пожалуйста, отпустите Чжэньчжу. Ее можно понять, она просто не сдержалась." }
+]
+},
+{
+"scene_id": 5,
+"duration_s": 13,
+"scene_summary": "[bai_yi] explains that [bai_zhenzhu] is preparing a wedding with the second young master Lian, so [hu_wanyu]'s supposed ties to him would enrage anyone.",
+"soundscape": "Crowd murmurs, faint string music, a sharp intake of breath from a guest.",
+"video_prompt": "[Shot 1] Medium close-up in [banquet_hall], [bai_yi] with her long side-parted black hair and ivory gown speaks with a self-righteous air, [bai_zhenzhu] visible beside her, slow push-in. [bai_yi] (S1) says in a smooth, haughty voice, <d>[Russian] Они со вторым молодым господином Лянем уже вовсю готовились к свадьбе, а тут появляетесь вы со своими двусмысленными связями. Любая на ее месте пришла бы в ярость.</d> [Shot 2] At 00:11.500, close-up on [hu_wanyu]'s narrowed dark eyes and tightening jaw, static, her knuckles whitening.",
+"dialogue": [
+{ "shot": 1, "speaker_ref": "bai_yi", "line": "Они со вторым молодым господином Лянем уже вовсю готовились к свадьбе, а тут появляетесь вы со своими двусмысленными связями. Любая на ее месте пришла бы в ярость." }
+]
+},
+{
+"scene_id": 6,
+"duration_s": 8,
+"scene_summary": "[hu_wanyu] asks where [bai_yi] saw any improper ties, and [bai_yi] hesitates. Her position weakens.",
+"soundscape": "Sudden quiet in the hall, a single glass clinking, slow breathing.",
+"video_prompt": "[Shot 1] Close-up in [banquet_hall], [hu_wanyu] with her low black ponytail tightens her grip on [bai_zhenzhu]'s wrist and looks at [bai_yi], static. [hu_wanyu] (S1) says sharply, <d>[Russian] И каким же глазом вы увидели эти двусмысленные связи?!</d> [Shot 2] At 00:04.500, close-up on [bai_yi]'s face, her cool light brown eyes darting sideways, lips pressed, a flash of guilt, slow push-in.",
+"dialogue": [
+{ "shot": 1, "speaker_ref": "hu_wanyu", "line": "И каким же глазом вы увидели эти двусмысленные связи?!" }
+]
+},
+{
+"scene_id": 7,
+"duration_s": 14,
+"scene_summary": "[hu_wanyu] reminds [bai_yi] of the videos in which Lian chases her. [bai_yi], who saw them, shifts the blame onto [hu_wanyu].",
+"soundscape": "Tense hush, whispers spreading through the guests, the faint rustle of silk.",
+"video_prompt": "[Shot 1] Medium close-up in [banquet_hall], [hu_wanyu] with her low black ponytail and emerald green dress speaks levelly to [bai_yi], static camera. [hu_wanyu] (S1) says in a firm, low voice, <d>[Russian] Вы же видели те видео. Это второй молодой господин Лянь сам бегает за мной, а не я за ним.</d> [Shot 2] At 00:08.200, close-up on [bai_yi] with her ivory gown and long side-parted black hair, she lifts her chin defensively, slight handheld drift. [bai_yi] (S1) says coldly, <d>[Russian] Если бы ты сама его не провоцировала, стал бы он за тобой бегать?</d>",
+"dialogue": [
+{ "shot": 1, "speaker_ref": "hu_wanyu", "line": "Вы же видели те видео. Это второй молодой господин Лянь сам бегает за мной, а не я за ним." },
+{ "shot": 2, "speaker_ref": "bai_yi", "line": "Если бы ты сама его не провоцировала, стал бы он за тобой бегать?" }
+]
+},
+{
+"scene_id": 8,
+"duration_s": 13,
+"scene_summary": "[hu_wanyu] turns the logic against [bai_yi] and names Qin Mo. [bai_yi] flares up and tries to pry off her fingers.",
+"soundscape": "Guests gasping, a hard rustle of silk, quick angry breathing.",
+"video_prompt": "[Shot 1] Close-up in [banquet_hall], [hu_wanyu] with her low black ponytail gives a bitter half-smile, still holding [bai_zhenzhu]'s wrist, static. [hu_wanyu] (S1) says with quiet irony, <d>[Russian] Раз уж ты так рассуждаешь, Бай И, может, ты тоже вовсю соблазняешь Цинь Мо?</d> [Shot 2] At 00:06.700, medium shot, [bai_yi] in her ivory gown flushes red with anger and grabs at [hu_wanyu]'s fingers to free [bai_zhenzhu], slight handheld drift. [bai_yi] (S1) says furiously, <d>[Russian] Ху Ваньюй, не переходи границы! Как ты смеешь так нагло издеваться над людьми!</d>",
+"dialogue": [
+{ "shot": 1, "speaker_ref": "hu_wanyu", "line": "Раз уж ты так рассуждаешь, Бай И, может, ты тоже вовсю соблазняешь Цинь Мо?" },
+{ "shot": 2, "speaker_ref": "bai_yi", "line": "Ху Ваньюй, не переходи границы! Как ты смеешь так нагло издеваться над людьми!" }
+]
+},
+{
+"scene_id": 9,
+"duration_s": 13,
+"scene_summary": "[qin_mo] enters with [ningbao] in his arms. She spots her mother in the crowd, the staff bow and apologize, and he strides toward the scene.",
+"soundscape": "The ballroom hum grows louder as the doors open, fast footsteps, guests bowing and murmuring, a soft rattle of the sippy cup strap.",
+"video_prompt": "[Shot 1] Medium shot at [banquet_entrance], [qin_mo] with his swept-back black hair and charcoal three-piece suit walks in carrying [ningbao], the chubby toddler in a pale pink cardigan with pink-ribbon pigtails, a [sippy_cup] on a strap around her neck, slow push-in. [ningbao] (S1) points a chubby finger ahead and says in a bright, excited toddler voice, <d>[Russian] Дядя, там мама!</d> [Shot 2] At 00:03.500, medium shot, [event_manager] in a dark navy suit and round glasses hurries up to [qin_mo] and bows, slight handheld drift. [event_manager] (S2) says nervously and hurriedly, <d>[Russian] Четвёртый молодой господин, вы прибыли! Простите, это наша оплошность, мы позволили госпоже Бай Чжэньчжу устроить скандал!</d> [Shot 3] At 00:11.000, [qin_mo] strides past him without a glance, expression tense, [ningbao] still pointing forward, footsteps on marble.",
+"dialogue": [
+{ "shot": 1, "speaker_ref": "ningbao", "line": "Дядя, там мама!" },
+{ "shot": 2, "speaker_ref": "event_manager", "line": "Четвёртый молодой господин, вы прибыли! Простите, это наша оплошность, мы позволили госпоже Бай Чжэньчжу устроить скандал!" }
+]
+},
+{
+"scene_id": 10,
+"duration_s": 12,
+"scene_summary": "[bai_yi] pouts and grumbles, refusing to look at [qin_mo]. He ignores her and asks [hu_wanyu] whether she is hurt.",
+"soundscape": "Crowd noise fading, a small huff of breath, soft footsteps stopping.",
+"video_prompt": "[Shot 1] Medium close-up in [banquet_hall], [bai_yi] in her ivory white gown turns her face away with her arms crossed, rubbing her wrist, her long glossy black hair swaying, slow push-in. [bai_yi] (S1) mutters in a smooth, sulky voice, <d>[Russian] Два дня ни слова, а теперь явился, как ни в чем не бывало. Ну и пожалуйста, я первой не заговорю.</d> [Shot 2] At 00:08.500, medium shot, [qin_mo] with [ningbao] in his arms stops in front of [hu_wanyu], not looking at [bai_yi] at all, static. [qin_mo] (S1) says in a low, concerned voice, <d>[Russian] Ты в порядке? Не пострадала?</d>",
+"dialogue": [
+{ "shot": 1, "speaker_ref": "bai_yi", "line": "Два дня ни слова, а теперь явился, как ни в чем не бывало. Ну и пожалуйста, я первой не заговорю." },
+{ "shot": 2, "speaker_ref": "qin_mo", "line": "Ты в порядке? Не пострадала?" }
+]
+},
+{
+"scene_id": 11,
+"duration_s": 13,
+"scene_summary": "[hu_wanyu] says she did not start the fight, forcing herself not to look at [ningbao]. The little girl wants to reach her mother.",
+"soundscape": "Faint crowd murmur, steady breathing, a soft strap creak.",
+"video_prompt": "[Shot 1] Medium close-up in [banquet_hall], [hu_wanyu] with her low black ponytail and emerald green dress keeps her eyes fixed on the floor, forcing herself not to look at the chubby [ningbao] held by [qin_mo] out of frame, slow push-in. [hu_wanyu] (S1) says in an even, controlled voice, <d>[Russian] Я в порядке. Не я это начала. Они оскорбляли меня без всяких на то причин, а потом еще и набросились с кулаками.</d> [Shot 2] At 00:09.500, close-up on [ningbao]'s round face with her pink-ribbon pigtails, her big dark eyes wet and fixed on her mother, chubby fingers tightening on the strap of the [sippy_cup], static.",
+"dialogue": [
+{ "shot": 1, "speaker_ref": "hu_wanyu", "line": "Я в порядке. Не я это начала. Они оскорбляли меня без всяких на то причин, а потом еще и набросились с кулаками." }
+]
+},
+{
+"scene_id": 12,
+"duration_s": 12,
+"scene_summary": "[bai_zhenzhu] curses [hu_wanyu] as shameless, and [bai_yi] insists everyone knows about her and Lian.",
+"soundscape": "Angry shouting, gasps from guests, a rustle of clothes.",
+"video_prompt": "[Shot 1] Medium close-up in [banquet_hall], [bai_zhenzhu] with her chestnut waves and crimson dress rubs her reddened wrist and points at [hu_wanyu], slight handheld drift. [bai_zhenzhu] (S1) screams in a shrill voice, <d>[Russian] Бесстыдница! Ты еще смеешь оправдываться перед четвёртым молодым господином?!</d> [Shot 2] At 00:04.500, medium shot, [bai_yi] with her ivory gown and long side-parted black hair folds her arms with a superior look, static. [bai_yi] (S2) says in a cool, dismissive voice, <d>[Russian] Госпожа Ху, о какой клевете речь? О ваших делах со вторым молодым господином Лянем знает каждый встречный.</d>",
+"dialogue": [
+{ "shot": 1, "speaker_ref": "bai_zhenzhu", "line": "Бесстыдница! Ты еще смеешь оправдываться перед четвёртым молодым господином?!" },
+{ "shot": 2, "speaker_ref": "bai_yi", "line": "Госпожа Ху, о какой клевете речь? О ваших делах со вторым молодым господином Лянем знает каждый встречный." }
+]
+},
+{
+"scene_id": 13,
+"duration_s": 10,
+"scene_summary": "[bai_yi] calls [hu_wanyu] rude and shows her red wrist, expecting [qin_mo] to comfort her. His attention stays elsewhere and [ningbao] seethes.",
+"soundscape": "Tense hush, a soft huff of breath, the creak of a fabric strap being squeezed.",
+"video_prompt": "[Shot 1] Medium close-up in [banquet_hall], [bai_yi] in her ivory white gown holds out her reddened wrist toward [qin_mo], stealing a hopeful glance at him, slow push-in. [bai_yi] (S1) says in a wounded, cool voice, <d>[Russian] К тому же вы ведете себя крайне грубо. Посмотрите, что вы сделали с моим запястьем!</d> [Shot 2] At 00:07.000, medium shot, [qin_mo] does not react to her wrist and keeps looking at [hu_wanyu] while [ningbao] on his arm puffs her round cheeks and clenches the strap of the [sippy_cup], static.",
+"dialogue": [
+{ "shot": 1, "speaker_ref": "bai_yi", "line": "К тому же вы ведете себя крайне грубо. Посмотрите, что вы сделали с моим запястьем!" }
+]
+},
+{
+"scene_id": 14,
+"duration_s": 8,
+"scene_summary": "[ningbao], unable to bear it any longer, shouts that [bai_yi] is hurting her mama and hurls the [sippy_cup] into [bai_yi]'s face.",
+"soundscape": "A sudden silence, the snap of the strap, a whoosh, a dull smack of plastic on skin, a sharp cry of pain, gasps from the crowd.",
+"video_prompt": "[Shot 1] Close-up in [banquet_hall], [ningbao] with her pink-ribbon pigtails and pale pink cardigan glares in the arms of [qin_mo], and yanks the [sippy_cup] off its strap around her neck, static camera. [ningbao] (S1) shouts in a high, furious toddler voice, <d>[Russian] Ты плохая! Ты обижаешь маму!</d> [Shot 2] At 00:04.000, fast side shot, the [sippy_cup] flies through the air and smacks into [bai_yi]'s cheekbone near the corner of her eye, tears spring into her eyes as she cries out in pain, slight handheld shake.",
+"dialogue": [
+{ "shot": 1, "speaker_ref": "ningbao", "line": "Ты плохая! Ты обижаешь маму!" }
+]
+},
+{
+"scene_id": 15,
+"duration_s": 9,
+"scene_summary": "[qin_mo] instinctively steps toward [bai_yi], but [ningbao] clings to his neck and stops him. He calls the staff to check on [bai_yi], and it is clear where he stands.",
+"soundscape": "Gasps and murmurs, quick footsteps, a soft creak of fabric, [bai_yi]'s faint sobbing.",
+"video_prompt": "[Shot 1] Medium close-up in [banquet_hall], [qin_mo] in his charcoal suit lurches a step toward [bai_yi], but [ningbao] hugs his neck tightly, hiding his eyes with her small hands, slight handheld drift. [ningbao] (S1) says urgently, <d>[Russian] Дядя, не смотри! Не смотри на бяку! Она злая!</d> [Shot 2] At 00:04.000, medium shot, [qin_mo] stops, holding [ningbao] steady, and turns to the crowded staff. [qin_mo] (S2) says in a firm, low voice, <d>[Russian] Чего застыли? Проверьте, что с лицом госпожи Бай.</d>",
+"dialogue": [
+{ "shot": 1, "speaker_ref": "ningbao", "line": "Дядя, не смотри! Не смотри на бяку! Она злая!" },
+{ "shot": 2, "speaker_ref": "qin_mo", "line": "Чего застыли? Проверьте, что с лицом госпожи Бай." }
+]
+},
+{
+"scene_id": 16,
+"duration_s": 12,
+"scene_summary": "[event_manager] examines [bai_yi]'s face and reports a bruise and swelling, promising a doctor. [qin_mo] tells him to hurry.",
+"soundscape": "Murmuring staff, hurried footsteps, a faint sniffle.",
+"video_prompt": "[Shot 1] Medium shot in [banquet_hall], [event_manager] in his dark navy suit and round glasses leans toward [bai_yi], who holds a hand to her bruised cheek beside her eye, slight handheld drift. [event_manager] (S1) says anxiously, <d>[Russian] Слушаемся, четвёртый молодой господин. У госпожи Бай синяк у самого уголка глаза и небольшая припухлость. Мы сейчас же отведем ее к врачу.</d> [Shot 2] At 00:09.500, close-up on [qin_mo], his swept-back black hair and stern face, static. [qin_mo] (S2) says curtly, <d>[Russian] Поторопитесь.</d>",
+"dialogue": [
+{ "shot": 1, "speaker_ref": "event_manager", "line": "Слушаемся, четвёртый молодой господин. У госпожи Бай синяк у самого уголка глаза и небольшая припухлость. Мы сейчас же отведем ее к врачу." },
+{ "shot": 2, "speaker_ref": "qin_mo", "line": "Поторопитесь." }
+]
+},
+{
+"scene_id": 17,
+"duration_s": 15,
+"scene_summary": "[qin_mo] introduces [ningbao] as his niece and asks [bai_yi] not to take her outburst to heart instead of punishing the child. [bai_yi] is left speechless.",
+"soundscape": "Hushed crowd, a faint rustle of fabric, [bai_yi]'s shaky breathing, a soft heartbeat-like tension.",
+"video_prompt": "[Shot 1] Medium shot in [banquet_hall], [qin_mo] in his charcoal suit turns [ningbao] outward as if introducing her, slow push-in. [qin_mo] (S1) says calmly, <d>[Russian] Ии, это моя племянница, Нинбао.</d> [Shot 2] At 00:03.000, close-up on [bai_yi] with her ivory gown and long black hair, one hand pressed to her bruised cheek, her eyes wide as she waits for him to punish the child, static. [Shot 3] At 00:05.500, medium close-up on [qin_mo], [ningbao] tucked in his arms, slight handheld drift. [qin_mo] (S1) says evenly, <d>[Russian] Она еще совсем маленькая и многого не понимает. Не принимай это близко к сердцу.</d> [Shot 4] At 00:11.500, tight close-up on [bai_yi], her mouth opening and closing without a word, eyes wide with disbelief, slow push-in.",
+"dialogue": [
+{ "shot": 1, "speaker_ref": "qin_mo", "line": "Ии, это моя племянница, Нинбао." },
+{ "shot": 3, "speaker_ref": "qin_mo", "line": "Она еще совсем маленькая и многого не понимает. Не принимай это близко к сердцу." }
+]
+}
+]
 }

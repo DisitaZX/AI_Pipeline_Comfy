@@ -151,6 +151,51 @@ def patch_hidream_workflow(
 
     return wf
 
+def patch_minimax_image_workflow(
+    workflow: dict,
+    image_paths: list[str],  # абсолютный путь до single input image
+    positive_prompt: str,
+    filename_prefix: str,
+    seed: int | None = None,
+    ) -> dict:
+
+    wf = copy.deepcopy(workflow)
+
+    loader_nodes = ["148", "149", "150", "151", "152"]
+    for i, path in enumerate(image_paths):
+        wf[loader_nodes[i]]["inputs"]["image"] = path
+
+    # Отключаем image2 / image3 в обоих text-encode'ах. Loader-ноды
+    # 200/201 без рёбер становятся unreachable от SaveImage.
+    if len(image_paths) == 1:
+        node_inputs = wf["104"]["inputs"]
+        for slot in ("ref_images.ref_image_1", "ref_images.ref_image_2", "ref_images.ref_image_3", "ref_images.ref_image_4"):
+            node_inputs.pop(slot, None)
+    elif len(image_paths) == 2:
+        node_inputs = wf["104"]["inputs"]
+        for slot in ("ref_images.ref_image_2", "ref_images.ref_image_3", "ref_images.ref_image_4"):
+            node_inputs.pop(slot, None)
+    elif len(image_paths) == 3:
+        node_inputs = wf["104"]["inputs"]
+        for slot in ("ref_images.ref_image_3", "ref_images.ref_image_4"):
+            node_inputs.pop(slot, None)
+    elif len(image_paths) == 4:
+        node_inputs = wf["104"]["inputs"]
+        for slot in ("ref_images.ref_image_4",):
+            node_inputs.pop(slot, None)
+
+
+    wf["137"]["inputs"]["prompt"] = "Japanese anime style. " + positive_prompt
+
+    # SaveImage prefix
+    wf["141"]["inputs"]["filename_prefix"] = filename_prefix
+
+    # Seed
+    if seed is not None:
+        wf["132"]["inputs"]["noise_seed"] = seed
+
+    return wf
+
 def patch_qwen_edit_workflow(
     workflow: dict,
     image_paths: list[str],  # абсолютный путь до single input image
@@ -933,9 +978,11 @@ async def main():
         workflow_image_hidream = json.load(f)
     with open("VID_LTX.json", "r", encoding="utf-8") as f:
         workflow_vid = json.load(f)
+    with open("image_minimax.json", "r", encoding="utf-8") as f:
+        workflow_image_minimax = json.load(f)
 
     # --- ЭТАП 2: Аудио ---
-    print("\n2. Запускаем генерацию TTS ...")
+    """print("\n2. Запускаем генерацию TTS ...")
     tts_node_id = "1"
     workflow_tts[tts_node_id]["inputs"]["text"] = plan["tts_text"]
 
@@ -994,7 +1041,7 @@ async def main():
 
     # ! ASS KARAOKE !
 
-    fragments_to_ass("map_words.json", "subs.ass")
+    fragments_to_ass("map_words.json", "subs.ass")"""
 
     # ============================================================
     # генерация base entity refs (multi-variant)
@@ -1102,11 +1149,6 @@ async def main():
     # На выходе continuity нести через РЕАЛЬНОЕ движение из LTX, а не через
     # идентичный Flux2-still предыдущей сцены — это и фиксит "одинаковые кадры".
 
-    LAST_FRAMES_DIR = (
-        r"C:\Users\Loopy\Desktop\comfyui\ComfyUI\output\last_frames"
-    )
-    os.makedirs(LAST_FRAMES_DIR, exist_ok=True)
-
     # unique_path нужен ДО depth-loop'а — LTX пишет туда же.
     folder_to_create = (
         f"C:\\Users\\Loopy\\Desktop\\comfyui\\ComfyUI\\output\\"
@@ -1124,7 +1166,7 @@ async def main():
     # Phase A; дальше внутри depth-loop'а Comfy↔Llama меняются локально:
     # A (Comfy) -> B (Llama vision) -> C (Comfy).
 
-    print(f"--- Depth Phase A: Klein keyframes ---")
+    print(f"--- Phase A ---")
 
     for i in range(n_scenes):
         scene = scenes[i]
@@ -1152,8 +1194,8 @@ async def main():
         )
         print(f"      final_prompt: {final_prompt}")
         print(f"      image_paths: {image_paths}")
-        wf_kf = patch_hidream_workflow(
-            workflow=workflow_image_hidream,
+        wf_kf = patch_minimax_image_workflow(
+            workflow=workflow_image_minimax,
             image_paths=image_paths,
             positive_prompt=final_prompt,
             filename_prefix=kf_filename_prefix,
@@ -1169,7 +1211,7 @@ async def main():
     # prompts из main.json + recap. Один проход — никаких drafts'ов
     # и refine'ов поверх. Результат: финальный chunk_plan
     # (num_chunks + global_prompt + per-chunk video_prompt + length_frames).
-    print(f"\n--- Depth / Phase B: Gemma vision plan ---")
+    print(f"\n--- Phase B: Gemma vision plan ---")
     await comfy_mgr.stop()
     await llama_mgr.start()
     print(f"llama-server готов на {llama_mgr.base_url}")

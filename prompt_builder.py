@@ -339,38 +339,17 @@ def build_qwen_edit_prompt(
     out = image_prompt
 
     for name in raw_entities:
-        et = _etype(name)
 
-        # Вычисляем alias один раз для обеих веток
-        bp = base_prompts_by_name[name]
-        alias = (bp.get("short_alias") or "").strip()
-        if not alias:
-            alias = short_alias_from_base_prompt(
-                bp.get("base_prompt", ""), max_words=20
-            )
-        if not alias:
-            alias = name.replace("_", " ")
-        alias = alias.strip(" ,.;:-")
-
-        # Если это локация И она не единственная сущность в промпте — используем (alias)
-        if et == "location" and not is_single_location_only:
-            replacement = f"({alias})"
+        # применяем Picture N
+        if len(image_entities) < max_pictures:
+            image_entities.append(name)
+            picture_idx = len(image_entities) + image_offset
+            replacement = f"<Picture {picture_idx}>"
             out = re.sub(
                 r"\[\s*" + re.escape(name) + r"\s*\]",
                 replacement,
                 out,
             )
-        else:
-            # Для character/object, а также для ЕДИНСТВЕННОЙ локации — применяем image N
-            if len(image_entities) < max_pictures:
-                image_entities.append(name)
-                picture_idx = len(image_entities) + image_offset
-                replacement = f"image {picture_idx}"
-                out = re.sub(
-                    r"\[\s*" + re.escape(name) + r"\s*\]",
-                    replacement,
-                    out,
-                )
 
     # 3. Стрипаем оставшиеся неизвестные или превысившие лимит [bracketed] → plain text
     out = _BRACKET_TOKEN_RE.sub(lambda m: m.group(1).strip(), out)
