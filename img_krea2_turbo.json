@@ -14,7 +14,7 @@
   },
   "51": {
     "inputs": {
-      "text": "A high-resolution, surreal digital illustration showing a human hand holding a martini glass. The image is overlaid with whimsical, expressive ink-style doodles, including a cartoon figure inside the glass, a drawn citrus wedge on the rim, and various abstract sketches and faces surrounding the glass against a clean, white background. The style seamlessly blends a realistic, lit photograph with loose, hand-drawn marker artistry, creating a playful and artistic juxtaposition.",
+      "text": "Horizontal shot of the raised seat-of-honor dais at the head of an ancient eastern-fantasy banquet hall, evening, warm red lantern light, three wide wooden steps leading up to a carved dark-wood high-backed seat with gold inlay, a large crimson banner with an embroidered golden phoenix behind it, bronze incense burners with thin smoke on both sides, a low table of honor at the left below the steps, red ribbons and lanterns, no people, 2D Modern Anime Style. ",
       "clip": [
         "56",
         0
@@ -27,8 +27,8 @@
   },
   "52": {
     "inputs": {
-      "width": 1024,
-      "height": 1024,
+      "width": 1280,
+      "height": 720,
       "batch_size": 1
     },
     "class_type": "EmptyLatentImage",
@@ -38,7 +38,7 @@
   },
   "53": {
     "inputs": {
-      "seed": 490424035290257,
+      "seed": 212005001607611,
       "steps": 8,
       "cfg": 1,
       "sampler_name": "euler",
@@ -84,7 +84,7 @@
   },
   "55": {
     "inputs": {
-      "unet_name": "krea2_turbo_int8_convrot.safetensors",
+      "unet_name": "krea2_turbo_bf16.safetensors",
       "weight_dtype": "default"
     },
     "class_type": "UNETLoader",

@@ -34,6 +34,9 @@ MiniMax H3 ref2video pipeline — прямая генерация видео и�
           -25dB -> (опц.) RIFE -> (опц.) субтитры из dialogue (тайминг внутри сцены
           по окнам шотов [Shot N]) -> обложка из первого кадра первого
           клипа.
+          Если клипов больше чем на FINAL_MAX_PART_S (2:30), финалка
+          делится по границам сцен на части примерно равной длины,
+          каждая собирается в свою папку part_1/, part_2/, ...
 
 Что удалено относительно прежней версии пайплайна:
   - Этап генерации стартовых кадров (image_minimax.json /
@@ -88,6 +91,7 @@ from __future__ import annotations
 
 import argparse
 import asyncio
+import math
 import copy
 import datetime
 import glob as _glob
@@ -133,7 +137,15 @@ MINIMAX_MAX_DURATION_S = 15.0
 # Перезапуск ComfyUI каждые N сгенерированных клипов: чистит VRAM/ОЗУ
 # от утечек и «залипших» моделей (после ~15 клипов подряд речь могла
 # уезжать с русского на китайский). 0 — не перезапускать.
-RESTART_EVERY_N_SCENES = 3
+RESTART_EVERY_N_SCENES = 1
+
+# Деление финалки на части. Если суммарная длина клипов больше
+# FINAL_MAX_PART_S, финалка режется на ceil(длина / FINAL_MAX_PART_S)
+# частей примерно равной длины. Режется только по границам сцен —
+# клип никогда не разрезается. Каждая часть собирается отдельно
+# (своя музыка, субтитры, обложки) в папку part_1/, part_2/, ...
+# 0 — не делить.
+FINAL_MAX_PART_S = 150.0        # 2:30
 
 # Файлы финалки, которые пересобираются при перегенерации сцен.
 FINAL_ARTIFACTS = (
@@ -237,12 +249,12 @@ _SHOT_TOKEN_RE = re.compile(
 # нарисован в японском стиле, текстом в видео это уже не переломить.
 # Меняешь стиль — меняй ОБА поля и хвост в GROK_Prompt_ACTION.txt.
 
-STYLE_PRESET = "jp"   # "jp" — японское аниме, "cn" — китайская донхуа
+STYLE_PRESET = "jp"   # "jp" — 2D modern anime, "cn" — китайская донхуа
 
 STYLE_PRESETS = {
     "jp": {
-        "anchor": "Anime style.",
-        "tail": "Japanese anime style",
+        "anchor": "2D Modern Anime Style.",
+        "tail": "2D Modern Anime Style",
     },
     "cn": {
         "anchor": (
@@ -619,6 +631,241 @@ def archive_files(paths: list[str], archive_dir: str) -> None:
                 k += 1
             dst = f"{base}_{k}{ext}"
         shutil.move(p, dst)
+
+
+def split_into_parts(durations: list[float], max_part_s: float) -> list[list[int]]:
+    """Делит клипы (по порядку) на части не длиннее max_part_s.
+
+    Число частей = ceil(сумма / max_part_s); внутри этого числа точки
+    разреза подбираются так, чтобы самая длинная часть была как можно
+    короче (части выходят примерно равными). Возвращает списки индексов
+    в durations. Если max_part_s <= 0 или всё влезает — одна часть.
+    """
+    n = len(durations)
+    total = sum(durations)
+    if n == 0:
+        return []
+    if max_part_s <= 0 or total <= max_part_s:
+        return [list(range(n))]
+    k = min(n, math.ceil(total / max_part_s))
+    pref = [0.0]
+    for d in durations:
+        pref.append(pref[-1] + d)
+    INF = float("inf")
+    # best[j][i] — минимальная «самая длинная часть» для первых i клипов в j частях
+    best = [[INF] * (n + 1) for _ in range(k + 1)]
+    cut = [[0] * (n + 1) for _ in range(k + 1)]
+    best[0][0] = 0.0
+    for j in range(1, k + 1):
+        for i in range(j, n + 1):
+            for p in range(j - 1, i):
+                v = max(best[j - 1][p], pref[i] - pref[p])
+                if v < best[j][i]:
+                    best[j][i] = v
+                    cut[j][i] = p
+    parts: list[list[int]] = []
+    i = n
+    for j in range(k, 0, -1):
+        p = cut[j][i]
+        parts.append(list(range(p, i)))
+        i = p
+    parts.reverse()
+    return parts
+
+
+async def run_ffmpeg(cmd: list[str], cwd: str) -> None:
+    if not FFMPEG_BIN:
+        raise RuntimeError(
+            "ffmpeg не найден: поставь его в PATH "
+            "(winget install --id=Gyan.FFmpeg -e) или "
+            "uv pip install imageio-ffmpeg"
+        )
+    cmd = [FFMPEG_BIN, *cmd[1:]]
+    proc = await asyncio.create_subprocess_exec(
+        *cmd, stdout=asyncio.subprocess.PIPE, stderr=asyncio.subprocess.PIPE,
+        cwd=cwd,
+    )
+    _, stderr = await proc.communicate()
+    if proc.returncode != 0:
+        raise RuntimeError(
+            f"ffmpeg упал ({' '.join(cmd[:3])}...): "
+            f"{stderr.decode(errors='ignore')[-500:]}"
+        )
+
+
+async def build_final_video(
+    out_dir: str,
+    clip_paths: list[str],
+    part_scenes: list[dict],
+    *,
+    cover_text: str,
+    cover_clip: str | None,
+    cover_t: float,
+    part_label: str | None,
+) -> str:
+    """Собирает одну финалку из clip_paths в out_dir:
+    concat -> музыка -> RIFE -> субтитры -> обложки. Возвращает путь видео."""
+    os.makedirs(out_dir, exist_ok=True)
+    clip_paths = [os.path.abspath(p) for p in clip_paths]
+
+    with open(os.path.join(out_dir, "list.txt"), "w", encoding="utf-8") as f:
+        for p in clip_paths:
+            f.write(f"file '{p}'\n")
+
+    # concat ЧЕРЕЗ ФИЛЬТР (не -c copy!):
+    #   у MiniMax-клипов длина аудиодорожки не совпадает с длиной видео
+    #   (AAC-кадры по 1024 сэмпла + encoder delay/priming в каждом файле).
+    #   При `-f concat -c copy` эти хвосты складываются, и рассинхрон
+    #   накапливается от клипа к клипу; плееры вроде TikTok/мобильных
+    #   декодеров игнорируют edit list и показывают дрейф звука.
+    #   Пересборка с явным CFR-видео и непрерывным аудио убирает дрейф.
+    print("  concat клипов...")
+    n_clips = len(clip_paths)
+    in_args: list[str] = []
+    for p in clip_paths:
+        in_args += ["-i", p]
+    chains = "".join(
+        f"[{k}:v]fps={OUT_FPS},scale={VIDEO_WIDTH}:{VIDEO_HEIGHT}:flags=bicubic,"
+        f"setsar=1,format=yuv420p,setpts=PTS-STARTPTS[v{k}];"
+        f"[{k}:a]aresample=48000:async=1:first_pts=0,"
+        f"aformat=sample_fmts=fltp:channel_layouts=stereo,"
+        f"asetpts=PTS-STARTPTS[a{k}];"
+        for k in range(n_clips)
+    )
+    pairs = "".join(f"[v{k}][a{k}]" for k in range(n_clips))
+    filter_complex = f"{chains}{pairs}concat=n={n_clips}:v=1:a=1[v][a]"
+    await run_ffmpeg(
+        ["ffmpeg", "-y", *in_args,
+         "-filter_complex", filter_complex,
+         "-map", "[v]", "-map", "[a]",
+         "-fps_mode", "cfr", "-r", str(OUT_FPS),
+         "-video_track_timescale", str(OUT_FPS * 1000),
+         "-c:v", "libx264", "-preset", "medium", "-crf", "16",
+         "-pix_fmt", "yuv420p",
+         "-c:a", "aac", "-b:a", "192k", "-ar", "48000", "-ac", "2",
+         "-movflags", "+faststart",
+         "output.mp4"],
+        cwd=out_dir,
+    )
+    current = "output.mp4"
+
+    # -------- опционально: фоновая музыка -25dB
+    music_src = os.path.join(OUTPUT_ROOT, "AI_VIDEO", "audio2.mp3")
+    if MIX_BACKGROUND_MUSIC and os.path.exists(music_src):
+        print("  подмешиваю фоновую музыку...")
+        shutil.copy2(music_src, os.path.join(out_dir, "audio2.mp3"))
+        await run_ffmpeg(
+            ["ffmpeg", "-y", "-i", current, "-stream_loop", "-1",
+             "-i", "audio2.mp3",
+             "-filter_complex",
+             "[1:a]volume=-25dB[bg];[0:a][bg]amix=inputs=2:duration=first[aout]",
+             "-map", "0:v", "-map", "[aout]",
+             "-c:v", "copy", "-c:a", "aac", "-b:a", "192k",
+             "-ar", "48000", "-ac", "2",
+             "-movflags", "+faststart",
+             "video_music.mp4"],
+            cwd=out_dir,
+        )
+        current = "video_music.mp4"
+
+    # -------- опционально: интерполяция кадров RIFE
+    # Строго ДО прожига субтитров: иначе интерполируются сами буквы
+    # и титры начинают двоиться. Звук RIFE не переносит (собирает видео
+    # из PNG) — возвращаем его ремуксом из исходного файла.
+    if RIFE_INTERPOLATION:
+        try:
+            from rife_interp import rife_interpolate
+
+            print(f"  интерполяция RIFE x{RIFE_MULTIPLIER}...")
+            await asyncio.to_thread(
+                rife_interpolate,
+                os.path.join(out_dir, current),
+                os.path.join(out_dir, "video_interp_v.mp4"),
+                RIFE_MULTIPLIER,
+                RIFE_TARGET_FPS,
+                None,
+                None,
+                RIFE_CRF,
+            )
+            await run_ffmpeg(
+                ["ffmpeg", "-y",
+                 "-i", "video_interp_v.mp4", "-i", current,
+                 "-map", "0:v", "-map", "1:a",
+                 "-c:v", "copy", "-c:a", "copy", "-shortest",
+                 "video_interp.mp4"],
+                cwd=out_dir,
+            )
+            current = "video_interp.mp4"
+        except Exception as exc:
+            print(f"  [WARN] интерполяция пропущена: {exc}")
+
+    # -------- субтитры: речь в кадре, жёлтые снизу
+    if BURN_SUBTITLES:
+        print("  субтитры...")
+        script_dir = os.path.dirname(os.path.abspath(__file__))
+        # шрифт кладём рядом с .ass и указываем fontsdir="." — так в
+        # filtergraph нет двоеточий/бэкслешей винды, которые ffmpeg
+        # молча съедал вместе с путём к шрифту
+        for _f in ("Montserrat-VariableFont_wght.ttf", "Montserrat-Bold.ttf"):
+            _src = os.path.join(script_dir, _f)
+            if os.path.exists(_src):
+                shutil.copy2(_src, os.path.join(out_dir, _f))
+
+        dlg_ass = os.path.join(out_dir, "subs_dialogue.ass")
+        print("  WhisperX forced alignment по клипам...")
+        n_events = await asyncio.to_thread(
+            build_aligned_ass,
+            part_scenes,
+            [(p, 0.0, 0.0) for p in clip_paths],
+            dlg_ass,
+            ffmpeg_bin=FFMPEG_BIN,
+            ffprobe_bin=FFPROBE_BIN,
+            video_width=VIDEO_WIDTH,
+            video_height=VIDEO_HEIGHT,
+            language=SUBS_LANGUAGE,
+            max_words=SUB_MAX_WORDS,
+            max_chars=SUB_MAX_CHARS,
+        )
+
+        if n_events <= 0:
+            print("  [WARN] в .ass нет ни одного события — прожиг пропущен "
+                  "(проверь dialogue[] в main.json и лог выравнивания)")
+        else:
+            await run_ffmpeg(
+                ["ffmpeg", "-y", "-i", current,
+                 "-vf", "ass=subs_dialogue.ass:fontsdir=.",
+                 "-c:v", "libx264", "-preset", "slow", "-crf", "16",
+                 "-tune", "animation", "-pix_fmt", "yuv420p",
+                 "-fps_mode", "cfr", "-r", str(OUT_FPS),
+                 "-video_track_timescale", str(OUT_FPS * 1000),
+                 "-movflags", "+faststart",
+                 "-af", "aresample=48000:async=1:first_pts=0",
+                 "-c:a", "aac", "-b:a", "192k", "-ar", "48000", "-ac", "2",
+                 "video_final.mp4"],
+                cwd=out_dir,
+            )
+            current = "video_final.mp4"
+
+    final_path = os.path.join(out_dir, current)
+    print(f"  видео: {final_path}")
+
+    # -------- обложки (16x9 и 9x16): кадр cover_clip @ cover_t
+    if cover_text and cover_clip:
+        print("  обложки...")
+        await run_ffmpeg(
+            ["ffmpeg", "-y", "-ss", f"{cover_t:.3f}",
+             "-i", os.path.abspath(cover_clip),
+             "-frames:v", "1", "cover_frame.png"],
+            cwd=out_dir,
+        )
+        from create_cover import create_covers
+        create_covers(
+            input_image_path=os.path.join(out_dir, "cover_frame.png"),
+            text=cover_text,
+            output_dir=out_dir,
+            part_label=part_label,
+        )
+    return final_path
 
 
 def parse_args() -> argparse.Namespace:
@@ -1298,12 +1545,13 @@ async def main(args):
     if regen:
         # прежняя финалка устарела — убираем в replaced/, пересоберём заново
         archive_files(
-            [os.path.join(unique_path, f) for f in FINAL_ARTIFACTS],
+            [os.path.join(unique_path, f) for f in FINAL_ARTIFACTS]
+            + sorted(_glob.glob(os.path.join(unique_path, "part_*"))),
             archive_dir,
         )
 
     # -------------------------------------------------- ЭТАП 3: финалка
-    # list.txt генерим ДИНАМИЧЕСКИ по фактически созданным клипам.
+    # список клипов — ДИНАМИЧЕСКИ по фактически созданным файлам.
     clip_paths = []
     kept_idx: list[int] = []
     for i in range(n_scenes):
@@ -1316,220 +1564,77 @@ async def main(args):
     if not clip_paths:
         raise RuntimeError("ни одного клипа не найдено — нечего склеивать")
 
-    list_path = os.path.join(unique_path, "list.txt")
-    with open(list_path, "w", encoding="utf-8") as f:
-        for p in clip_paths:
-            f.write(f"file '{os.path.basename(p)}'\n")
-
-    async def _ffmpeg(cmd: list[str], cwd: str) -> None:
-        if not FFMPEG_BIN:
-            raise RuntimeError(
-                "ffmpeg не найден: поставь его в PATH "
-                "(winget install --id=Gyan.FFmpeg -e) или "
-                "uv pip install imageio-ffmpeg"
-            )
-        cmd = [FFMPEG_BIN, *cmd[1:]]
-        proc = await asyncio.create_subprocess_exec(
-            *cmd, stdout=asyncio.subprocess.PIPE, stderr=asyncio.subprocess.PIPE,
-            cwd=cwd,
-        )
-        _, stderr = await proc.communicate()
-        if proc.returncode != 0:
-            raise RuntimeError(
-                f"ffmpeg упал ({' '.join(cmd[:3])}...): "
-                f"{stderr.decode(errors='ignore')[-500:]}"
-            )
-
-    # concat ЧЕРЕЗ ФИЛЬТР (не -c copy!):
-    #   у MiniMax-клипов длина аудиодорожки не совпадает с длиной видео
-    #   (AAC-кадры по 1024 сэмпла + encoder delay/priming в каждом файле).
-    #   При `-f concat -c copy` эти хвосты складываются, и рассинхрон
-    #   накапливается от клипа к клипу; плееры вроде TikTok/мобильных
-    #   декодеров игнорируют edit list и показывают дрейф звука.
-    #   Пересборка с явным CFR-видео и непрерывным аудио убирает дрейф.
-    print("  concat клипов...")
-    n_clips = len(clip_paths)
-    in_args: list[str] = []
-    for p in clip_paths:
-        in_args += ["-i", os.path.basename(p)]
-    chains = "".join(
-        f"[{k}:v]fps={OUT_FPS},scale={VIDEO_WIDTH}:{VIDEO_HEIGHT}:flags=bicubic,"
-        f"setsar=1,format=yuv420p,setpts=PTS-STARTPTS[v{k}];"
-        f"[{k}:a]aresample=48000:async=1:first_pts=0,"
-        f"aformat=sample_fmts=fltp:channel_layouts=stereo,"
-        f"asetpts=PTS-STARTPTS[a{k}];"
-        for k in range(n_clips)
-    )
-    pairs = "".join(f"[v{k}][a{k}]" for k in range(n_clips))
-    filter_complex = f"{chains}{pairs}concat=n={n_clips}:v=1:a=1[v][a]"
-    await _ffmpeg(
-        ["ffmpeg", "-y", *in_args,
-         "-filter_complex", filter_complex,
-         "-map", "[v]", "-map", "[a]",
-         "-fps_mode", "cfr", "-r", str(OUT_FPS),
-         "-video_track_timescale", str(OUT_FPS * 1000),
-         "-c:v", "libx264", "-preset", "medium", "-crf", "16",
-         "-pix_fmt", "yuv420p",
-         "-c:a", "aac", "-b:a", "192k", "-ar", "48000", "-ac", "2",
-         "-movflags", "+faststart",
-         "output.mp4"],
-        cwd=unique_path,
-    )
-
-    current = "output.mp4"
-
-    # фактические длительности клипов: субтитры кладутся на реальный
-    # таймлайн склейки, а не на плановые duration_s
-    _t = 0.0
+    # фактические длительности клипов: по ним делим на части и кладём
+    # субтитры на реальный таймлайн склейки, а не на плановые duration_s
+    durations: list[float] = []
     for k, idx in enumerate(kept_idx):
         d = await media_duration(
             clip_paths[k], float(scenes[idx].get("duration_s") or 8.0)
         )
         scenes[idx]["duration_s"] = d
-        _t += d
-    kept_scenes = [scenes[idx] for idx in kept_idx]
-    print(f"  таймлайн: {len(kept_scenes)} сцен, {_t:.1f} с")
+        durations.append(d)
+    total_s = sum(durations)
+    print(f"  таймлайн: {len(kept_idx)} сцен, {total_s:.1f} с")
 
-    # -------- опционально: фоновая музыка -25dB
-    music_src = os.path.join(OUTPUT_ROOT, "AI_VIDEO", "audio2.mp3")
-    if MIX_BACKGROUND_MUSIC and os.path.exists(music_src):
-        print("  подмешиваю фоновую музыку...")
-        shutil.copy2(music_src, os.path.join(unique_path, "audio2.mp3"))
-        await _ffmpeg(
-            ["ffmpeg", "-y", "-i", current, "-stream_loop", "-1",
-             "-i", "audio2.mp3",
-             "-filter_complex",
-             "[1:a]volume=-25dB[bg];[0:a][bg]amix=inputs=2:duration=first[aout]",
-             "-map", "0:v", "-map", "[aout]",
-             "-c:v", "copy", "-c:a", "aac", "-b:a", "192k",
-             "-ar", "48000", "-ac", "2",
-             "-movflags", "+faststart",
-             "video_music.mp4"],
-            cwd=unique_path,
-        )
-        current = "video_music.mp4"
+    parts = split_into_parts(durations, FINAL_MAX_PART_S)
+    n_parts = len(parts)
+    if n_parts > 1:
+        print(f"  длина {total_s:.1f} с > {FINAL_MAX_PART_S:.0f} с — "
+              f"делю на {n_parts} части по границам сцен:")
+        for pn, part in enumerate(parts, 1):
+            sids = [kept_idx[k] + 1 for k in part]
+            print(f"    часть {pn}: сцены {sids[0]}..{sids[-1]}, "
+                  f"{sum(durations[k] for k in part):.1f} с")
 
-    # -------- опционально: интерполяция кадров RIFE
-    # Строго ДО прожига субтитров: иначе интерполируются сами буквы
-    # и титры начинают двоиться. Звук RIFE не переносит (собирает видео
-    # из PNG) — возвращаем его ремуксом из исходного файла.
-    if RIFE_INTERPOLATION:
-        try:
-            from rife_interp import rife_interpolate
-
-            print(f"  интерполяция RIFE x{RIFE_MULTIPLIER}...")
-            await asyncio.to_thread(
-                rife_interpolate,
-                os.path.join(unique_path, current),
-                os.path.join(unique_path, "video_interp_v.mp4"),
-                RIFE_MULTIPLIER,
-                RIFE_TARGET_FPS,
-                None,
-                None,
-                RIFE_CRF,
-            )
-            await _ffmpeg(
-                ["ffmpeg", "-y",
-                 "-i", "video_interp_v.mp4", "-i", current,
-                 "-map", "0:v", "-map", "1:a",
-                 "-c:v", "copy", "-c:a", "copy", "-shortest",
-                 "video_interp.mp4"],
-                cwd=unique_path,
-            )
-            current = "video_interp.mp4"
-        except Exception as exc:
-            print(f"  [WARN] интерполяция пропущена: {exc}")
-
-    # -------- субтитры: речь в кадре, жёлтые снизу
-    if BURN_SUBTITLES:
-        print("  субтитры...")
-        script_dir = os.path.dirname(os.path.abspath(__file__))
-        # шрифт кладём рядом с .ass и указываем fontsdir="." — так в
-        # filtergraph нет двоеточий/бэкслешей винды, которые ffmpeg
-        # молча съедал вместе с путём к шрифту
-        for _f in ("Montserrat-VariableFont_wght.ttf", "Montserrat-Bold.ttf"):
-            _src = os.path.join(script_dir, _f)
-            if os.path.exists(_src):
-                shutil.copy2(_src, os.path.join(unique_path, _f))
-
-        dlg_ass = os.path.join(unique_path, "subs_dialogue.ass")
-        print("  WhisperX forced alignment по клипам...")
-        n_events = await asyncio.to_thread(
-            build_aligned_ass,
-            kept_scenes,
-            [(p, 0.0, 0.0) for p in clip_paths],
-            dlg_ass,
-            ffmpeg_bin=FFMPEG_BIN,
-            ffprobe_bin=FFPROBE_BIN,
-            video_width=VIDEO_WIDTH,
-            video_height=VIDEO_HEIGHT,
-            language=SUBS_LANGUAGE,
-            max_words=SUB_MAX_WORDS,
-            max_chars=SUB_MAX_CHARS,
-        )
-
-        if n_events <= 0:
-            print("  [WARN] в .ass нет ни одного события — прожиг пропущен "
-                  "(проверь dialogue[] в main.json и лог выравнивания)")
-        else:
-            await _ffmpeg(
-                ["ffmpeg", "-y", "-i", current,
-                 "-vf", "ass=subs_dialogue.ass:fontsdir=.",
-                 "-c:v", "libx264", "-preset", "slow", "-crf", "16",
-                 "-tune", "animation", "-pix_fmt", "yuv420p",
-                 "-fps_mode", "cfr", "-r", str(OUT_FPS),
-                 "-video_track_timescale", str(OUT_FPS * 1000),
-                 "-movflags", "+faststart",
-                 "-af", "aresample=48000:async=1:first_pts=0",
-                 "-c:a", "aac", "-b:a", "192k", "-ar", "48000", "-ac", "2",
-                 "video_final.mp4"],
-                cwd=unique_path,
-            )
-            current = "video_final.mp4"
-
-    print(f"\nФинальное видео: {os.path.join(unique_path, current)}")
-
-    # обложки: кадр из ВЫБРАННОЙ сцены (cover_scene_id / cover_time_s),
-    # текст-крючок cover_text_short, номер части part_label.
-    # Сразу два формата: result_cover_16x9.jpg и result_cover_9x16.jpg.
     cover_text = (plan.get("cover_text_short") or plan.get("cover_text") or "").strip()
-    if cover_text and clip_paths:
-        print("  обложки...")
-        cover_clip = clip_paths[0]
-        cover_sid = plan.get("cover_scene_id")
-        if cover_sid is not None:
-            match_idx = next(
-                (k for k, sc in enumerate(scenes) if sc.get("scene_id") == cover_sid),
-                None,
-            )
-            if match_idx is None:
-                print(f"  [WARN] cover_scene_id={cover_sid} нет в scenes — "
-                      f"беру первый клип")
-            else:
-                p = find_video_for_scene(unique_path, match_idx)
-                if p:
-                    cover_clip = p
-                else:
-                    print(f"  [WARN] cover_scene_id={cover_sid}: клип не найден — "
-                          f"беру первый")
-        try:
-            cover_t = max(0.0, float(plan.get("cover_time_s") or 0.0))
-        except (TypeError, ValueError):
-            cover_t = 0.0
-        cover_png = os.path.join(unique_path, "cover_frame.png")
-        await _ffmpeg(
-            ["ffmpeg", "-y", "-ss", f"{cover_t:.3f}",
-             "-i", os.path.basename(cover_clip),
-             "-frames:v", "1", "cover_frame.png"],
-            cwd=unique_path,
-        )
-        from create_cover import create_covers
-        create_covers(
-            input_image_path=cover_png,
-            text=cover_text,
-            output_dir=unique_path,
-            part_label=(plan.get("part_label") or None),
-        )
+    cover_sid = plan.get("cover_scene_id")
+    cover_idx = next(
+        (k for k, sc in enumerate(scenes) if sc.get("scene_id") == cover_sid),
+        None,
+    ) if cover_sid is not None else None
+    if cover_sid is not None and cover_idx is None:
+        print(f"  [WARN] cover_scene_id={cover_sid} нет в scenes — "
+              f"беру первый клип части")
+    try:
+        plan_cover_t = max(0.0, float(plan.get("cover_time_s") or 0.0))
+    except (TypeError, ValueError):
+        plan_cover_t = 0.0
+    base_label = (plan.get("part_label") or "").strip() or None
+
+    finals: list[str] = []
+    for pn, part in enumerate(parts, 1):
+        part_clips = [clip_paths[k] for k in part]
+        part_idx = [kept_idx[k] for k in part]
+        part_scenes = [scenes[i] for i in part_idx]
+
+        # обложка: cover_scene_id, если сцена попала в эту часть;
+        # иначе — первый клип части, кадр на 1-й секунде
+        if cover_idx is not None and cover_idx in part_idx:
+            cover_clip = part_clips[part_idx.index(cover_idx)]
+            cover_t = plan_cover_t
+        else:
+            cover_clip = part_clips[0]
+            cover_t = plan_cover_t if (n_parts == 1 and cover_idx is None) else 1.0
+
+        if n_parts == 1:
+            out_dir = unique_path
+            label = base_label
+        else:
+            out_dir = os.path.join(unique_path, f"part_{pn}")
+            label = f"Часть {pn}"
+            print(f"\n  === часть {pn}/{n_parts} -> {out_dir}")
+
+        finals.append(await build_final_video(
+            out_dir, part_clips, part_scenes,
+            cover_text=cover_text,
+            cover_clip=cover_clip,
+            cover_t=cover_t,
+            part_label=label,
+        ))
+
+    print("\nФинальное видео:" if len(finals) == 1 else "\nФинальные видео:")
+    for p in finals:
+        print(f"  {p}")
 
     print("Пайплайн MiniMax H3 ref2video успешно завершён!")
 

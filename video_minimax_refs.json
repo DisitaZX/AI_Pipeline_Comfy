@@ -17,22 +17,6 @@
       "title": "Загрузить VAE"
     }
   },
-  "125": {
-    "inputs": {
-      "samples": [
-        "128",
-        0
-      ],
-      "vae": [
-        "122",
-        0
-      ]
-    },
-    "class_type": "VAEDecode",
-    "_meta": {
-      "title": "Декодировать VAE"
-    }
-  },
   "126": {
     "inputs": {
       "sampler_name": "euler"
@@ -48,7 +32,7 @@
       "steps": 8,
       "denoise": 1,
       "model": [
-        "165",
+        "170",
         0
       ]
     },
@@ -88,7 +72,7 @@
   "129": {
     "inputs": {
       "model": [
-        "165",
+        "170",
         0
       ],
       "conditioning": [
@@ -124,7 +108,7 @@
   },
   "132": {
     "inputs": {
-      "noise_seed": 90268642282106
+      "noise_seed": 161793907639093
     },
     "class_type": "RandomNoise",
     "_meta": {
@@ -133,9 +117,9 @@
   },
   "137": {
     "inputs": {
-      "prompt": "subject_definitions:\n<Subject 1> is the character in <Picture 1>: Single figure alone in frame, full-length vertical portrait, a 25-year-old East Asian woman, tall and slim, sharp heart-shaped face, pale skin, narrow upturned amber-brown eyes with heavy black eyeliner, glossy red lips, shoulder-length wavy chestnut hair with a side part, wearing a fitted wine-red satin evening gown with thin straps, diamond drop earrings, a wide gold bracelet on her right wrist and red high heels, neutral standing pose, neutral flat light grey background, Japanese anime style.\n<Subject 2> is the character in <Picture 2>: Single figure alone in frame, full-length vertical portrait, a 26-year-old East Asian woman, slender delicate build, oval face with fair skin, calm almond-shaped dark brown eyes, straight nose, thin lips without lipstick, long straight black hair reaching mid-back with a center part and one thin silver hairpin, wearing a plain charcoal-grey high-collar work dress with long sleeves, a narrow black belt and black flat shoes, a small staff badge on a grey lanyard, neutral standing pose with arms relaxed at her sides, neutral flat light grey background, no props, Japanese anime style.\n<Subject 3> is the environment in <Picture 3>: Empty grand hotel banquet hall with no people, horizontal frame, evening, tall gold-framed mirrors and cream marble columns, round tables under white cloths with low white orchid centerpieces, crystal chandeliers casting warm amber light, polished dark marble floor with soft reflections, tall windows showing distant night city lights, Japanese anime style.\n\nsummary:\n[reference generation] In <Subject 3> <Subject 1> swings an open-handed slap at <Subject 2>, who catches her wrist mid-air and refuses to let go.\n\nretention_analysis:\n<Subject 1> (appears in [Shot 1], [Shot 2]): fully_preserved - the referenced appearance, outfit and defining features are kept unchanged for the whole clip.\n<Subject 2> (appears in [Shot 1], [Shot 2]): fully_preserved - the referenced appearance, outfit and defining features are kept unchanged for the whole clip.\n<Subject 3> (appears in [Shot 1]): fully_preserved - the referenced appearance, outfit and defining features are kept unchanged for the whole clip.\n\ndetailed_description:\nAnime style.\n[Shot 1] Tight side-on medium shot at chest height inside <Subject 3>, warm chandelier light raking across cream marble columns and gold-framed mirrors. <Subject 1> in her fitted wine-red satin gown, chestnut waves swinging, has already thrown her arm forward in a full slap; <Subject 2> in her plain charcoal-grey high-collar work dress, long black hair with a thin silver hairpin, snaps her hand up and catches the wrist in mid-air a few centimetres from her cheek. The gold bracelet jolts against caught skin. Guests behind them freeze with glasses half-raised. Camera holds static, then drifts a few centimetres closer as <Subject 1> leans in, teeth showing, and pushes against the grip without moving it. <Subject 1> (S1) says in a bright brittle voice, thrown loud enough for the tables around them, <d>[Russian] Ты лезла к моему жениху.</d> Physical sound: the flat clap of palm meeting palm, satin creaking, a fork set down on porcelain.\n[Shot 2] At 00:04.500, reverse over-the-shoulder close-up favouring <Subject 2>, the red gown burning out of focus on the left edge of frame. Her face is calm, jaw set, a single strand of black hair fallen loose across her temple; her fingers stay locked around the other woman's wrist, knuckles pale from the effort, forearm steady from months of carrying a heavy child. Chandelier reflections crawl in her dark eyes. She does not raise her volume. Camera performs a very slow push-in on her eyes, the crowd blurring to gold behind her. <Subject 2> (S2) says in a quiet level voice, almost gentle, <d>[Russian] Докажите. Хоть чем-нибудь.</d> Behind her the murmur swells and someone whispers into a phone; her grip tightens once at the end of the line and <Subject 1> flinches out of frame. Physical sound: a bracelet ticking against bone, a phone camera shutter, the string quartet thinning out as players notice the fight.\n\noverall_soundscape:\nlow crowd murmur and clinking glassware under a string quartet, a sharp gasp from nearby guests, the slap of skin caught in a palm, satin rustling, a heel scraping polished marble\n\nnon_diegetic_music:\nN/A",
-      "width": 1024,
-      "height": 576,
+      "prompt": "subject_definitions:\n<Subject 1> is the character in <Picture 1>: Full-body vertical portrait of an 18-year-old young man, slim build, handsome face with a lazy, mischievous look, sharp dark brown eyes, black hair tied in a loose half-topknot with a gold hairpin and a few loose strands framing the face, crimson silk robe with gold cloud embroidery, black waist sash with a white jade pendant, black cloth boots, neutral standing pose, arms relaxed, 2D Modern Anime Style.\n<Subject 2> is the environment in <Picture 2>: Horizontal wide shot of a grand empty banquet hall in an ancient eastern-fantasy city lord's residence, evening, warm light from dozens of red paper lanterns, crimson silk ribbons draped between red lacquered columns, polished dark wooden floor, two long rows of low guest tables with dishes, wine jars and cups, golden lattice windows, open carved main doors at the far end, no people, 2D Modern Anime Style.\n\nsummary:\n[reference generation] <Subject 1> sighs and thinks that Hayato's enemies will one day wipe out the whole Shirase clan except Mio; mio freezes, remembering Hayato arrived wounded and hunted.\n\nretention_analysis:\n<Subject 1> (appears in [Shot 1], [Shot 2]): fully_preserved - the referenced appearance, outfit and defining features are kept unchanged for the whole clip.\n<Subject 2> (appears in [Shot 1]): fully_preserved - the referenced appearance, outfit and defining features are kept unchanged for the whole clip.\n\ndetailed_description:\n2D Modern Anime Style.\n[Shot 1] Medium close-up of <Subject 1> in <Subject 2> shaking his head with a heavy sigh, static. <Subject 1> (S1) whispers sadly, <d>[Russian] А ведь Хаято идёт к вершине по трупам.</d> [Shot 2] At 00:03.800, the camera slowly pushes in to a tighter close-up of <Subject 1>, the emotion in the face intensifying. <Subject 1> (S1) goes on, <d>[Russian] Его враги вырежут весь клан Сирасэ, останется одна Мио. Глупышка даже не догадывается.</d>\n\noverall_soundscape:\nMurmur fading under a low ominous hum, a candle flame hissing.\n\nnon_diegetic_music:\nN/A",
+      "width": 832,
+      "height": 480,
       "length": [
         "159",
         1
@@ -203,7 +187,7 @@
   },
   "150": {
     "inputs": {
-      "image": "",
+      "image": "\"C:\\Users\\Loopy\\Desktop\\comfyui\\ComfyUI\\output\\base_image_gen\\wedding_hall_00001_.png\"",
       "custom_width": 0,
       "custom_height": 0
     },
@@ -234,50 +218,15 @@
       "title": "Load Image (Path) 🎥🅥🅗🅢"
     }
   },
-  "154": {
-    "inputs": {
-      "samples": [
-        "128",
-        0
-      ],
-      "vae": [
-        "123",
-        0
-      ]
-    },
-    "class_type": "VAEDecodeAudio",
-    "_meta": {
-      "title": "Декодировать аудио VAE"
-    }
-  },
-  "155": {
-    "inputs": {
-      "fps": 24,
-      "bit_depth": 8,
-      "color_space": "sRGB",
-      "codec": "none",
-      "images": [
-        "168",
-        1
-      ],
-      "audio": [
-        "154",
-        0
-      ]
-    },
-    "class_type": "CreateVideo",
-    "_meta": {
-      "title": "Создать видео"
-    }
-  },
   "156": {
     "inputs": {
       "filename_prefix": "video/MiniMax_H3",
       "format": "auto",
       "format.codec": "auto",
       "codec": "auto",
+      "video-preview": "",
       "video": [
-        "155",
+        "172",
         0
       ]
     },
@@ -322,17 +271,173 @@
       "title": "Загрузчик LoRA (Только модель)"
     }
   },
-  "168": {
+  "169": {
     "inputs": {
-      "clean_cache": true,
-      "image_pass": [
-        "125",
+      "sage_attention": "auto",
+      "allow_compile": true,
+      "model": [
+        "165",
         0
       ]
     },
-    "class_type": "CacheCleaner",
+    "class_type": "PathchSageAttentionKJ",
     "_meta": {
-      "title": "Cache Cleaner"
+      "title": "Patch Sage Attention KJ"
+    }
+  },
+  "170": {
+    "inputs": {
+      "enable_fp16_accumulation": true,
+      "model": [
+        "169",
+        0
+      ]
+    },
+    "class_type": "ModelPatchTorchSettings",
+    "_meta": {
+      "title": "Model Patch Torch Settings"
+    }
+  },
+  "172": {
+    "inputs": {
+      "fps": 24,
+      "bit_depth": 8,
+      "color_space": "sRGB",
+      "codec": "none",
+      "images": [
+        "181",
+        0
+      ],
+      "audio": [
+        "174",
+        0
+      ]
+    },
+    "class_type": "CreateVideo",
+    "_meta": {
+      "title": "Создать видео"
+    }
+  },
+  "173": {
+    "inputs": {
+      "seed": 205036960232140,
+      "steps": 4,
+      "cfg": 1,
+      "sampler_name": "euler",
+      "scheduler": "simple",
+      "denoise": 0.5,
+      "model": [
+        "170",
+        0
+      ],
+      "positive": [
+        "137",
+        0
+      ],
+      "negative": [
+        "180",
+        0
+      ],
+      "latent_image": [
+        "175",
+        0
+      ]
+    },
+    "class_type": "KSampler",
+    "_meta": {
+      "title": "KSampler"
+    }
+  },
+  "174": {
+    "inputs": {
+      "samples": [
+        "173",
+        0
+      ],
+      "vae": [
+        "123",
+        0
+      ]
+    },
+    "class_type": "VAEDecodeAudio",
+    "_meta": {
+      "title": "Декодировать аудио VAE"
+    }
+  },
+  "175": {
+    "inputs": {
+      "video_latent": [
+        "176",
+        0
+      ],
+      "audio_latent": [
+        "178",
+        1
+      ]
+    },
+    "class_type": "LTXVConcatAVLatent",
+    "_meta": {
+      "title": "Объединить AV-латент"
+    }
+  },
+  "176": {
+    "inputs": {
+      "model_name": "minimax_h3_latent_upscaler_3d_conv_v1_bf16.safetensors",
+      "mode": "megapixels",
+      "mode.megapixels": 0.6,
+      "align": 32,
+      "enable_temporal_chunking": true,
+      "force_unload": "cuda",
+      "device": "cuda",
+      "precision": "fp16",
+      "latent": [
+        "178",
+        0
+      ]
+    },
+    "class_type": "MinimaxH3LatentUpscaler3D",
+    "_meta": {
+      "title": "Minimax H3 Latent Upscaler (3D)"
+    }
+  },
+  "178": {
+    "inputs": {
+      "av_latent": [
+        "128",
+        0
+      ]
+    },
+    "class_type": "LTXVSeparateAVLatent",
+    "_meta": {
+      "title": "Разделить AV-латент"
+    }
+  },
+  "180": {
+    "inputs": {
+      "conditioning": [
+        "137",
+        0
+      ]
+    },
+    "class_type": "ConditioningZeroOut",
+    "_meta": {
+      "title": "Обнуление кондиционирования"
+    }
+  },
+  "181": {
+    "inputs": {
+      "samples": [
+        "173",
+        0
+      ],
+      "vae": [
+        "122",
+        0
+      ]
+    },
+    "class_type": "VAEDecode",
+    "_meta": {
+      "title": "Декодировать VAE"
     }
   }
 }
